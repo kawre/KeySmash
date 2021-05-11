@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { firestore } from "../firebase";
 
-interface DataType {
+export interface DataType {
   rows: {
     numbersRow: [];
     topRow: [];
@@ -11,7 +11,7 @@ interface DataType {
 }
 
 interface Context {
-  getLayout: () => void;
+  getLayout: () => Promise<object | undefined>;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -24,21 +24,15 @@ export const DataProvider: React.FC = ({ children }) => {
   const [currentLayout, setCurrentLayout] = useState<string>("qwerty");
   const [layoutRows, setLayoutRows] = useState<DataType["rows"]>();
 
-  const getLayout = () => {
+  const getLayout = async () => {
     const ref = firestore.collection("layouts").doc("qwerty");
 
-    ref.get().then((cred) => {
+    return await ref.get().then((cred) => {
       const data = cred.data();
-      setLayoutRows({
-        numbersRow: data?.numbersRow,
-        topRow: data?.topRow,
-        middleRow: data?.middleRow,
-        bottomRow: data?.bottomRow,
-      });
+
+      return data;
     });
   };
-
-  getLayout();
 
   const value = {
     getLayout,
