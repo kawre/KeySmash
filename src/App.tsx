@@ -1,10 +1,14 @@
 import React from "react";
+import { AuthProvider } from "./contexts/AuthContext";
+import { DataProvider } from "./contexts/DataContext";
 
 function App() {
   return (
-    <div className="App">
-      <h1>siema</h1>
-    </div>
+    <AuthProvider>
+      <DataProvider>
+        <h1>siema</h1>
+      </DataProvider>
+    </AuthProvider>
   );
 }
 
