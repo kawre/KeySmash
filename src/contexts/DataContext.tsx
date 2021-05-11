@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext } from "react";
 import { firestore } from "../firebase";
 
 export interface DataType {
@@ -11,7 +11,7 @@ export interface DataType {
 }
 
 interface Context {
-  getLayout: () => Promise<object | undefined>;
+  getLayout: () => Promise<DataType["rows"] | undefined>;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -21,16 +21,25 @@ export function useData() {
 }
 
 export const DataProvider: React.FC = ({ children }) => {
-  const [currentLayout, setCurrentLayout] = useState<string>("qwerty");
-  const [layoutRows, setLayoutRows] = useState<DataType["rows"]>();
+  // const [currentLayout, setCurrentLayout] = useState<string>("qwerty");
+  // const [layoutRows, setLayoutRows] = useState<DataType["rows"]>();
+  // const [loading, setLoading] = useState<boolean>(true);
 
-  const getLayout = async () => {
+  const getLayout = () => {
     const ref = firestore.collection("layouts").doc("qwerty");
 
-    return await ref.get().then((cred) => {
+    let rows;
+    return ref.get().then((cred) => {
       const data = cred.data();
 
-      return data;
+      rows = {
+        numbersRow: data?.numbersRow,
+        topRow: data?.topRow,
+        middleRow: data?.middleRow,
+        bottomRow: data?.bottomRow,
+      };
+
+      return rows!;
     });
   };
 
