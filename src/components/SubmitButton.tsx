@@ -21,11 +21,11 @@ export default SubmitButton;
 // Styled ------------------------------------------------------------------------
 
 const Wrapper = styled.button`
-  height: 50px;
+  height: 40px;
   padding: 0 15px;
   font-size: 16px;
   font-weight: 500;
-  border: 2px solid ${colors.primary};
+  border: 2px solid ${colors.secondary};
   background: none;
   outline: none;
   cursor: pointer;
@@ -35,7 +35,7 @@ const Wrapper = styled.button`
   margin-bottom: 20px;
 
   &:hover {
-    background: ${colors.primary};
+    background: ${colors.secondary};
     color: ${colors.body};
   }
 `;

@@ -10,10 +10,24 @@ export const colors = {
 };
 
 export const GlobalStyle = createGlobalStyle`
+#root {
+  width: 100%;
+  height: 100%;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Fira Code', monospace;
+}
+body {
+  background-color: ${colors.body};
+  width: 100vw;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 `;

@@ -13,6 +13,7 @@ interface Value {
     email: string;
   } | null;
   login: (email: string, password: string) => Promise<void>;
+  logOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<Value>(undefined!);

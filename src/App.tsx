@@ -1,6 +1,7 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import KeySmashGame from "./components/KeySmash/KeySmashGame";
+import { Route, Switch } from "react-router-dom";
+import styled from "styled-components";
+import Header from "./components/Header";
 import LoginForm from "./components/LoginForm";
 import { RegisterForm } from "./components/RegisterForm";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -10,17 +11,22 @@ function App() {
   return (
     <AuthProvider>
       <DataProvider>
-        <Router>
-          {/* <KeySmashGame /> */}
-          {/* <RegisterForm /> */}
+        <Wrapper>
+          <Header />
           <Switch>
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
           </Switch>
-        </Router>
+        </Wrapper>
       </DataProvider>
     </AuthProvider>
   );
 }
 
 export default App;
+
+const Wrapper = styled.div`
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+`;
