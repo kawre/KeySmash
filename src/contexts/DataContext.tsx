@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useContext } from "react";
 import { firestore } from "../firebase";
 
 export interface DataType {
@@ -39,7 +39,7 @@ export const DataProvider: React.FC = ({ children }) => {
         bottomRow: data?.bottomRow,
       };
 
-      return rows!;
+      return rows;
     });
   };
 

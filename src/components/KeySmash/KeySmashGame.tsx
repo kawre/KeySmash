@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useAuth } from "../../contexts/AuthContext";
+// import { useAuth } from "../../contexts/AuthContext";
 import { DataType, useData } from "../../contexts/DataContext";
 // Types -------------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ interface Props {
 // Component ---------------------------------------------------------------------
 const KeySmashGame = () => {
   const [rows, setRows] = useState<Props["rows"]>();
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const { getLayout } = useData();
 
   // fetch data
@@ -32,28 +32,32 @@ const KeySmashGame = () => {
     };
 
     fetchData();
-  }, []);
+  }, [getLayout]);
 
   return (
     <Wrapper>
       <RowsWrapper>
         <NumbersRow>
           {rows?.numbersRow.map((letter) => {
+            return null;
             // return console.log(letter);
           })}
         </NumbersRow>
         <TopRow>
           {rows?.topRow.map((letter) => {
+            return null;
             // return console.log(letter);
           })}
         </TopRow>
         <MiddleRow>
           {rows?.middleRow.map((letter) => {
+            return null;
             // return console.log(letter);
           })}
         </MiddleRow>
         <BottomRow>
           {rows?.bottomRow.map((letter) => {
+            return null;
             // return console.log(letter);
           })}
         </BottomRow>

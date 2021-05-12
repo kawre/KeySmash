@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth, firestore } from "../firebase";
 
 interface Value {
-  signup: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, username: string) => Promise<void>;
   user: object | null;
 }
 
@@ -23,19 +23,22 @@ export const AuthProvider: React.FC = ({ children }) => {
   const ref = firestore.collection("users");
 
   // register user
-  const signup = (email: string, password: string) => {
+  const signup = (email: string, password: string, username: string) => {
     const createUser = auth.createUserWithEmailAndPassword(email, password);
 
     return createUser
       .then((cred) => {
         const id = cred?.user?.uid;
 
-        console.log("siema", id);
-
-        // ref.doc(id).set({});
+        ref.doc(id).set({
+          layout: "qwerty",
+          username: username,
+          id: id,
+          email: email,
+        });
       })
-      .catch((error) => {
-        console.log(error);
+      .then(() => {
+        window.location.reload();
       });
   };
 

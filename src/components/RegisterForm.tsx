@@ -1,13 +1,11 @@
 import { Field, Form, Formik } from "formik";
-import React from "react";
-import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
 import SubmitButton from "./SubmitButton";
 import TextField from "./TextField";
 
 // Types -------------------------------------------------------------------------
 
-interface Props {}
+// interface Props {}
 
 // Component ---------------------------------------------------------------------
 export const RegisterForm = () => {
@@ -16,13 +14,12 @@ export const RegisterForm = () => {
     <div>
       <Formik
         initialValues={{ username: "", email: "", password: "" }}
-        onSubmit={(data, { setSubmitting, resetForm }) => {
+        onSubmit={(data, { setSubmitting }) => {
           const createUser = async () => {
             setSubmitting(true);
 
             try {
-              await signup(data.email, data.password);
-              resetForm();
+              await signup(data.email, data.password, data.username);
             } catch {
               console.log("error");
             }
@@ -30,12 +27,12 @@ export const RegisterForm = () => {
             setSubmitting(false);
           };
 
-          createUser();
+          return createUser();
         }}
       >
         {({ values, isSubmitting }) => (
           <Form>
-            {/* <Field name="username" as={TextField} /> */}
+            <Field name="username" as={TextField} />
             <Field name="email" as={TextField} />
             <Field name="password" as={TextField} />
             <SubmitButton disabled={isSubmitting}>Sign Up</SubmitButton>
@@ -48,5 +45,3 @@ export const RegisterForm = () => {
 };
 
 // Styled ------------------------------------------------------------------------
-
-const Wrapper = styled.div``;
