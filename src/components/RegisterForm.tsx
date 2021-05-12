@@ -1,5 +1,7 @@
 import { Field, Form, Formik } from "formik";
+import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
+import { colors } from "../Global";
 import SubmitButton from "./SubmitButton";
 import TextField from "./TextField";
 
@@ -11,7 +13,7 @@ import TextField from "./TextField";
 export const RegisterForm = () => {
   const { signup } = useAuth();
   return (
-    <div>
+    <Wrapper>
       <Formik
         initialValues={{ username: "", email: "", password: "" }}
         onSubmit={(data, { setSubmitting }) => {
@@ -32,16 +34,30 @@ export const RegisterForm = () => {
       >
         {({ values, isSubmitting }) => (
           <Form>
-            <Field name="username" as={TextField} />
-            <Field name="email" as={TextField} />
-            <Field name="password" as={TextField} />
+            <Field placeholder="Username" name="username" as={TextField} />
+            <Field placeholder="Email" name="email" as={TextField} />
+            <Field placeholder="Password" name="password" as={TextField} />
             <SubmitButton disabled={isSubmitting}>Sign Up</SubmitButton>
-            <pre>{JSON.stringify(values, null, 2)}</pre>
           </Form>
         )}
       </Formik>
-    </div>
+    </Wrapper>
   );
 };
 
 // Styled ------------------------------------------------------------------------
+
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: ${colors.body};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  form {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+  }
+`;
