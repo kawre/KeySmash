@@ -12,6 +12,7 @@ interface Value {
     id: string;
     email: string;
   } | null;
+  login: (email: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<Value>(undefined!);
@@ -53,7 +54,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   // log in
   const login = (email: string, password: string) => {
-    auth.signInWithEmailAndPassword(email, password).then(() => {
+    return auth.signInWithEmailAndPassword(email, password).then(() => {
       window.location.reload();
     });
   };

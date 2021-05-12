@@ -21,17 +21,18 @@ export default SubmitButton;
 // Styled ------------------------------------------------------------------------
 
 const Wrapper = styled.button`
-  height: 40px;
+  height: 50px;
   padding: 0 15px;
   font-size: 16px;
   font-weight: 500;
-  border: none;
+  border: 2px solid ${colors.primary};
   background: none;
   outline: none;
   cursor: pointer;
   color: ${colors.text};
   transition: 150ms ease;
   border-radius: 6px;
+  margin-bottom: 20px;
 
   &:hover {
     background: ${colors.primary};

@@ -1,44 +1,44 @@
 import { Field, Form, Formik } from "formik";
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
 import { colors } from "../Global";
 import SubmitButton from "./SubmitButton";
 import TextField from "./TextField";
-
 // Types -------------------------------------------------------------------------
 
-// interface Props {}
+interface Props {}
 
 // Component ---------------------------------------------------------------------
-export const RegisterForm = () => {
-  const { signup } = useAuth();
+const LoginForm = () => {
+  const { login } = useAuth();
   return (
     <Wrapper>
       <Formik
-        initialValues={{ username: "", email: "", password: "" }}
+        initialValues={{ email: "", password: "" }}
         onSubmit={(data, { setSubmitting }) => {
-          const createUser = async () => {
+          const loginHandler = async () => {
             setSubmitting(true);
 
             try {
-              await signup(data.email, data.password, data.username);
+              await login(data.email, data.password);
             } catch {
-              console.log("error");
+              console.log("error something went wrong");
             }
 
             setSubmitting(false);
           };
 
-          createUser();
+          loginHandler();
         }}
       >
         {({ values, isSubmitting }) => (
           <Form>
             <Field
-              placeholder="Username"
-              name="username"
-              type="username"
+              placeholder="Email"
+              name="email"
+              type="email"
               as={TextField}
             />
             <Field
@@ -47,15 +47,9 @@ export const RegisterForm = () => {
               type="password"
               as={TextField}
             />
-            <Field
-              placeholder="Email"
-              name="email"
-              type="email"
-              as={TextField}
-            />
-            <SubmitButton disabled={isSubmitting}>Sign Up</SubmitButton>
+            <SubmitButton disabled={isSubmitting}>Log In</SubmitButton>
             <small>
-              Already have an account? <Link to="/login">Log In</Link>
+              Don't have an account? <Link to="/register">Sign Up</Link>
             </small>
           </Form>
         )}
@@ -63,6 +57,8 @@ export const RegisterForm = () => {
     </Wrapper>
   );
 };
+
+export default LoginForm;
 
 // Styled ------------------------------------------------------------------------
 

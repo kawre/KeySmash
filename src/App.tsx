@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import KeySmashGame from "./components/KeySmash/KeySmashGame";
+import LoginForm from "./components/LoginForm";
 import { RegisterForm } from "./components/RegisterForm";
 import { AuthProvider } from "./contexts/AuthContext";
 import { DataProvider } from "./contexts/DataContext";
@@ -10,11 +11,11 @@ function App() {
     <AuthProvider>
       <DataProvider>
         <Router>
-          <KeySmashGame />
-          <RegisterForm />
+          {/* <KeySmashGame /> */}
+          {/* <RegisterForm /> */}
           <Switch>
-            <Route path="/login" />
-            <Route path="/register" />
+            <Route path="/login" component={LoginForm} />
+            <Route path="/register" component={RegisterForm} />
           </Switch>
         </Router>
       </DataProvider>

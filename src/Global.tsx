@@ -6,7 +6,7 @@ export const colors = {
   background: "#40394a",
   body: "#1c1427",
   text: "#f8f5f1",
-  border: "#efefef80",
+  border: "#efefef40",
 };
 
 export const GlobalStyle = createGlobalStyle`

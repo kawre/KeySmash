@@ -8,15 +8,23 @@ interface Props {
   onChange: any;
   name: string;
   placeholder: string;
+  type: string;
 }
 
 // Component ---------------------------------------------------------------------
-const TextField: React.FC<Props> = ({ placeholder, name, value, onChange }) => {
+const TextField: React.FC<Props> = ({
+  type,
+  placeholder,
+  name,
+  value,
+  onChange,
+}) => {
   return (
     <Wrapper
       placeholder={placeholder}
       name={name}
       value={value}
+      type={type}
       onChange={onChange}
     />
   );
@@ -36,13 +44,13 @@ const Wrapper = styled.input`
   margin-bottom: 15px;
   border: 2px solid ${colors.border};
   transition: 150ms ease;
+  font-size: 16px;
 
   &:hover {
     background-color: ${colors.background};
   }
 
   &::placeholder {
-    font-size: 16px;
     font-weight: 500;
   }
 
