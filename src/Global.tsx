@@ -15,6 +15,10 @@ export const GlobalStyle = createGlobalStyle`
   height: 100%;
 }
 
+.none {
+  display: none;
+}
+
 * {
     margin: 0;
     padding: 0;

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { DataType, useData } from "../../contexts/DataContext";
-import KeycapButton from "./KeycapButton";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import { colors } from "../../Global";
 import { GiArrowCursor } from "react-icons/gi";
+import Keyboard from "../../images/qwerty-keyboard";
 // Types -------------------------------------------------------------------------
 
 interface Props {
@@ -16,7 +16,6 @@ const KeySmashGame = () => {
   const [rows, setRows] = useState<Props["rows"]>();
   const { getLayout } = useData();
   const [focus, setFocus] = useState<boolean>(true);
-  console.log(focus);
 
   // fetch data
   useEffect(() => {
@@ -37,8 +36,8 @@ const KeySmashGame = () => {
     fetchData();
   }, [getLayout]);
 
-  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
+  const pressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log(e.key);
   };
 
   return (
@@ -52,17 +51,21 @@ const KeySmashGame = () => {
       <RowsWrapper className={focus ? "" : "focus-alert"}>
         <InputHandler
           autoFocus
-          value={""}
           onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-          onChange={inputChangeHandler}
+          onBlur={() => {
+            setTimeout(() => {
+              setFocus(false);
+            }, 350);
+          }}
+          onKeyPress={pressHandler}
         />
-        <NumbersRow>
-          {/* {rows?.numbersRow.map((res: string) => {
+        <Keyboard />
+        {/* <NumbersRow>
+          {rows?.numbersRow.map((res: string) => {
             const key = res.toUpperCase();
 
             return <KeycapButton key={uuidv4()}>{key}</KeycapButton>;
-          })} */}
+          })}
         </NumbersRow>
         <TopRow>
           {rows?.topRow.map((res: string) => {
@@ -84,7 +87,7 @@ const KeySmashGame = () => {
 
             return <KeycapButton key={uuidv4()}>{key}</KeycapButton>;
           })}
-        </BottomRow>
+        </BottomRow> */}
       </RowsWrapper>
     </Wrapper>
   );
@@ -103,7 +106,7 @@ const Wrapper = styled.div`
 `;
 
 const RowsWrapper = styled.div`
-  width: 800px;
+  width: fit-content;
   height: fit-content;
   margin: auto;
   position: relative;
@@ -111,7 +114,7 @@ const RowsWrapper = styled.div`
   &.focus-alert {
     transition: 200ms ease;
     opacity: 0.5;
-    filter: blur(3px);
+    filter: blur(4px);
   }
 `;
 
@@ -137,6 +140,7 @@ const InputHandler = styled.input`
   position: absolute;
   cursor: default;
   color: transparent;
+  opacity: 0;
 
   &:focus,
   &:active {
@@ -155,7 +159,7 @@ const FocusAlert = styled.div`
   z-index: 99;
   color: ${colors.text};
   pointer-events: none;
-  text-shadow: 0 0 6px black;
+  text-shadow: 0 0 16px black;
   font-size: 20px;
   font-weight: 500;
 

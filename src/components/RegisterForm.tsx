@@ -1,5 +1,5 @@
 import { Field, Form, Formik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
 import { colors } from "../Global";
@@ -12,7 +12,10 @@ import TextField from "./TextField";
 
 // Component ---------------------------------------------------------------------
 export const RegisterForm = () => {
-  const { signup } = useAuth();
+  const { user, signup } = useAuth();
+  console.log(user);
+
+  if (user !== null) return <Redirect to="/" />;
   return (
     <Wrapper>
       <Formik

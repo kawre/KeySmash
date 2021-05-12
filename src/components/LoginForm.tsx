@@ -1,6 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
 import { colors } from "../Global";
@@ -12,7 +12,9 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const LoginForm = () => {
-  const { login } = useAuth();
+  const { user, login } = useAuth();
+
+  if (user !== null) return <Redirect to="/" />;
   return (
     <Wrapper>
       <Formik
