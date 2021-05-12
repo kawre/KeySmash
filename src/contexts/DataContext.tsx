@@ -28,7 +28,14 @@ export const DataProvider: React.FC = ({ children }) => {
   const { userData } = useAuth();
 
   const getLayout = () => {
-    const ref = firestore.collection("layouts").doc(userData?.layout);
+    let layout;
+    if (userData === null) {
+      layout = "qwerty";
+    } else {
+      layout = userData?.layout;
+    }
+
+    const ref = firestore.collection("layouts").doc(layout);
 
     let rows;
     return ref.get().then((cred) => {

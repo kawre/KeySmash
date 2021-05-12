@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import styled from "styled-components";
 import Header from "./components/Header";
+import KeySmashGame from "./components/KeySmash/KeySmashGame";
 import LoginForm from "./components/LoginForm";
 import { RegisterForm } from "./components/RegisterForm";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -16,6 +17,7 @@ function App() {
           <Switch>
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
+            <Route path="/" component={KeySmashGame} />
           </Switch>
         </Wrapper>
       </DataProvider>

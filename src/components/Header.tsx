@@ -24,13 +24,13 @@ const Header = () => {
         <AccoutAccessibility>
           {userData ? (
             <>
-              <Button onClick={logOut}>Log Out</Button>
               <Icon size={32} padding={5} margin="0 0 0 5px" cursor={true}>
                 <RiSettings4Fill color={colors.text} />
               </Icon>
               <Icon size={36} padding={5} margin="0 0 0 5px" cursor={true}>
                 <TiUser color={colors.text} />
               </Icon>
+              <Button onClick={logOut}>Log Out</Button>
             </>
           ) : (
             <>
@@ -73,7 +73,7 @@ const HeaderWrapper = styled.div`
 
 const Logo = styled.h1`
   color: ${colors.primary};
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   font-weight: 500;
   font-size: 26px;
 `;
