@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-// import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { DataType, useData } from "../../contexts/DataContext";
 // Types -------------------------------------------------------------------------
 
@@ -11,8 +11,8 @@ interface Props {
 // Component ---------------------------------------------------------------------
 const KeySmashGame = () => {
   const [rows, setRows] = useState<Props["rows"]>();
-  // const { user } = useAuth();
   const { getLayout } = useData();
+  const { userData } = useAuth();
 
   // fetch data
   useEffect(() => {
@@ -28,7 +28,6 @@ const KeySmashGame = () => {
       } catch {
         console.log("error");
       }
-      // console.log(user);
     };
 
     fetchData();

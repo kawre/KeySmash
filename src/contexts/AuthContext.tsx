@@ -3,7 +3,15 @@ import { auth, firestore } from "../firebase";
 
 interface Value {
   signup: (email: string, password: string, username: string) => Promise<void>;
-  user: object | null;
+  user: {
+    uid: string;
+  } | null;
+  userData: {
+    layout: string;
+    username: string;
+    id: string;
+    email: string;
+  } | null;
 }
 
 const AuthContext = createContext<Value>(undefined!);
@@ -17,7 +25,8 @@ export function useAuth() {
 export const AuthProvider: React.FC = ({ children }) => {
   // States
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<object | null>(null);
+  const [user, setUser] = useState<Value["user"]>(null);
+  const [userData, setUserData] = useState<Value["userData"]>(null);
 
   // reference
   const ref = firestore.collection("users");
@@ -42,13 +51,47 @@ export const AuthProvider: React.FC = ({ children }) => {
       });
   };
 
+  // log in
+  const login = (email: string, password: string) => {
+    auth.signInWithEmailAndPassword(email, password).then(() => {
+      window.location.reload();
+    });
+  };
+
+  // log Out
+  const logOut = () => {
+    return auth.signOut().then(() => {
+      window.location.reload();
+    });
+  };
+
+  // get current user DATA
+  const getUserData = (user: Value["user"]) => {
+    if (user === null) return;
+
+    return ref
+      .doc(user.uid)
+      .get()
+      .then((res) => {
+        const data = res.data()!;
+
+        setUserData({
+          layout: data.layout,
+          username: data.username,
+          id: data.id,
+          email: data.email,
+        });
+      });
+  };
+
   // get current user
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user: Value["user"]) => {
       setLoading(true);
 
       try {
         setUser(user!);
+        await getUserData(user!);
       } catch {}
       setLoading(false);
     });
@@ -60,13 +103,14 @@ export const AuthProvider: React.FC = ({ children }) => {
   const value = {
     signup,
     user,
+    login,
+    logOut,
+    userData,
   };
 
   return (
-    <>
-      <AuthContext.Provider value={value}>
-        {!loading && children}
-      </AuthContext.Provider>
-    </>
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
   );
 };
