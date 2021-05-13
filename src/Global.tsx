@@ -15,8 +15,10 @@ export const GlobalStyle = createGlobalStyle`
   height: 100%;
 }
 
-.none {
-  display: none;
+.siema {
+  background: green;
+  color: green;
+  fill: greenyellow;
 }
 
 * {

@@ -8,8 +8,6 @@ import SubmitButton from "./SubmitButton";
 import TextField from "./TextField";
 // Types -------------------------------------------------------------------------
 
-interface Props {}
-
 // Component ---------------------------------------------------------------------
 const LoginForm = () => {
   const { user, login } = useAuth();

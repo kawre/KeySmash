@@ -1,40 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { DataType, useData } from "../../contexts/DataContext";
 // import { v4 as uuidv4 } from "uuid";
 import { colors } from "../../Global";
 import { GiArrowCursor } from "react-icons/gi";
-import Keyboard from "../../images/qwerty-keyboard";
+import QwertyKeyboard from "../Keyboards/qwerty";
 // Types -------------------------------------------------------------------------
 
-interface Props {
-  rows: DataType["rows"];
-}
+// interface Props {
+//   rows: DataType["rows"];
+// }
 
 // Component ---------------------------------------------------------------------
 const KeySmashGame = () => {
-  const [rows, setRows] = useState<Props["rows"]>();
-  const { getLayout } = useData();
   const [focus, setFocus] = useState<boolean>(true);
-
-  // fetch data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getLayout();
-        setRows({
-          numbersRow: response?.numbersRow!,
-          topRow: response?.topRow!,
-          middleRow: response?.middleRow!,
-          bottomRow: response?.bottomRow!,
-        });
-      } catch {
-        console.log("error");
-      }
-    };
-
-    fetchData();
-  }, [getLayout]);
 
   const pressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     console.log(e.key);
@@ -59,35 +37,7 @@ const KeySmashGame = () => {
           }}
           onKeyPress={pressHandler}
         />
-        <Keyboard />
-        {/* <NumbersRow>
-          {rows?.numbersRow.map((res: string) => {
-            const key = res.toUpperCase();
-
-            return <KeycapButton key={uuidv4()}>{key}</KeycapButton>;
-          })}
-        </NumbersRow>
-        <TopRow>
-          {rows?.topRow.map((res: string) => {
-            const key = res.toUpperCase();
-
-            return <KeycapButton key={uuidv4()}>{key}</KeycapButton>;
-          })}
-        </TopRow>
-        <MiddleRow>
-          {rows?.middleRow.map((res: string) => {
-            const key = res.toUpperCase();
-
-            return <KeycapButton key={uuidv4()}>{key}</KeycapButton>;
-          })}
-        </MiddleRow>
-        <BottomRow>
-          {rows?.bottomRow.map((res: string) => {
-            const key = res.toUpperCase();
-
-            return <KeycapButton key={uuidv4()}>{key}</KeycapButton>;
-          })}
-        </BottomRow> */}
+        <QwertyKeyboard />
       </RowsWrapper>
     </Wrapper>
   );
@@ -118,23 +68,10 @@ const RowsWrapper = styled.div`
   }
 `;
 
-const Row = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-`;
-
-const NumbersRow = Row;
-
-const TopRow = Row;
-
-const MiddleRow = Row;
-
-const BottomRow = Row;
-
 const InputHandler = styled.input`
   background: transparent;
   border: none;
+  outline: none;
   width: 100%;
   height: 100%;
   position: absolute;
