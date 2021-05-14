@@ -7,7 +7,7 @@ export const colors = {
   body: "#1c1427",
   text: "#f8f5f1",
   border: "#efefef40",
-  fail: "red",
+  fail: "#e8505b",
 };
 
 export const GlobalStyle = createGlobalStyle`

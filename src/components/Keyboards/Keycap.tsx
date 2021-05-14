@@ -58,7 +58,6 @@ export default Keycap;
 
 const Wrapper = styled.div`
   position: relative;
-  /* border: 1px solid ${colors.border}; */
   background-color: ${colors.secondary};
   margin: 0 2.5px;
   border-radius: 6px;
@@ -71,6 +70,15 @@ const Wrapper = styled.div`
   &.key-1 {
     width: 50px;
     flex-shrink: 0;
+  }
+
+  &.key-1_5,
+  &.key-1_75,
+  &.key-2,
+  &.key-2_25,
+  &.key-2_75,
+  &.key-6_25 {
+    background-color: ${colors.background};
   }
 
   &.key-1_5 {
@@ -100,10 +108,33 @@ const Wrapper = styled.div`
   }
 
   &.keycap-pressed-successfully {
-    opacity: 0.5;
+    background-color: ${colors.primary};
   }
 
   &.keycap-pressed-unsuccessfully {
     background-color: ${colors.fail};
+    animation: shake 0.4s both;
+  }
+  @keyframes shake {
+    10%,
+    90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+      transform: translate3d(1px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+      transform: translate3d(-2px, 0, 0);
+    }
+
+    40%,
+    60% {
+      transform: translate3d(2px, 0, 0);
+    }
   }
 `;

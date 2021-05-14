@@ -16,13 +16,16 @@ import { keys as keysArray } from "../../LocalData/keys";
 const KeySmashGame = () => {
   const [focus, setFocus] = useState<boolean>(true);
   const [alert] = useState<string>("Press any key to start");
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>();
   const [timer, setTimer] = useState<number>(0);
   const [keys, setKeys] = useState<string[]>(keysArray);
   const [score, setScore] = useState<number>(0);
+  const [inputDisabled, setInputDisabled] = useState<boolean>(false);
   const [randomKey, setRandomKey] = useState(() => {
     return keys[Math.floor(Math.random() * keys.length)];
   });
+  const audio = new Audio("https://media1.vocaroo.com/mp3/1dLVjOVcqDsj");
+  audio.volume = 0.33;
 
   const pressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     setIsPlaying(true);
@@ -30,29 +33,38 @@ const KeySmashGame = () => {
     const keyIndex = getIndex(key);
     const randomKeyIndex = getIndex(randomKey);
 
+    // correct
     if (key === randomKey) {
+      audio.play();
       keys.splice(keyIndex, 1);
       setScore(score + 1);
       document
         .querySelector(`#${key}`)
         ?.classList.add("keycap-pressed-successfully");
-    } else {
+    }
+    // incorrect
+    else {
       keys.splice(randomKeyIndex, 1);
       document
         .querySelector(`#${randomKey}`)
         ?.classList.add("keycap-pressed-unsuccessfully");
     }
 
+    if (keys.length === 0) setIsPlaying(false);
     setRandomKey(() => {
       return keys[Math.floor(Math.random() * keys.length)];
     });
   };
 
+  useEffect(() => {
+    if (isPlaying) {
+      console.log("siema");
+    }
+  }, [isPlaying]);
+
   const getIndex = (key: string) => {
     return keys.indexOf(key);
   };
-
-  // useEffect(() => {}, [isPlaying]);
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -91,6 +103,13 @@ const KeySmashGame = () => {
     return value;
   };
 
+  // if (isPlaying === false) {
+  //   return (
+  //     <>
+  //       <h1>siema</h1>
+  //     </>
+  //   );
+  // }
   return (
     <Wrapper>
       {!focus && (
@@ -99,7 +118,7 @@ const KeySmashGame = () => {
           Click or press any key to focus
         </FocusAlert>
       )}
-      <KeyToPress>{randomKey}</KeyToPress>
+      {isPlaying && <KeyToPress>{randomKey}</KeyToPress>}
       <RowsWrapper className={focus ? "" : "focus-alert"}>
         <AbovePanel>
           {isPlaying ? (
@@ -117,6 +136,7 @@ const KeySmashGame = () => {
           )}
         </AbovePanel>
         <InputHandler
+          disabled={inputDisabled}
           autoFocus
           onFocus={() => setFocus(true)}
           onBlur={() => {
@@ -212,7 +232,7 @@ const KeyToPress = styled.div`
 `;
 
 const AbovePanel = styled.div`
-  color: ${colors.text}80;
+  color: ${colors.background};
   font-size: 18px;
   font-weight: 500;
   padding-bottom: 15px;
@@ -223,7 +243,7 @@ const AbovePanel = styled.div`
 
     b {
       font-weight: 500;
-      color: ${colors.secondary}80;
+      /* color: ${colors.secondary}80; */
     }
   }
 
