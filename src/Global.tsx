@@ -7,6 +7,7 @@ export const colors = {
   body: "#1c1427",
   text: "#f8f5f1",
   border: "#efefef40",
+  fail: "red",
 };
 
 export const GlobalStyle = createGlobalStyle`
@@ -15,11 +16,9 @@ export const GlobalStyle = createGlobalStyle`
   height: 100%;
 }
 
-.siema {
-  background: green;
-  color: green;
-  fill: greenyellow;
-}
+
+
+
 
 * {
     margin: 0;

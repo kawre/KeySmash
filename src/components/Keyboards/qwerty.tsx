@@ -1,15 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { useAuth } from "../../contexts/AuthContext";
 import Keycap from "./Keycap";
 // Types -------------------------------------------------------------------------
 
-interface Props {}
-
 // Component ---------------------------------------------------------------------
 const QwertyKeyboard = () => {
-  const { userData } = useAuth();
-
   return (
     <Rows>
       <NumbersRow>

@@ -42,7 +42,7 @@ const Keycap: React.FC<Props> = ({ type, value }) => {
     if (value === "8") return "key-8";
     if (value === "9") return "key-9";
     if (value === "0") return "key-0";
-    return value;
+    return value?.toLocaleLowerCase();
   });
 
   return (
@@ -58,12 +58,13 @@ export default Keycap;
 
 const Wrapper = styled.div`
   position: relative;
-  /* border: 2px solid ${colors.border}; */
-  background-color: ${colors.background};
+  /* border: 1px solid ${colors.border}; */
+  background-color: ${colors.secondary};
   margin: 0 2.5px;
   border-radius: 6px;
-  color: ${colors.text};
+  color: ${colors.body};
   font-size: 18px;
+  font-weight: 500;
   height: 50px;
   padding: 4px 0 0 8px;
 
@@ -96,5 +97,13 @@ const Wrapper = styled.div`
 
   &.key-6_25 {
     width: 300px;
+  }
+
+  &.keycap-pressed-successfully {
+    opacity: 0.5;
+  }
+
+  &.keycap-pressed-unsuccessfully {
+    background-color: ${colors.fail};
   }
 `;
