@@ -16,9 +16,14 @@ export const GlobalStyle = createGlobalStyle`
   height: 100%;
 }
 
-
-
-
+@keyframes textScale {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+}
 
 * {
     margin: 0;

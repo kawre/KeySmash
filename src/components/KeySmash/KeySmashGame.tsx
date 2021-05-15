@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 // import { v4 as uuidv4 } from "uuid";
 import { colors } from "../../Global";
 import { GiArrowCursor } from "react-icons/gi";
 import QwertyKeyboard from "../Keyboards/qwerty";
 import { keys as keysArray } from "../../LocalData/keys";
+import { setTimeout } from "timers";
 
 // Types -------------------------------------------------------------------------
 
@@ -14,54 +15,83 @@ import { keys as keysArray } from "../../LocalData/keys";
 
 // Component ---------------------------------------------------------------------
 const KeySmashGame = () => {
+  const pRef = useRef<HTMLParagraphElement>(null);
   const [focus, setFocus] = useState<boolean>(true);
+  const [countDown, setCountDown] = useState<boolean | null>(null);
   const [alert] = useState<string>("Press any key to start");
   const [isPlaying, setIsPlaying] = useState<boolean>();
   const [timer, setTimer] = useState<number>(0);
-  const [keys, setKeys] = useState<string[]>(keysArray);
-  const [score, setScore] = useState<number>(0);
-  const [inputDisabled, setInputDisabled] = useState<boolean>(false);
-  const [randomKey, setRandomKey] = useState(() => {
-    return keys[Math.floor(Math.random() * keys.length)];
-  });
+  const [keys] = useState<string[]>(keysArray);
+  const [score, setScore] = useState<number>(-1);
+  const [randomKey, setRandomKey] = useState<string>("Ready");
   const audio = new Audio("https://media1.vocaroo.com/mp3/1dLVjOVcqDsj");
   audio.volume = 0.33;
 
-  const pressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    setIsPlaying(true);
-    const key = valueHandler(e.key);
+  const keyPressHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (score === -1) {
+      return setCountDown(true);
+    }
+    validationHandler(e.key);
+  };
+
+  const validationHandler = (e: string) => {
+    const key = valueHandler(e);
     const keyIndex = getIndex(key);
     const randomKeyIndex = getIndex(randomKey);
 
-    // correct
+    // validation
     if (key === randomKey) {
       audio.play();
-      keys.splice(keyIndex, 1);
-      setScore(score + 1);
       document
         .querySelector(`#${key}`)
         ?.classList.add("keycap-pressed-successfully");
-    }
-    // incorrect
-    else {
-      keys.splice(randomKeyIndex, 1);
+      setScore(score + 1);
+      keys.splice(keyIndex, 1);
+    } else {
       document
         .querySelector(`#${randomKey}`)
         ?.classList.add("keycap-pressed-unsuccessfully");
+      keys.splice(randomKeyIndex, 1);
     }
 
-    if (keys.length === 0) setIsPlaying(false);
+    if (keys.length === 0) return setIsPlaying(false);
     setRandomKey(() => {
       return keys[Math.floor(Math.random() * keys.length)];
     });
   };
 
-  useEffect(() => {
-    if (isPlaying) {
-      console.log("siema");
-    }
-  }, [isPlaying]);
+  const countDownHandler = async () => {
+    await timeout(500);
+    setRandomKey("steady");
+    await timeout(500);
+    setRandomKey("go");
+    await timeout(500);
+    setScore(0);
+    setCountDown(false);
+    setIsPlaying(true);
+  };
 
+  useEffect(() => {
+    if (countDown === true) {
+      countDownHandler();
+    }
+  }, [countDown]);
+
+  function timeout(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  // animation on key to press change
+  useEffect(() => {
+    if (pRef.current !== null) {
+      pRef.current.classList.add(`animation`);
+      setTimeout(() => {
+        if (pRef.current !== null) pRef.current.classList.remove(`animation`);
+      }, 100);
+    }
+  }, [randomKey]);
+
+  // get index of key
   const getIndex = (key: string) => {
     return keys.indexOf(key);
   };
@@ -103,13 +133,32 @@ const KeySmashGame = () => {
     return value;
   };
 
-  // if (isPlaying === false) {
-  //   return (
-  //     <>
-  //       <h1>siema</h1>
-  //     </>
-  //   );
-  // }
+  const randomKeyFilter = (value: string) => {
+    if (value === "equal") return "=";
+    if (value === "tilda") return "`";
+    if (value === "minus") return "-";
+    if (value === "open-bracket") return "[";
+    if (value === "close-bracket") return "]";
+    if (value === "backslash") return "\\";
+    if (value === "semicolon") return ";";
+    if (value === "quote") return "'";
+    if (value === "comma") return ",";
+    if (value === "dot") return ".";
+    if (value === "slash") return "/";
+    if (value === "key-1") return "1";
+    if (value === "key-2") return "2";
+    if (value === "key-3") return "3";
+    if (value === "key-4") return "4";
+    if (value === "key-5") return "5";
+    if (value === "key-6") return "6";
+    if (value === "key-7") return "7";
+    if (value === "key-8") return "8";
+    if (value === "key-9") return "9";
+    if (value === "key-0") return "0";
+    return value.toUpperCase();
+  };
+  console.log(countDown);
+
   return (
     <Wrapper>
       {!focus && (
@@ -118,8 +167,12 @@ const KeySmashGame = () => {
           Click or press any key to focus
         </FocusAlert>
       )}
-      {isPlaying && <KeyToPress>{randomKey}</KeyToPress>}
       <RowsWrapper className={focus ? "" : "focus-alert"}>
+        {isPlaying === false && (
+          <KeyToPress>
+            <p ref={pRef}>{randomKeyFilter(randomKey)}</p>
+          </KeyToPress>
+        )}
         <AbovePanel>
           {isPlaying ? (
             <>
@@ -136,7 +189,9 @@ const KeySmashGame = () => {
           )}
         </AbovePanel>
         <InputHandler
-          disabled={inputDisabled}
+          disabled={
+            (countDown === null && false) || (countDown === true && true)
+          }
           autoFocus
           onFocus={() => setFocus(true)}
           onBlur={() => {
@@ -144,7 +199,7 @@ const KeySmashGame = () => {
               setFocus(false);
             }, 350);
           }}
-          onKeyPress={pressHandler}
+          onKeyPress={keyPressHandler}
         />
         <QwertyKeyboard />
       </RowsWrapper>
@@ -217,18 +272,28 @@ const FocusAlert = styled.div`
 `;
 
 const KeyToPress = styled.div`
-  font-size: 80px;
+  font-size: 30px;
+  top: -90px;
+  left: 50%;
+  height: 75px;
+  width: 75px;
+  transform: translate(-50%, 0%);
   position: absolute;
-  background: ${colors.primary}80;
-  height: 400px;
-  width: 400px;
+  color: ${colors.primary};
+  background: ${colors.background};
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 99;
   border-radius: 10%;
-  color: ${colors.text};
-  pointer-events: none;
+
+  p {
+    animation: none;
+
+    &.animation {
+      animation: textScale 100ms forwards;
+    }
+  }
 `;
 
 const AbovePanel = styled.div`
