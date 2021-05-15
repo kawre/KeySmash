@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import styled from "styled-components";
 import Header from "./components/Header";
@@ -8,7 +8,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AuthProvider } from "./contexts/AuthContext";
 import { DataProvider } from "./contexts/DataContext";
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <DataProvider>
@@ -17,13 +17,13 @@ function App() {
           <Switch>
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
-            <Route path="/" component={KeySmashGame} />
+            <Route path="/" component={() => <KeySmashGame />} />
           </Switch>
         </Wrapper>
       </DataProvider>
     </AuthProvider>
   );
-}
+};
 
 export default App;
 
