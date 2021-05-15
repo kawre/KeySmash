@@ -1,40 +1,52 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-// import { v4 as uuidv4 } from "uuid";
 import { colors } from "../../Global";
 import { GiArrowCursor } from "react-icons/gi";
 import QwertyKeyboard from "../Keyboards/qwerty";
 import { keys as keysArray } from "../../LocalData/keys";
 import { setTimeout } from "timers";
+import { useData } from "../../contexts/DataContext";
+import { v4 as uuidv4 } from "uuid";
+import Loader from "react-loader-spinner";
+import Button from "../Button";
+import { useHistory } from "react-router";
 
 // Types -------------------------------------------------------------------------
 
-// interface Props {
-//   rows: DataType["rows"];
-// }
+interface Props {
+  // setReset: React.Dispatch<React.SetStateAction<boolean | null>>;
+}
 
 // Component ---------------------------------------------------------------------
-const KeySmashGame = () => {
+const KeySmashGame: React.FC<Props> = () => {
+  const [postGame, setPostGame] = useState<boolean>(false);
+  const { sendFinalResults } = useData();
   const pRef = useRef<HTMLParagraphElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [focus, setFocus] = useState<boolean>(true);
-  const [countDown, setCountDown] = useState<boolean | null>(null);
+  const [game, setGame] = useState<boolean>(false);
   const [alert] = useState<string>("Press any key to start");
-  const [isPlaying, setIsPlaying] = useState<boolean>();
+  const [isPlaying, setIsPlaying] = useState<boolean | null>(null);
+  const [countDown, setCountDown] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(0);
   const [keys] = useState<string[]>(keysArray);
   const [score, setScore] = useState<number>(-1);
-  const [randomKey, setRandomKey] = useState<string>("Ready");
+  const [randomKey, setRandomKey] = useState<string>("Ready?");
+  const [loading, setLoading] = useState<boolean>(false);
   const audio = new Audio("https://media1.vocaroo.com/mp3/1dLVjOVcqDsj");
   audio.volume = 0.33;
 
   const keyPressHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (score === -1) {
-      return setCountDown(true);
+      countDownHandler();
+      return;
     }
+
     validationHandler(e.key);
   };
 
   const validationHandler = (e: string) => {
+    setIsPlaying(true);
     const key = valueHandler(e);
     const keyIndex = getIndex(key);
     const randomKeyIndex = getIndex(randomKey);
@@ -54,32 +66,54 @@ const KeySmashGame = () => {
       keys.splice(randomKeyIndex, 1);
     }
 
-    if (keys.length === 0) return setIsPlaying(false);
+    if (keys.length === 0) {
+      setIsPlaying(false);
+      setGame(false);
+      return;
+    }
     setRandomKey(() => {
       return keys[Math.floor(Math.random() * keys.length)];
     });
   };
 
   const countDownHandler = async () => {
-    await timeout(500);
-    setRandomKey("steady");
-    await timeout(500);
-    setRandomKey("go");
-    await timeout(500);
+    setCountDown(true);
+    setGame(true);
+    await timeout(900);
+    setRandomKey("steady?");
+    await timeout(600);
+    setRandomKey("go!");
+    await timeout(300);
+    setRandomKey(() => {
+      return keys[Math.floor(Math.random() * keys.length)];
+    });
     setScore(0);
     setCountDown(false);
-    setIsPlaying(true);
+    if (inputRef.current) inputRef.current.focus();
   };
-
-  useEffect(() => {
-    if (countDown === true) {
-      countDownHandler();
-    }
-  }, [countDown]);
 
   function timeout(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
+  // send the data to the server and showcase the restults
+  useEffect(() => {
+    if (isPlaying !== false) return;
+    const sendData = async () => {
+      setLoading(true);
+      const id: string = uuidv4();
+      const game = "key-smash";
+
+      try {
+        await sendFinalResults(game, id, score, timer);
+        setPostGame(true);
+      } catch {
+        console.log("error");
+      }
+      setLoading(false);
+    };
+    sendData();
+  }, [isPlaying]);
 
   // animation on key to press change
   useEffect(() => {
@@ -157,7 +191,26 @@ const KeySmashGame = () => {
     if (value === "key-0") return "0";
     return value.toUpperCase();
   };
-  console.log(countDown);
+
+  const history = useHistory();
+
+  if (loading)
+    return (
+      <Wrapper>
+        <Loader type="ThreeDots" color={colors.secondary} height={75} />
+      </Wrapper>
+    );
+
+  if (postGame)
+    return (
+      <Wrapper>
+        <Results>
+          <p>score: {score}</p>
+          <p>time: {timer}</p>
+          <Button onClick={() => history.go(0)}>Play Again</Button>
+        </Results>
+      </Wrapper>
+    );
 
   return (
     <Wrapper>
@@ -168,7 +221,7 @@ const KeySmashGame = () => {
         </FocusAlert>
       )}
       <RowsWrapper className={focus ? "" : "focus-alert"}>
-        {isPlaying === false && (
+        {game && (
           <KeyToPress>
             <p ref={pRef}>{randomKeyFilter(randomKey)}</p>
           </KeyToPress>
@@ -189,10 +242,9 @@ const KeySmashGame = () => {
           )}
         </AbovePanel>
         <InputHandler
-          disabled={
-            (countDown === null && false) || (countDown === true && true)
-          }
           autoFocus
+          ref={inputRef}
+          disabled={countDown}
           onFocus={() => setFocus(true)}
           onBlur={() => {
             setTimeout(() => {
@@ -315,5 +367,18 @@ const AbovePanel = styled.div`
   span {
     margin: 0 20px;
     color: ${colors.secondary};
+  }
+`;
+
+const Results = styled.div`
+  background: ${colors.background};
+  color: ${colors.secondary};
+  border-radius: 6px;
+  padding: 20px;
+
+  p {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 15px;
   }
 `;
