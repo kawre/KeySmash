@@ -1,18 +1,13 @@
 import React, { createContext, useContext } from "react";
 import { firestore } from "../firebase";
-import { useAuth } from "./AuthContext";
-
-export interface DataType {
-  rows: {
-    numbersRow: [];
-    topRow: [];
-    middleRow: [];
-    bottomRow: [];
-  };
-}
 
 interface Context {
-  getLayout: () => Promise<DataType["rows"] | undefined>;
+  sendFinalResults: (
+    game: "key-smash",
+    id: string,
+    score: number,
+    time: number
+  ) => Promise<void>;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -22,38 +17,28 @@ export function useData() {
 }
 
 export const DataProvider: React.FC = ({ children }) => {
-  // const [currentLayout, setCurrentLayout] = useState<string>("qwerty");
-  // const [layoutRows, setLayoutRows] = useState<DataType["rows"]>();
-  // const [loading, setLoading] = useState<boolean>(true);
-  const { userData } = useAuth();
+  const sendFinalResults = (
+    game: "key-smash",
+    id: string,
+    score: number,
+    time: number
+  ) => {
+    const ref = firestore
+      .collection("game-results")
+      .doc(game)
+      .collection("results")
+      .doc(id);
 
-  const getLayout = () => {
-    let layout;
-    if (userData === null) {
-      layout = "qwerty";
-    } else {
-      layout = userData?.layout;
-    }
-
-    const ref = firestore.collection("layouts").doc(layout);
-
-    let rows;
-    return ref.get().then((cred) => {
-      const data = cred.data();
-
-      rows = {
-        numbersRow: data?.numbersRow,
-        topRow: data?.topRow,
-        middleRow: data?.middleRow,
-        bottomRow: data?.bottomRow,
-      };
-
-      return rows;
+    return ref.set({
+      id: id,
+      time: time,
+      score: score,
+      finalScore: score / time,
     });
   };
 
   const value = {
-    getLayout,
+    sendFinalResults,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
