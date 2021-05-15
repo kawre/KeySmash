@@ -9,18 +9,19 @@ import { useData } from "../../contexts/DataContext";
 import { v4 as uuidv4 } from "uuid";
 import Loader from "react-loader-spinner";
 import Button from "../Button";
-import { useHistory } from "react-router";
 
 // Types -------------------------------------------------------------------------
 
 interface Props {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  show: boolean;
 }
 
 // Component ---------------------------------------------------------------------
-const KeySmashGame: React.FC<Props> = ({ setShow }) => {
+const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
   const [postGame, setPostGame] = useState<boolean>(false);
   const { sendFinalResults } = useData();
+  const resultsRef = useRef<HTMLDivElement>(null);
   const pRef = useRef<HTMLParagraphElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [focus, setFocus] = useState<boolean>(true);
@@ -192,8 +193,6 @@ const KeySmashGame: React.FC<Props> = ({ setShow }) => {
     return value.toUpperCase();
   };
 
-  const history = useHistory();
-
   if (loading)
     return (
       <Wrapper>
@@ -204,16 +203,17 @@ const KeySmashGame: React.FC<Props> = ({ setShow }) => {
   if (postGame)
     return (
       <Wrapper>
-        <Results>
+        <Results ref={resultsRef} className={show ? "" : "unmount-animation"}>
           <p>score: {score}</p>
           <p>time: {timer}</p>
           <Button
-            onClick={() => {
-              // history.go(0);
+            onClick={async () => {
+              if (resultsRef.current)
+                resultsRef.current.classList.add("unmount-animation");
+              await timeout(100);
               setShow(false);
-              setTimeout(() => {
-                setShow(true);
-              }, 100);
+              await timeout(100);
+              setShow(true);
             }}
           >
             Play Again
@@ -385,6 +385,21 @@ const Results = styled.div`
   color: ${colors.secondary};
   border-radius: 6px;
   padding: 20px;
+
+  &.unmount-animation {
+    animation: unmount 100ms;
+  }
+
+  @keyframes unmount {
+    0% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-50%);
+    }
+  }
 
   p {
     font-size: 20px;

@@ -21,7 +21,7 @@ const App = () => {
             {show && (
               <Route
                 path="/"
-                component={() => <KeySmashGame setShow={setShow} />}
+                component={() => <KeySmashGame show={show} setShow={setShow} />}
               />
             )}
           </Switch>
