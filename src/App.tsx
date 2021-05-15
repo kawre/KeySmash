@@ -9,6 +9,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { DataProvider } from "./contexts/DataContext";
 
 const App = () => {
+  const [show, setShow] = useState<boolean>(true);
   return (
     <AuthProvider>
       <DataProvider>
@@ -17,7 +18,12 @@ const App = () => {
           <Switch>
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
-            <Route path="/" component={() => <KeySmashGame />} />
+            {show && (
+              <Route
+                path="/"
+                component={() => <KeySmashGame setShow={setShow} />}
+              />
+            )}
           </Switch>
         </Wrapper>
       </DataProvider>

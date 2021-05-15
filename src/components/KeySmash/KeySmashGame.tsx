@@ -14,11 +14,11 @@ import { useHistory } from "react-router";
 // Types -------------------------------------------------------------------------
 
 interface Props {
-  // setReset: React.Dispatch<React.SetStateAction<boolean | null>>;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Component ---------------------------------------------------------------------
-const KeySmashGame: React.FC<Props> = () => {
+const KeySmashGame: React.FC<Props> = ({ setShow }) => {
   const [postGame, setPostGame] = useState<boolean>(false);
   const { sendFinalResults } = useData();
   const pRef = useRef<HTMLParagraphElement>(null);
@@ -207,7 +207,17 @@ const KeySmashGame: React.FC<Props> = () => {
         <Results>
           <p>score: {score}</p>
           <p>time: {timer}</p>
-          <Button onClick={() => history.go(0)}>Play Again</Button>
+          <Button
+            onClick={() => {
+              // history.go(0);
+              setShow(false);
+              setTimeout(() => {
+                setShow(true);
+              }, 100);
+            }}
+          >
+            Play Again
+          </Button>
         </Results>
       </Wrapper>
     );
