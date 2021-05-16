@@ -32,64 +32,54 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
   const [timer, setTimer] = useState<number>(0);
   const [keys, setKeys] = useState<string[]>(keysArray);
   const [score, setScore] = useState<number>(-1);
-  const [randomKey, setRandomKey] = useState<string>("Ready?");
+  const [randomKey, setRandomKey] = useState<string>("rdy");
   const [loading, setLoading] = useState<boolean>(false);
   const audio = new Audio("https://media1.vocaroo.com/mp3/1dLVjOVcqDsj");
   audio.volume = 0.33;
+  const random = keys[Math.floor(Math.random() * keys.length)];
 
   const keyPressHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (score === -1) {
-      countDownHandler();
-      return;
-    }
-
-    validationHandler(e.key);
+    if (score === -1) return countDownHandler();
+    validationHandler(valueHandler(e.key));
   };
 
-  const validationHandler = (e: string) => {
-    const key = valueHandler(e);
-
+  const validationHandler = (key: string) => {
     // validation
     if (key === randomKey) {
-      audio.play();
-      document
-        .querySelector(`#${key}`)
-        ?.classList.add("keycap-pressed-successfully");
-      handleRemove(key);
+      document.querySelector(`#${randomKey}`)?.classList.add("success");
       setScore(score + 1);
+      audio.play();
     } else {
-      document
-        .querySelector(`#${randomKey}`)
-        ?.classList.add("keycap-pressed-unsuccessfully");
-      handleRemove(randomKey);
+      document.querySelector(`#${randomKey}`)?.classList.add("fail");
     }
 
-    if (keys.length === 0) {
-      setIsPlaying(false);
-      setGame(false);
-      return;
-    }
-    setRandomKey(keys[Math.floor(Math.random() * keys.length)]);
+    handleRemove(randomKey);
   };
 
   const handleRemove = (value: string) => {
     const newKeys = keys.filter((key) => key !== value);
+
+    if (newKeys.length === 0) {
+      setIsPlaying(false);
+      setGame(false);
+      return;
+    }
+
     setKeys(newKeys);
-    console.log(newKeys);
-    console.log(value);
+    setRandomKey(newKeys[Math.floor(Math.random() * newKeys.length)]);
   };
 
   const countDownHandler = async () => {
     setCountDown(true);
     setGame(true);
-    await timeout(900);
-    setRandomKey("steady?");
-    await timeout(600);
+    await timeout(900); // wait 900ms
+    setRandomKey("set");
+    await timeout(600); // wait 600ms
     setRandomKey("go!");
-    await timeout(300);
-    setRandomKey(keys[Math.floor(Math.random() * keys.length)]);
-    setCountDown(false);
+    await timeout(300); // wait 300ms
     setScore(0);
+    setRandomKey(random);
+    setCountDown(false);
     setIsPlaying(true);
     if (inputRef.current) inputRef.current.focus();
   };
@@ -263,6 +253,7 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
           }}
           onKeyPress={keyPressHandler}
         />
+
         <QwertyKeyboard />
       </RowsWrapper>
     </Wrapper>

@@ -107,14 +107,15 @@ const Wrapper = styled.div`
     width: 300px;
   }
 
-  &.keycap-pressed-successfully {
+  &.success {
     background-color: ${colors.primary};
   }
 
-  &.keycap-pressed-unsuccessfully {
+  &.fail {
     background-color: ${colors.fail};
     animation: shake 0.4s both;
   }
+
   @keyframes shake {
     10%,
     90% {
