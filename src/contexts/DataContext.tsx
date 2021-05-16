@@ -1,5 +1,11 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { firestore } from "../firebase";
+
+interface Props {
+  quote: {
+    quote: string[];
+  };
+}
 
 interface Context {
   sendFinalResults: (
@@ -9,7 +15,11 @@ interface Context {
     time: number
   ) => Promise<void>;
   addQuote: (quote: string) => any;
-  getRandomQuote: () => Promise<object>;
+  quote:
+    | {
+        quote: string[];
+      }
+    | undefined;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -19,6 +29,8 @@ export function useData() {
 }
 
 export const DataProvider: React.FC = ({ children }) => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [quote, setQuote] = useState<Props["quote"]>();
   const sendFinalResults = (
     game: "key-smash",
     id: string,
@@ -46,7 +58,7 @@ export const DataProvider: React.FC = ({ children }) => {
       .collection("quotes");
 
     return ref.add({
-      quote: quote.split(""),
+      quote: quote.split(" "),
     });
   };
 
@@ -57,19 +69,37 @@ export const DataProvider: React.FC = ({ children }) => {
       .collection("quotes");
 
     return ref.get().then((quotes) => {
-      const randomQuote =
+      const randomQuote: any =
         quotes.docs[Math.floor(Math.random() * quotes.docs.length)].data();
 
-      console.log(randomQuote);
       return randomQuote;
     });
   };
 
+  useEffect(() => {
+    const quoteHandler = async () => {
+      try {
+        const res = await getRandomQuote();
+        setQuote({
+          quote: res.quote,
+        });
+      } catch {
+        console.log("error");
+      }
+      setLoading(false);
+    };
+    quoteHandler();
+  }, []);
+
   const value = {
     sendFinalResults,
     addQuote,
-    getRandomQuote,
+    quote,
   };
 
-  return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
+  return (
+    <DataContext.Provider value={value}>
+      {!loading && children}
+    </DataContext.Provider>
+  );
 };

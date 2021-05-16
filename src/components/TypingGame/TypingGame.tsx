@@ -2,50 +2,27 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useData } from "../../contexts/DataContext";
 import { colors } from "../../Global";
+import Button from "../Button";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
 const TypingGame = () => {
-  const { getRandomQuote, addQuote } = useData();
-  //   useEffect(() => {
-  //     const getQuote = async () => {
-  //       try {
-  //         const res = await getRandomQuote();
-  //         console.log(res);
-  //       } catch {}
-  //     };
+  const { quote } = useData();
 
-  //     getQuote();
-  //   }, []);
+  console.log(quote);
 
-  const [text, setText] = useState<string>("siema co tam kekw");
-  var split = text.replace(/ /g, "-").split("");
   return (
     <Wrapper>
-      <TypingWrapper>
-        <Word>
-          <span>B</span>
-          <span>o</span>
-          <span>o</span>
-          <span>k</span>
-          <span>s</span>
-        </Word>
-        <Word>are</Word>
-        <Word>the</Word>
-        <Word>quietest</Word>
-        <Word>and</Word>
-        <Word>most</Word>
-        <Word>constant</Word>
-        <Word>of</Word>
-        <Word>friends</Word>
-        <Word>they</Word>
-        <Word>are</Word>
-        <Word>gay</Word>
-        <Word>kekw</Word>
-        <Word>siema</Word>
-      </TypingWrapper>
+      <Button
+      // onClick={() =>
+      //   addQuote(
+      //     `When I have a little money, I buy books; and if I have any left, I buy food and clothes.`
+      //   )
+      // }
+      ></Button>
+      <TypingWrapper></TypingWrapper>
     </Wrapper>
   );
 };
