@@ -1,4 +1,4 @@
-export const keys = [
+export const keysArray = [
   "q",
   "w",
   "e",

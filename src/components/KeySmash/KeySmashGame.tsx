@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { colors } from "../../Global";
 import { GiArrowCursor } from "react-icons/gi";
 import QwertyKeyboard from "../Keyboards/qwerty";
-import { keys as keysArray } from "../../LocalData/keys";
 import { setTimeout } from "timers";
 import { useData } from "../../contexts/DataContext";
+import { keysArray } from "../../LocalData/keys";
 import { v4 as uuidv4 } from "uuid";
 import Loader from "react-loader-spinner";
 import Button from "../Button";
@@ -30,7 +30,7 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
   const [isPlaying, setIsPlaying] = useState<boolean | null>(null);
   const [countDown, setCountDown] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(0);
-  const [keys] = useState<string[]>(keysArray);
+  const [keys, setKeys] = useState<string[]>(keysArray);
   const [score, setScore] = useState<number>(-1);
   const [randomKey, setRandomKey] = useState<string>("Ready?");
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,10 +47,7 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
   };
 
   const validationHandler = (e: string) => {
-    setIsPlaying(true);
     const key = valueHandler(e);
-    const keyIndex = getIndex(key);
-    const randomKeyIndex = getIndex(randomKey);
 
     // validation
     if (key === randomKey) {
@@ -58,13 +55,13 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
       document
         .querySelector(`#${key}`)
         ?.classList.add("keycap-pressed-successfully");
+      handleRemove(key);
       setScore(score + 1);
-      keys.splice(keyIndex, 1);
     } else {
       document
         .querySelector(`#${randomKey}`)
         ?.classList.add("keycap-pressed-unsuccessfully");
-      keys.splice(randomKeyIndex, 1);
+      handleRemove(randomKey);
     }
 
     if (keys.length === 0) {
@@ -72,9 +69,14 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
       setGame(false);
       return;
     }
-    setRandomKey(() => {
-      return keys[Math.floor(Math.random() * keys.length)];
-    });
+    setRandomKey(keys[Math.floor(Math.random() * keys.length)]);
+  };
+
+  const handleRemove = (value: string) => {
+    const newKeys = keys.filter((key) => key !== value);
+    setKeys(newKeys);
+    console.log(newKeys);
+    console.log(value);
   };
 
   const countDownHandler = async () => {
@@ -85,11 +87,10 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
     await timeout(600);
     setRandomKey("go!");
     await timeout(300);
-    setRandomKey(() => {
-      return keys[Math.floor(Math.random() * keys.length)];
-    });
-    setScore(0);
+    setRandomKey(keys[Math.floor(Math.random() * keys.length)]);
     setCountDown(false);
+    setScore(0);
+    setIsPlaying(true);
     if (inputRef.current) inputRef.current.focus();
   };
 
@@ -125,11 +126,6 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
       }, 100);
     }
   }, [randomKey]);
-
-  // get index of key
-  const getIndex = (key: string) => {
-    return keys.indexOf(key);
-  };
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -203,17 +199,18 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
   if (postGame)
     return (
       <Wrapper>
-        <Results ref={resultsRef} className={show ? "" : "unmount-animation"}>
+        <Results ref={resultsRef}>
           <p>score: {score}</p>
           <p>time: {timer}</p>
           <Button
             onClick={async () => {
-              if (resultsRef.current)
-                resultsRef.current.classList.add("unmount-animation");
-              await timeout(100);
+              setKeys(keysArray);
+              resultsRef?.current?.classList.add("unmount-animation");
+              await timeout(200);
               setShow(false);
               await timeout(100);
               setShow(true);
+              resultsRef?.current?.classList.remove("unmount-animation");
             }}
           >
             Play Again
@@ -244,7 +241,10 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
               </p>
               <span>|</span>
               <p>
-                score: <b>{score}/47</b>
+                score:{" "}
+                <b>
+                  {score}/{keysArray.length}
+                </b>
               </p>
             </>
           ) : (
@@ -387,7 +387,7 @@ const Results = styled.div`
   padding: 20px;
 
   &.unmount-animation {
-    animation: unmount 100ms;
+    animation: unmount 200ms;
   }
 
   @keyframes unmount {
@@ -397,7 +397,7 @@ const Results = styled.div`
     }
     100% {
       opacity: 0;
-      transform: translateY(-50%);
+      transform: translateY(50%);
     }
   }
 
