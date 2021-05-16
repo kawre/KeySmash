@@ -8,6 +8,8 @@ interface Context {
     score: number,
     time: number
   ) => Promise<void>;
+  addQuote: (quote: string) => any;
+  getRandomQuote: () => Promise<object>;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -24,7 +26,7 @@ export const DataProvider: React.FC = ({ children }) => {
     time: number
   ) => {
     const ref = firestore
-      .collection("game-results")
+      .collection("game-data")
       .doc(game)
       .collection("results")
       .doc(id);
@@ -37,8 +39,36 @@ export const DataProvider: React.FC = ({ children }) => {
     });
   };
 
+  const addQuote = (quote: string) => {
+    const ref = firestore
+      .collection("game-data")
+      .doc("typing-game")
+      .collection("quotes");
+
+    return ref.add({
+      quote: quote.split(""),
+    });
+  };
+
+  const getRandomQuote = () => {
+    const ref = firestore
+      .collection("game-data")
+      .doc("typing-game")
+      .collection("quotes");
+
+    return ref.get().then((quotes) => {
+      const randomQuote =
+        quotes.docs[Math.floor(Math.random() * quotes.docs.length)].data();
+
+      console.log(randomQuote);
+      return randomQuote;
+    });
+  };
+
   const value = {
     sendFinalResults,
+    addQuote,
+    getRandomQuote,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
