@@ -387,7 +387,7 @@ const Results = styled.div`
       opacity: 1;
     }
     100% {
-      transform: translateY(50%);
+      transform: translateY(25%);
       opacity: 0;
     }
   }

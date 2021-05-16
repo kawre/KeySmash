@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { TiUser } from "react-icons/ti";
 import { RiSettings4Fill } from "react-icons/ri";
+import { FaKeyboard } from "react-icons/fa";
 import { useAuth } from "../contexts/AuthContext";
 import { colors } from "../Global";
 import Button from "./Button";
@@ -22,6 +23,14 @@ const Header = () => {
           <Logo>KeySmash</Logo>
         </Link>
         <AccoutAccessibility>
+          <GamesNav>
+            <Link to="/typing-game">
+              <Icon size={32} padding={5} cursor={true}>
+                <FaKeyboard color={colors.text} />
+              </Icon>
+            </Link>
+          </GamesNav>
+          <span>|</span>
           {userData ? (
             <>
               <Icon size={32} padding={5} margin="0 0 0 5px" cursor={true}>
@@ -69,6 +78,11 @@ const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  span {
+    margin: 0 5px 0 10px;
+    color: ${colors.secondary};
+  }
 `;
 
 const Logo = styled.h1`
@@ -86,3 +100,5 @@ const AccoutAccessibility = styled.div`
     margin-left: 15px;
   }
 `;
+
+const GamesNav = styled.div``;

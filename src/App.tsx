@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import KeySmashGame from "./components/KeySmash/KeySmashGame";
 import LoginForm from "./components/LoginForm";
 import { RegisterForm } from "./components/RegisterForm";
+import TypingGame from "./components/TypingGame/TypingGame";
 import { AuthProvider } from "./contexts/AuthContext";
 import { DataProvider } from "./contexts/DataContext";
 
@@ -16,14 +17,16 @@ const App = () => {
         <Wrapper>
           <Header />
           <Switch>
-            <Route path="/login" component={LoginForm} />
-            <Route path="/register" component={RegisterForm} />
+            <Route exact path="/login" component={LoginForm} />
+            <Route exact path="/register" component={RegisterForm} />
             {show && (
               <Route
+                exact
                 path="/"
                 component={() => <KeySmashGame show={show} setShow={setShow} />}
               />
             )}
+            <Route exact path="/typing-game" component={() => <TypingGame />} />
           </Switch>
         </Wrapper>
       </DataProvider>
