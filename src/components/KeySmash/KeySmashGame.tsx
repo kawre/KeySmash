@@ -107,14 +107,14 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
     sendData();
   }, [isPlaying]);
 
-  // animation on key to press change
+  // animation on key press
   useEffect(() => {
-    if (pRef.current !== null) {
-      pRef.current.classList.add(`animation`);
-      setTimeout(() => {
-        if (pRef.current !== null) pRef.current.classList.remove(`animation`);
-      }, 100);
-    }
+    if (pRef.current === null) return;
+
+    pRef.current.classList.add(`animation`);
+    setTimeout(() => {
+      if (pRef.current !== null) pRef.current.classList.remove(`animation`);
+    }, 100);
   }, [randomKey]);
 
   useEffect(() => {
@@ -198,9 +198,9 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
               resultsRef?.current?.classList.add("unmount-animation");
               await timeout(200);
               setShow(false);
+              resultsRef?.current?.classList.remove("unmount-animation");
               await timeout(100);
               setShow(true);
-              resultsRef?.current?.classList.remove("unmount-animation");
             }}
           >
             Play Again
@@ -325,7 +325,7 @@ const FocusAlert = styled.div`
 `;
 
 const KeyToPress = styled.div`
-  font-size: 30px;
+  font-size: 28px;
   top: -90px;
   left: 50%;
   height: 75px;
@@ -378,7 +378,7 @@ const Results = styled.div`
   padding: 20px;
 
   &.unmount-animation {
-    animation: unmount 200ms;
+    animation: unmount 200ms forwards;
   }
 
   @keyframes unmount {
@@ -387,14 +387,14 @@ const Results = styled.div`
       opacity: 1;
     }
     100% {
-      opacity: 0;
       transform: translateY(50%);
+      opacity: 0;
     }
   }
 
   p {
     font-size: 20px;
-    font-weight: 500;
     margin-bottom: 15px;
+    font-weight: 500;
   }
 `;
