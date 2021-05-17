@@ -25,6 +25,7 @@ export function useData() {
 export const DataProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [quote, setQuote] = useState<Props["quote"]>();
+  const [letters, getLetters] = useState<string[]>();
 
   const sendFinalResults = (
     game: "key-smash" | "typing-game",
