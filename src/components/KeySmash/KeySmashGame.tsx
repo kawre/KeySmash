@@ -105,17 +105,18 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
       setLoading(false);
     };
     sendData();
-  }, [isPlaying]);
+  }, [isPlaying, score, sendFinalResults, timer]);
 
   // animation on key press
   useEffect(() => {
     if (pRef.current === null) return;
+    const ref = pRef.current;
 
-    pRef.current.classList.add(`animation`);
+    ref.classList.add(`animation`);
     setTimeout(() => {
-      if (pRef.current !== null) pRef.current.classList.remove(`animation`);
+      ref.classList.remove(`animation`);
     }, 100);
-  }, [randomKey]);
+  }, [randomKey, pRef]);
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -124,9 +125,7 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
       setTimer(timer + 1);
     }, 1000);
 
-    return () => {
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [isPlaying, timer]);
 
   const valueHandler = (value: string) => {
@@ -246,11 +245,7 @@ const KeySmashGame: React.FC<Props> = ({ show, setShow }) => {
           ref={inputRef}
           disabled={countDown}
           onFocus={() => setFocus(true)}
-          onBlur={() => {
-            setTimeout(() => {
-              setFocus(false);
-            }, 350);
-          }}
+          onBlur={() => setTimeout(() => setFocus(false), 300)}
           onKeyPress={keyPressHandler}
         />
 

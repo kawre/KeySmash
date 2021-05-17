@@ -2,24 +2,18 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { firestore } from "../firebase";
 
 interface Props {
-  quote: {
-    quote: string[];
-  };
+  quote: string[] | undefined;
 }
 
 interface Context {
   sendFinalResults: (
-    game: "key-smash",
+    game: "key-smash" | "typing-game",
     id: string,
     score: number,
     time: number
-  ) => Promise<void>;
+  ) => any;
   addQuote: (quote: string) => any;
-  quote:
-    | {
-        quote: string[];
-      }
-    | undefined;
+  quote: string[] | undefined;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -31,8 +25,9 @@ export function useData() {
 export const DataProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [quote, setQuote] = useState<Props["quote"]>();
+
   const sendFinalResults = (
-    game: "key-smash",
+    game: "key-smash" | "typing-game",
     id: string,
     score: number,
     time: number
@@ -80,9 +75,7 @@ export const DataProvider: React.FC = ({ children }) => {
     const quoteHandler = async () => {
       try {
         const res = await getRandomQuote();
-        setQuote({
-          quote: res.quote,
-        });
+        setQuote(res.quote);
       } catch {
         console.log("error");
       }

@@ -1,28 +1,33 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { useData } from "../../contexts/DataContext";
 import { colors } from "../../Global";
-import Button from "../Button";
+import { v4 as uuidv4 } from "uuid";
 // Types -------------------------------------------------------------------------
 
-interface Props {}
+// interface Props {}
 
 // Component ---------------------------------------------------------------------
 const TypingGame = () => {
   const { quote } = useData();
 
-  console.log(quote);
+  useEffect(() => {
+    console.log(quote);
+  }, [quote]);
 
   return (
     <Wrapper>
-      <Button
-      // onClick={() =>
-      //   addQuote(
-      //     `When I have a little money, I buy books; and if I have any left, I buy food and clothes.`
-      //   )
-      // }
-      ></Button>
-      <TypingWrapper></TypingWrapper>
+      <TypingWrapper>
+        {quote?.map((word) => {
+          return (
+            <Word key={uuidv4()}>
+              {word.split("").map((letter) => (
+                <span key={uuidv4()}>{letter}</span>
+              ))}
+            </Word>
+          );
+        })}
+      </TypingWrapper>
     </Wrapper>
   );
 };
