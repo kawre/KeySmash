@@ -10,24 +10,24 @@ import { v4 as uuidv4 } from "uuid";
 // Component ---------------------------------------------------------------------
 const TypingGame = () => {
   const { quote } = useData();
-  const [letters] = useState<string[] | undefined>(quote?.join(" ").split(""));
-  const [length, setLength] = useState<number>(0);
-  const [word, setWord] = useState<number>(0);
-  const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
+  const [letters, setQuote] = useState<string[] | undefined>(quote);
+  const [input, setInput] = useState<string>();
+  const [length, setLength] = useState<number>(-1);
 
   const keyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === " ") setWord(word + 1);
+    setInput(e.key);
     setLength(length + 1);
-    // console.log(letters?.[length]);
   };
+
+  console.log(letters);
 
   return (
     <Wrapper>
       <TypingWrapper>
         <TypeInput onKeyPress={keyPressHandler} />
-        {quote?.map((word) =>
-          word.split("").map((letter) => <span>{letter}</span>)
-        )}
+        {/* {quote?.join(" ")?.map((letter) => {
+          return console.log(letter);
+        })} */}
       </TypingWrapper>
     </Wrapper>
   );
@@ -50,6 +50,8 @@ const TypingWrapper = styled.div`
   position: relative;
 `;
 
+const Quote = styled.p``;
+
 const TypeInput = styled.input`
   position: absolute;
   background: none;
@@ -69,8 +71,10 @@ const Letter = styled.span`
   color: ${colors.text};
 
   &.correct {
+    color: green;
   }
 
   &.incorrect {
+    color: red;
   }
 `;
