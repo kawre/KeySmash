@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useData } from "../../contexts/DataContext";
 import { colors } from "../../Global";
@@ -10,10 +10,10 @@ import { v4 as uuidv4 } from "uuid";
 // Component ---------------------------------------------------------------------
 const TypingGame = () => {
   const { quote } = useData();
+  const quoteRef = useRef<HTMLDivElement>(null);
   const [words] = useState<string[]>(quote.split(" "));
   const [input, setInput] = useState<string>("");
   const [currentWord, setCurrentWord] = useState<number>(0);
-  const [wordLength, setWordLength] = useState<number>(0);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -23,7 +23,7 @@ const TypingGame = () => {
     <Wrapper>
       <TypingWrapper>
         <TypeInput autoFocus value={input} onChange={changeHandler} />
-        <Quote>
+        <Quote ref={quoteRef}>
           {words.map((word, wordIdx) => {
             let active;
 
@@ -32,7 +32,6 @@ const TypingGame = () => {
               <Word key={uuidv4()} className={active}>
                 {word.split("").map((letter, letterIdx) => {
                   let color;
-
                   if (wordIdx === currentWord) {
                     if (letterIdx < input.length) {
                       color =
@@ -50,7 +49,7 @@ const TypingGame = () => {
                   }
 
                   return (
-                    <Letter key={uuidv4()} style={{ color: color }}>
+                    <Letter style={{ color: color }} key={uuidv4()}>
                       {letter}
                     </Letter>
                   );
@@ -102,7 +101,7 @@ const Letter = styled.span`
   color: ${colors.text};
 
   &.correct {
-    color: ${colors.secondary};
+    color: ${colors.secondary} !important;
   }
 
   &.incorrect {
