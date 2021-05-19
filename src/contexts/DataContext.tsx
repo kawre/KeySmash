@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { firestore } from "../firebase";
 
 interface Props {
-  quote: string[] | undefined;
+  quote: string;
 }
 
 interface Context {
@@ -13,7 +13,7 @@ interface Context {
     time: number
   ) => any;
   addQuote: (quote: string) => any;
-  quote: string[] | undefined;
+  quote: string;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -24,7 +24,7 @@ export function useData() {
 
 export const DataProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [quote, setQuote] = useState<Props["quote"]>();
+  const [quote, setQuote] = useState<Props["quote"]>("");
 
   const sendFinalResults = (
     game: "key-smash" | "typing-game",
