@@ -10,24 +10,32 @@ import { v4 as uuidv4 } from "uuid";
 // Component ---------------------------------------------------------------------
 const TypingGame = () => {
   const { quote } = useData();
-  const [letters, setQuote] = useState<string[] | undefined>(quote);
-  const [input, setInput] = useState<string>();
-  const [length, setLength] = useState<number>(-1);
+  const [letters] = useState<string[] | undefined>(quote?.join("").split(""));
+  const [input, setInput] = useState<string>("");
 
-  const keyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    setInput(e.key);
-    setLength(length + 1);
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
   };
-
-  console.log(letters);
 
   return (
     <Wrapper>
       <TypingWrapper>
-        <TypeInput onKeyPress={keyPressHandler} />
-        {/* {quote?.join(" ")?.map((letter) => {
-          return console.log(letter);
-        })} */}
+        <TypeInput autoFocus onChange={changeHandler} />
+        <Quote>
+          {letters?.map((letter, index) => {
+            let color;
+
+            if (index < input.length) {
+              color = letter === input[index] ? "correct" : "incorrect";
+            }
+
+            return (
+              <Letter key={uuidv4()} className={color}>
+                {letter}
+              </Letter>
+            );
+          })}
+        </Quote>
       </TypingWrapper>
     </Wrapper>
   );
@@ -50,7 +58,7 @@ const TypingWrapper = styled.div`
   position: relative;
 `;
 
-const Quote = styled.p``;
+const Quote = styled.div``;
 
 const TypeInput = styled.input`
   position: absolute;
@@ -62,19 +70,14 @@ const TypeInput = styled.input`
   height: 100%;
 `;
 
-const Word = styled.div`
-  margin: 4px;
-  display: inline-block;
-`;
-
 const Letter = styled.span`
   color: ${colors.text};
 
   &.correct {
-    color: green;
+    color: ${colors.secondary};
   }
 
   &.incorrect {
-    color: red;
+    color: ${colors.fail};
   }
 `;
