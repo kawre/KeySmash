@@ -11,20 +11,99 @@ import { v4 as uuidv4 } from "uuid";
 const TypingGame = () => {
   const { quote } = useData();
   const quoteRef = useRef<HTMLDivElement>(null);
-  const [word, setWord] = useState<string>("");
-  const [input, setInput] = useState<string>("");
+  const [letters] = useState<string[]>(quote.split(""));
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setInput(e.currentTarget.value.trim());
+  const [input, setInput] = useState<string>("");
+  const [cordinates, setCordinates] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+
+  const changeHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    const key = keyValidation(e.key);
+    if (key === "Escape") return;
+    if (key === "Backspace") return setInput(input.slice(0, -1).trim());
+    if (key === "Space") return;
+    setInput(input + key);
+  };
+
+  useEffect(() => {
+    const cord =
+      quoteRef.current!.children[input.length].getBoundingClientRect();
+
+    setCordinates({ x: cord.x, y: cord.y });
+  }, [input]);
+
+  const keyValidation = (key: string) => {
+    if (
+      [
+        "ContextMenu",
+        "Shift",
+        "Control",
+        "Meta",
+        "Alt",
+        "AltGraph",
+        "CapsLock",
+        "PageUp",
+        "PageDown",
+        "Home",
+        "ArrowUp",
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowDown",
+        "OS",
+        "Insert",
+        "Home",
+        "Undefined",
+        "Control",
+        "Fn",
+        "FnLock",
+        "Hyper",
+        "NumLock",
+        "ScrollLock",
+        "Symbol",
+        "SymbolLock",
+        "Super",
+        "Unidentified",
+        "Process",
+        "Delete",
+        "KanjiMode",
+        "Pause",
+        "PrintScreen",
+        "Clear",
+        "End",
+        undefined,
+      ].includes(key)
+    ) {
+      return "";
+    }
+    return key;
   };
 
   return (
     <Wrapper>
       <TypingWrapper>
-        <TypeInput autoFocus value={input} onChange={changeHandler} />
+        <TypeInput
+          tabIndex={0}
+          autoFocus
+          autoComplete="off"
+          onKeyDown={changeHandler}
+        />
+        <Caret style={{ left: cordinates.x, top: cordinates.y }} />
         <Quote ref={quoteRef}>
-          {quote.split("").map((letter, index) => {
-            return <Letter key={uuidv4()}>{letter}</Letter>;
+          {letters.map((character, index) => {
+            let state;
+            if (index < input.length) {
+              state = character === input[index] ? "correct" : "incorrect";
+              if (index === input.length - 1) {
+              }
+            }
+
+            return (
+              <Letter key={character + index} className={state}>
+                {character}
+              </Letter>
+            );
           })}
         </Quote>
       </TypingWrapper>
@@ -62,13 +141,23 @@ const TypeInput = styled.input`
 const Quote = styled.div``;
 
 const Letter = styled.span`
-  color: ${colors.text};
+  color: ${colors.text}80;
 
   &.correct {
-    color: ${colors.secondary} !important;
+    color: ${colors.text} !important;
   }
 
   &.incorrect {
     color: ${colors.fail};
   }
+`;
+
+const Caret = styled.div`
+  width: 2.5px;
+  top: 0;
+  left: 0;
+  height: 26px;
+  background: ${colors.secondary};
+  position: fixed;
+  transition: 150ms ease;
 `;
