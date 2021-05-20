@@ -22,16 +22,25 @@ const TypingGame = () => {
   const changeHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     const key = keyValidation(e.key);
     if (key === "Escape") return;
-    if (key === "Backspace") return setInput(input.slice(0, -1).trim());
-    if (key === "Space") return;
+    if (key === "Backspace") return setInput(input.slice(0, -1));
     setInput(input + key);
+    // if (key === " ") setInput("");
   };
 
+  // Caret cordinates handler
   useEffect(() => {
-    const cord =
-      quoteRef.current!.children[input.length].getBoundingClientRect();
+    const caretHandler = () => {
+      const cord =
+        quoteRef.current!.children[input.length].getBoundingClientRect();
 
-    setCordinates({ x: cord.x, y: cord.y });
+      setCordinates({ x: cord.x, y: cord.y });
+    };
+    caretHandler();
+
+    window.addEventListener("resize", caretHandler);
+    return () => {
+      window.removeEventListener("resize", caretHandler);
+    };
   }, [input]);
 
   const keyValidation = (key: string) => {
@@ -95,8 +104,6 @@ const TypingGame = () => {
             let state;
             if (index < input.length) {
               state = character === input[index] ? "correct" : "incorrect";
-              if (index === input.length - 1) {
-              }
             }
 
             return (
@@ -157,7 +164,7 @@ const Caret = styled.div`
   top: 0;
   left: 0;
   height: 26px;
-  background: ${colors.secondary};
+  background: ${colors.primary};
   position: fixed;
   transition: 150ms ease;
 `;
