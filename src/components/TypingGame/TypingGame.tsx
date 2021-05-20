@@ -14,6 +14,7 @@ const TypingGame = () => {
   const [letters] = useState<string[]>(quote.split(" "));
   const [currentWord, setCurrentWord] = useState<number>(0);
   const [input, setInput] = useState<string>("");
+  const [keyState, setKeyState] = useState<string>("");
   const [cordinates, setCordinates] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -119,7 +120,7 @@ const TypingGame = () => {
 
                   if (index === currentWord) {
                     if (letterIdx < input.length) {
-                      state =
+                      let state =
                         letter === input[letterIdx] ? "correct" : "incorrect";
                     }
                   }
