@@ -11,12 +11,11 @@ import { v4 as uuidv4 } from "uuid";
 const TypingGame = () => {
   const { quote } = useData();
   const quoteRef = useRef<HTMLDivElement>(null);
-  const [words] = useState<string[]>(quote.split(" "));
+  const [word, setWord] = useState<string>("");
   const [input, setInput] = useState<string>("");
-  const [currentWord, setCurrentWord] = useState<number>(0);
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInput(e.currentTarget.value.trim());
   };
 
   return (
@@ -24,38 +23,8 @@ const TypingGame = () => {
       <TypingWrapper>
         <TypeInput autoFocus value={input} onChange={changeHandler} />
         <Quote ref={quoteRef}>
-          {words.map((word, wordIdx) => {
-            let active;
-
-            if (wordIdx === currentWord) active = "active";
-            return (
-              <Word key={uuidv4()} className={active}>
-                {word.split("").map((letter, letterIdx) => {
-                  let color;
-                  if (wordIdx === currentWord) {
-                    if (letterIdx < input.length) {
-                      color =
-                        letter === input[letterIdx]
-                          ? colors.secondary
-                          : colors.fail;
-                    }
-                    if (
-                      words[wordIdx].split("").length < input.length &&
-                      input.endsWith(" ")
-                    ) {
-                      setCurrentWord(currentWord + 1);
-                      setInput("");
-                    }
-                  }
-
-                  return (
-                    <Letter style={{ color: color }} key={uuidv4()}>
-                      {letter}
-                    </Letter>
-                  );
-                })}
-              </Word>
-            );
+          {quote.split("").map((letter, index) => {
+            return <Letter key={uuidv4()}>{letter}</Letter>;
           })}
         </Quote>
       </TypingWrapper>
@@ -91,11 +60,6 @@ const TypeInput = styled.input`
 `;
 
 const Quote = styled.div``;
-
-const Word = styled.div`
-  display: inline-block;
-  margin: 4px;
-`;
 
 const Letter = styled.span`
   color: ${colors.text};
