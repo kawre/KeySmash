@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 const TypingGame = () => {
   const { quote } = useData();
   const quoteRef = useRef<HTMLDivElement>(null);
-  const [letters] = useState<string[]>(quote.split(" "));
+  const [letters] = useState<string[]>(quote.split(""));
   const [currentWord, setCurrentWord] = useState<number>(0);
   const [input, setInput] = useState<string>("");
   const [keyState, setKeyState] = useState<string>("");
@@ -19,36 +19,30 @@ const TypingGame = () => {
     x: 0,
     y: 0,
   });
-  console.log(input);
 
   const changeHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     const key = keyValidation(e.key);
     if (key === "Escape") return;
     if (key === "Backspace") return setInput(input.slice(0, -1));
-    if (key === " ") {
-      setCurrentWord(currentWord + 1);
-      return setInput("");
-    }
     setInput(input + key);
+    // if (key === " ") setInput("");
   };
 
   // Caret cordinates handler
-  // useEffect(() => {
-  //   const caretHandler = () => {
-  //     const cord =
-  //       quoteRef.current!.children[currentWord].children[
-  //         input.length
-  //       ].getBoundingClientRect();
+  useEffect(() => {
+    const caretHandler = () => {
+      const cord =
+        quoteRef.current!.children[input.length].getBoundingClientRect();
 
-  //     setCordinates({ x: cord.x, y: cord.y });
-  //   };
-  //   caretHandler();
+      setCordinates({ x: cord.x, y: cord.y });
+    };
+    caretHandler();
 
-  //   window.addEventListener("resize", caretHandler);
-  //   return () => {
-  //     window.removeEventListener("resize", caretHandler);
-  //   };
-  // }, [input]);
+    window.addEventListener("resize", caretHandler);
+    return () => {
+      window.removeEventListener("resize", caretHandler);
+    };
+  }, [input]);
 
   const keyValidation = (key: string) => {
     if (
@@ -109,7 +103,9 @@ const TypingGame = () => {
         <Quote ref={quoteRef}>
           {letters.map((word, index) => {
             let state;
-            if (index === currentWord) state = "active";
+            if (index < input.length) {
+              state = word === input[index] ? "correct" : "incorrect";
+            }
 
             return (
               <Word key={word + index} className={state}>
@@ -181,11 +177,6 @@ const Letter = styled.span`
   }
 `;
 
-const Word = styled.div`
-  display: inline-block;
-  margin: 4px;
-`;
-
 const Caret = styled.div`
   width: 2.5px;
   top: 0;
@@ -195,3 +186,5 @@ const Caret = styled.div`
   position: fixed;
   transition: 150ms ease;
 `;
+
+const Word = styled.div``;
