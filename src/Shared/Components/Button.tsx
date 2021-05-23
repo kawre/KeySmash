@@ -94,7 +94,7 @@ const AccoutButton = styled.button`
     color: ${colors.secondary};
 
     &:hover {
-      background: ${colors.secondary};
+      background: ${colors.primary};
       color: ${colors.background};
     }
   }

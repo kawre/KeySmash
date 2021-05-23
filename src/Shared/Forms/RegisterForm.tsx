@@ -11,7 +11,7 @@ import TextField from "./TextField";
 // interface Props {}
 
 // Component ---------------------------------------------------------------------
-export const RegisterForm = () => {
+const RegisterForm = () => {
   const { user, signUp } = useAuth();
 
   if (user !== null) return <Redirect to="/" />;
@@ -67,6 +67,8 @@ export const RegisterForm = () => {
     </Wrapper>
   );
 };
+
+export default RegisterForm;
 
 // Styled ------------------------------------------------------------------------
 

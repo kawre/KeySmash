@@ -10,7 +10,6 @@ import TextField from "./TextField";
 // Component ---------------------------------------------------------------------
 const LoginForm = () => {
   const { user, logIn } = useAuth();
-  console.log(user);
 
   if (user !== null) return <Redirect to="/" />;
   return (
