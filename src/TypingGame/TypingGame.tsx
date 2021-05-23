@@ -64,10 +64,14 @@ const TypingGame: React.FC<Props> = () => {
 
   useEffect(() => {
     const ref = wordsRef.current;
+    // const letterWidth = ref?.offsetWidth;
 
     const caretHandler = () => {
       if (ref?.children[current].children[input.length] === undefined) {
-        return setCaret({ ...caret, left: caret.left + 12 });
+        return setCaret({
+          ...caret,
+          left: caret.left + 14,
+        });
       }
       const position =
         ref?.children[current].children[input.length].getBoundingClientRect();
@@ -97,7 +101,14 @@ const TypingGame: React.FC<Props> = () => {
   }, [caret]);
 
   useEffect(() => {
-    console.log(Math.fround(caret.left));
+    const ref = caretRef.current;
+    ref?.animate(
+      { left: `${caret.left}px` },
+      {
+        duration: 100,
+        fill: "forwards",
+      }
+    );
   }, [caret]);
 
   const keyValidation = (key: string) => {
@@ -162,7 +173,7 @@ const TypingGame: React.FC<Props> = () => {
           <Caret
             className="caret-flash-animation"
             ref={caretRef}
-            style={{ left: caret.left, top: caret.top }}
+            style={{ top: caret.top }}
           />
         )}
         {!focus && <FocusAlert>Click or press any key to focus</FocusAlert>}
@@ -215,15 +226,24 @@ const Input = styled.input`
 
 const Caret = styled.div`
   position: fixed;
-  transition: 100ms ease-in-out;
-  width: 2.5px;
+  /* transition: 100ms ease-in-out; */
+  width: 3px;
   background: ${colors.secondary};
-  height: 26px;
+  height: 32px;
   border-radius: 999px;
 
   &.caret-flash-animation {
     animation: caretFlash 1000ms infinite;
   }
+
+  /* @keyframes smoothCaret {
+    0% {
+      left: 300px;
+    }
+    100% {
+      left: 400px;
+    }
+  } */
 
   @keyframes caretFlash {
     0% {
@@ -254,7 +274,7 @@ const Letter = styled.span`
   user-select: none;
   color: ${colors.text};
   opacity: 0.5;
-  font-size: 20px;
+  font-size: 24px;
   transition: 40ms;
 
   &.correct {
