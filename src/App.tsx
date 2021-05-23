@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import styled from "styled-components";
+import Header from "./Shared/Components/Header";
+import { colors } from "./Shared/Global/Colors";
+import TypingGame from "./TypingGame/TypingGame";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Wrapper>
+      <Header />
+      <TypingGame />
+    </Wrapper>
   );
-}
+};
 
 export default App;
+
+const Wrapper = styled.div`
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: ${colors.body};
+  color: ${colors.text};
+`;
