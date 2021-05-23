@@ -1,5 +1,4 @@
 import { Field, Form, Formik } from "formik";
-import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";

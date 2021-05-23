@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 // Types -------------------------------------------------------------------------
 
@@ -7,7 +8,7 @@ interface Props {
   padding?: number;
   margin?: string;
   disabled?: boolean;
-  type: "icon" | "login" | "submit";
+  type: "icon" | "login" | "signup" | "submit";
 }
 
 // Component ---------------------------------------------------------------------
@@ -22,9 +23,23 @@ const Button: React.FC<Props> = ({
   if (type === "icon") {
     return <IconButton>{children}</IconButton>;
   }
+
   if (type === "login") {
-    return <LoginButton>Log In</LoginButton>;
+    return (
+      <Link to="/login">
+        <LoginButton>Log In</LoginButton>;
+      </Link>
+    );
   }
+
+  if (type === "signup") {
+    return (
+      <Link to="/signup">
+        <LoginButton>Sign Up</LoginButton>;
+      </Link>
+    );
+  }
+
   if (type === "submit") {
     return <SubmitButton disabled={disabled}>Submit</SubmitButton>;
   }

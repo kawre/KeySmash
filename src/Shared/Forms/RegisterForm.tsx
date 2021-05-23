@@ -1,9 +1,9 @@
 import { Field, Form, Formik } from "formik";
 import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
-import { useAuth } from "../contexts/AuthContext";
-import { colors } from "../Global";
-import SubmitButton from "./SubmitButton";
+import { useAuth } from "../../Contexts/AuthContext";
+import Button from "../Components/Button";
+import { colors } from "../Global/Colors";
 import TextField from "./TextField";
 
 // Types -------------------------------------------------------------------------
@@ -12,7 +12,7 @@ import TextField from "./TextField";
 
 // Component ---------------------------------------------------------------------
 export const RegisterForm = () => {
-  const { user, signup } = useAuth();
+  const { user, signUp } = useAuth();
   console.log(user);
 
   if (user !== null) return <Redirect to="/" />;
@@ -25,7 +25,7 @@ export const RegisterForm = () => {
             setSubmitting(true);
 
             try {
-              await signup(data.email, data.password, data.username);
+              await signUp(data.email, data.password, data.username);
             } catch {
               console.log("error");
             }
@@ -36,7 +36,7 @@ export const RegisterForm = () => {
           createUser();
         }}
       >
-        {({ values, isSubmitting }) => (
+        {({ isSubmitting }) => (
           <Form>
             <Field
               placeholder="Username"
@@ -56,7 +56,7 @@ export const RegisterForm = () => {
               type="email"
               as={TextField}
             />
-            <SubmitButton disabled={isSubmitting}>Sign Up</SubmitButton>
+            <Button type="submit" disabled={isSubmitting} />
             <small>
               Already have an account? <Link to="/login">Log In</Link>
             </small>
