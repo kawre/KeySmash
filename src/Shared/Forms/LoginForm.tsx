@@ -10,6 +10,7 @@ import TextField from "./TextField";
 // Component ---------------------------------------------------------------------
 const LoginForm = () => {
   const { user, logIn } = useAuth();
+  console.log(user);
 
   if (user !== null) return <Redirect to="/" />;
   return (
@@ -23,7 +24,7 @@ const LoginForm = () => {
             try {
               await logIn(data.email, data.password);
             } catch {
-              console.log("error something went wrong");
+              console.log("Invalid data");
             }
 
             setSubmitting(false);
@@ -46,7 +47,9 @@ const LoginForm = () => {
               type="password"
               as={TextField}
             />
-            <Button disabled={isSubmitting} type="submit" />
+            <Button disabled={isSubmitting} type="submit">
+              Log In
+            </Button>
             <small>
               Don't have an account? <Link to="/register">Sign Up</Link>
             </small>

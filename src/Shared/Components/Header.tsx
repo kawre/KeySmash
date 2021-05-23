@@ -1,5 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useAuth } from "../../Contexts/AuthContext";
 import { colors } from "../Global/Colors";
 import Button from "./Button";
 // Types -------------------------------------------------------------------------
@@ -8,11 +10,23 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const Header: React.FC<Props> = () => {
+  const { user } = useAuth();
   return (
     <Wrapper>
-      <Logo>soon...</Logo>
+      <Link to="/">
+        <Logo>soon...</Logo>
+      </Link>
       <Menu>
-        <Button type="icon">siema</Button>
+        {user ? (
+          <>
+            <Button type="logout" />
+          </>
+        ) : (
+          <>
+            <Button reversed={true} type="login" />
+            <Button type="signup" />
+          </>
+        )}
       </Menu>
     </Wrapper>
   );
@@ -24,7 +38,11 @@ export default Header;
 
 const Wrapper = styled.div`
   width: 1000px;
-  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%);
+
   margin-top: 60px;
   display: flex;
   justify-content: space-between;
@@ -38,6 +56,7 @@ const Logo = styled.h1`
 `;
 
 const Menu = styled.div`
-  display: flex;
-  align-items: center;
+  display: grid;
+  column-gap: 15px;
+  grid-auto-flow: column;
 `;

@@ -13,7 +13,6 @@ import TextField from "./TextField";
 // Component ---------------------------------------------------------------------
 export const RegisterForm = () => {
   const { user, signUp } = useAuth();
-  console.log(user);
 
   if (user !== null) return <Redirect to="/" />;
   return (
@@ -56,7 +55,9 @@ export const RegisterForm = () => {
               type="email"
               as={TextField}
             />
-            <Button type="submit" disabled={isSubmitting} />
+            <Button type="submit" disabled={isSubmitting}>
+              Sign In
+            </Button>
             <small>
               Already have an account? <Link to="/login">Log In</Link>
             </small>

@@ -8,7 +8,7 @@ interface Props {}
 const TypingGame: React.FC<Props> = () => {
   return (
     <Wrapper>
-      <h1>typing game</h1>
+      <></>
     </Wrapper>
   );
 };

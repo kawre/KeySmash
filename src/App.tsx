@@ -1,15 +1,24 @@
-import React from "react";
+import { Route, Switch } from "react-router";
 import styled from "styled-components";
+import { AuthProvider } from "./Contexts/AuthContext";
 import Header from "./Shared/Components/Header";
+import LoginForm from "./Shared/Forms/LoginForm";
+import { RegisterForm } from "./Shared/Forms/RegisterForm";
 import { colors } from "./Shared/Global/Colors";
 import TypingGame from "./TypingGame/TypingGame";
 
 const App = () => {
   return (
-    <Wrapper>
-      <Header />
-      <TypingGame />
-    </Wrapper>
+    <AuthProvider>
+      <Wrapper>
+        <Header />
+        <TypingGame />
+        <Switch>
+          <Route exact path="/login" component={LoginForm} />
+          <Route exact path="/register" component={RegisterForm} />
+        </Switch>
+      </Wrapper>
+    </AuthProvider>
   );
 };
 

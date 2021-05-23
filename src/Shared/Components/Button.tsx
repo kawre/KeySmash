@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useAuth } from "../../Contexts/AuthContext";
+import { colors } from "../Global/Colors";
+import Loader from "react-loader-spinner";
 // Types -------------------------------------------------------------------------
 
 interface Props {
@@ -8,18 +11,14 @@ interface Props {
   padding?: number;
   margin?: string;
   disabled?: boolean;
-  type: "icon" | "login" | "signup" | "submit";
+  type: "logout" | "icon" | "login" | "signup" | "submit";
+  reversed?: boolean;
 }
 
 // Component ---------------------------------------------------------------------
-const Button: React.FC<Props> = ({
-  disabled,
-  type,
-  size,
-  padding,
-  children,
-  margin,
-}) => {
+const Button: React.FC<Props> = ({ reversed, disabled, type, children }) => {
+  const { logOut } = useAuth();
+
   if (type === "icon") {
     return <IconButton>{children}</IconButton>;
   }
@@ -27,21 +26,37 @@ const Button: React.FC<Props> = ({
   if (type === "login") {
     return (
       <Link to="/login">
-        <LoginButton>Log In</LoginButton>;
+        <AccoutButton className={reversed ? "reversed" : ""}>
+          Log In
+        </AccoutButton>
       </Link>
     );
   }
 
   if (type === "signup") {
     return (
-      <Link to="/signup">
-        <LoginButton>Sign Up</LoginButton>;
+      <Link to="/register">
+        <AccoutButton className={reversed ? "reversed" : ""}>
+          Sign Up
+        </AccoutButton>
       </Link>
     );
   }
 
+  if (type === "logout") {
+    return <AccoutButton onClick={logOut}>Sign Out</AccoutButton>;
+  }
+
   if (type === "submit") {
-    return <SubmitButton disabled={disabled}>Submit</SubmitButton>;
+    return (
+      <SubmitButton disabled={disabled}>
+        {disabled ? (
+          <Loader type="ThreeDots" color={colors.background} height={8} />
+        ) : (
+          children
+        )}
+      </SubmitButton>
+    );
   }
 
   return null;
@@ -63,6 +78,34 @@ const IconButton = styled.div`
   }
 `;
 
-const LoginButton = styled.button``;
+const AccoutButton = styled.button`
+  height: 35px;
+  padding: 0 20px;
+  background: ${colors.secondary};
+  border-radius: 4px;
 
-const SubmitButton = styled.button``;
+  &:hover {
+    background: ${colors.background};
+    color: ${colors.secondary};
+  }
+
+  &.reversed {
+    background: ${colors.background};
+    color: ${colors.secondary};
+
+    &:hover {
+      background: ${colors.secondary};
+      color: ${colors.background};
+    }
+  }
+`;
+
+const SubmitButton = styled.button`
+  height: 35px;
+  width: 100%;
+  background: ${colors.secondary};
+  color: ${colors.body};
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+`;
