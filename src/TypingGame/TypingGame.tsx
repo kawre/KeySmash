@@ -10,9 +10,9 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const TypingGame: React.FC<Props> = () => {
+  const { quote } = useData();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { quote } = useData();
   const caretRef = useRef<HTMLDivElement>(null);
   const [words] = useState<string[]>(quote.split(" "));
   const [wordLength, setWordLength] = useState<number>(0);
@@ -21,7 +21,7 @@ const TypingGame: React.FC<Props> = () => {
   const [current, setCurrent] = useState<number>(0);
   const [currentKey, setKey] = useState<string>("");
   const [input, setInput] = useState<string>("");
-  const [oldInput, setOldInput] = useState<string>("");
+  const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [caret, setCaret] = useState<{ left: number; top: number }>({
     left: 0,
@@ -46,7 +46,7 @@ const TypingGame: React.FC<Props> = () => {
         }
       });
 
-      setOldInput(input);
+      setInputHistory([...inputHistory, input]);
       setCurrent(current + 1);
       setInput("");
       return;
@@ -56,7 +56,7 @@ const TypingGame: React.FC<Props> = () => {
       if (input.length === 0 && canGoBack) {
         wordsRef.current?.children[current - 1].classList.remove("error");
         setCurrent(current - 1);
-        setInput(oldInput);
+        setInput(inputHistory[current - 1]);
       }
       if (input.length === 0) return;
 
@@ -73,7 +73,6 @@ const TypingGame: React.FC<Props> = () => {
       }
     }
 
-    // setKey(key);
     setInput(input + key);
   };
 
@@ -88,6 +87,8 @@ const TypingGame: React.FC<Props> = () => {
       ref?.children[wordIdx].classList.add("active");
 
       if (letterIdx < input.length) {
+        console.log(input);
+        console.log("idx:", letterIdx, "length:", input.length);
         if (letter === input[letterIdx]) {
           ref?.children[wordIdx].children[letterIdx].classList.add("correct");
         } else {
@@ -128,15 +129,14 @@ const TypingGame: React.FC<Props> = () => {
     caretHandler();
 
     window.addEventListener("resize", caretHandler);
-    return () => {
-      window.removeEventListener("resize", caretHandler);
-    };
+    return () => window.removeEventListener("resize", caretHandler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input]);
+  }, [input, current]);
 
   // Get word length
   useEffect(() => {
-    setWordLength(wordsRef.current!.children[current].childNodes.length);
+    setWordLength(words[current].length);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
   // set can go back
@@ -165,6 +165,16 @@ const TypingGame: React.FC<Props> = () => {
       clearTimeout(timeout);
     };
   }, [caret]);
+
+  // Listen for key press to focus
+  useEffect(() => {
+    const keyHandler = () => {
+      inputRef.current?.focus();
+    };
+
+    document.addEventListener("keypress", keyHandler);
+    return () => document.removeEventListener("keypress", keyHandler);
+  }, []);
 
   // Caret animation
   useEffect(() => {
@@ -225,10 +235,14 @@ const TypingGame: React.FC<Props> = () => {
     return key;
   };
 
-  console.log(focus);
   return (
     <Wrapper>
-      <Game>
+      <Game
+        onClick={() => {
+          if (focus) return;
+          inputRef.current?.focus();
+        }}
+      >
         <Input
           tabIndex={0}
           autoFocus
@@ -239,7 +253,7 @@ const TypingGame: React.FC<Props> = () => {
           ref={inputRef}
         />
         <Caret
-          className={focus ? "" : "hidden"}
+          className={`caret-flash-animation ${focus ? "" : "hidden"}`}
           ref={caretRef}
           style={{ top: caret.top }}
         />
@@ -247,11 +261,7 @@ const TypingGame: React.FC<Props> = () => {
         {!focus && <FocusAlert>Click or press any key to focus</FocusAlert>}
         <TypingStats isPlaying={isPlaying} />
 
-        <Words
-          onMouseDown={() => inputRef.current?.focus()}
-          className={focus ? "" : "blur"}
-          ref={wordsRef}
-        >
+        <Words className={focus ? "" : "blur"} ref={wordsRef}>
           {words.map((word, index) => {
             return (
               <Word key={word + index}>

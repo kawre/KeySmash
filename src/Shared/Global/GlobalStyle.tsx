@@ -6,6 +6,7 @@ export const GlobalStyle = createGlobalStyle`
    padding: 0;
    box-sizing: border-box;
    font-family: 'Fira Code', monospace;
+   font-variant-ligatures: none;
 }
 
 a {

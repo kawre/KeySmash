@@ -44,7 +44,11 @@ const Button: React.FC<Props> = ({ reversed, disabled, type, children }) => {
   }
 
   if (type === "logout") {
-    return <AccoutButton onClick={logOut}>Sign Out</AccoutButton>;
+    return (
+      <AccoutButton className={reversed ? "reversed" : ""} onClick={logOut}>
+        Sign Out
+      </AccoutButton>
+    );
   }
 
   if (type === "submit") {

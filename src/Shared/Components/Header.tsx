@@ -19,7 +19,7 @@ const Header: React.FC<Props> = () => {
       <Menu>
         {user ? (
           <>
-            <Button type="logout" />
+            <Button reversed={true} type="logout" />
           </>
         ) : (
           <>
