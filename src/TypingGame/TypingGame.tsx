@@ -2,12 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useData } from "../Contexts/DataContext";
 import { colors } from "../Shared/Global/Colors";
+import RepeatTest from "./RepeatTest";
+import TypingStats from "./TypingStats";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
 const TypingGame: React.FC<Props> = () => {
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { quote } = useData();
   const caretRef = useRef<HTMLDivElement>(null);
   const [words] = useState<string[]>(quote.split(" "));
@@ -18,27 +22,28 @@ const TypingGame: React.FC<Props> = () => {
   const [currentKey, setKey] = useState<string>("");
   const [input, setInput] = useState<string>("");
   const [oldInput, setOldInput] = useState<string>("");
+  const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [caret, setCaret] = useState<{ left: number; top: number }>({
     left: 0,
     top: 0,
   });
 
-  // Get word length
-  useEffect(() => {
-    setWordLength(wordsRef.current!.children[current].childNodes.length);
-  }, [current]);
-
   // key down handler
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     setKey(e.key);
+    setIsPlaying(true);
     const key = keyValidation(e.key);
 
     if (key === " ") {
-      // let wordsLen = current - 1;
-      // if (wordsLen === -1) wordsLen = 0;
+      wordsRef.current?.children[current].childNodes.forEach((i, index) => {
+        const doesContain =
+          wordsRef.current?.children[current].children[
+            index
+          ].classList.contains("correct");
 
-      wordsRef.current?.children[current].childNodes.forEach((letter) => {
-        // console.log(letter.classList.contains("siema"));
+        if (!doesContain) {
+          wordsRef.current?.children[current].classList.add("error");
+        }
       });
 
       setOldInput(input);
@@ -48,6 +53,11 @@ const TypingGame: React.FC<Props> = () => {
     }
 
     if (key === "Backspace") {
+      if (input.length === 0 && canGoBack) {
+        wordsRef.current?.children[current - 1].classList.remove("error");
+        setCurrent(current - 1);
+        setInput(oldInput);
+      }
       if (input.length === 0) return;
 
       if (wordLength < input.length) {
@@ -124,6 +134,24 @@ const TypingGame: React.FC<Props> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input]);
 
+  // Get word length
+  useEffect(() => {
+    setWordLength(wordsRef.current!.children[current].childNodes.length);
+  }, [current]);
+
+  // set can go back
+  useEffect(() => {
+    if (current === 0) return;
+    const oldWord =
+      wordsRef.current?.children[current - 1].classList.contains("error");
+
+    if (oldWord) {
+      setCanGoBack(true);
+      return;
+    }
+    setCanGoBack(false);
+  }, [current]);
+
   // Caret flashing animation
   useEffect(() => {
     if (caret.left === 0) return;
@@ -188,7 +216,7 @@ const TypingGame: React.FC<Props> = () => {
         "PrintScreen",
         "Clear",
         "End",
-        // "Backspace",
+        "Tab",
         undefined,
       ].includes(key)
     ) {
@@ -197,6 +225,7 @@ const TypingGame: React.FC<Props> = () => {
     return key;
   };
 
+  console.log(focus);
   return (
     <Wrapper>
       <Game>
@@ -207,6 +236,7 @@ const TypingGame: React.FC<Props> = () => {
           onFocus={() => setFocus(true)}
           onBlur={() => setTimeout(() => setFocus(false), 300)}
           onKeyDown={inputHandler}
+          ref={inputRef}
         />
         <Caret
           className={focus ? "" : "hidden"}
@@ -215,7 +245,13 @@ const TypingGame: React.FC<Props> = () => {
         />
 
         {!focus && <FocusAlert>Click or press any key to focus</FocusAlert>}
-        <Words className={focus ? "" : "blur"} ref={wordsRef}>
+        <TypingStats isPlaying={isPlaying} />
+
+        <Words
+          onMouseDown={() => inputRef.current?.focus()}
+          className={focus ? "" : "blur"}
+          ref={wordsRef}
+        >
           {words.map((word, index) => {
             return (
               <Word key={word + index}>
@@ -228,6 +264,7 @@ const TypingGame: React.FC<Props> = () => {
             );
           })}
         </Words>
+        <RepeatTest />
       </Game>
     </Wrapper>
   );
@@ -250,21 +287,16 @@ const Game = styled.div`
 `;
 
 const Input = styled.input`
-  cursor: default;
-  opacity: 0;
-  color: transparent;
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  height: 0;
+  padding: 0;
+  margin: 0;
   border: none;
   outline: none;
-  background: none;
-  z-index: 99;
+  display: block;
 `;
 
 const Caret = styled.div`
   position: fixed;
-  /* transition: 100ms ease-in-out; */
   width: 3px;
   background: ${colors.secondary};
   height: 32px;
@@ -273,15 +305,6 @@ const Caret = styled.div`
   &.caret-flash-animation {
     animation: caretFlash 1000ms infinite;
   }
-
-  /* @keyframes smoothCaret {
-    0% {
-      left: 300px;
-    }
-    100% {
-      left: 400px;
-    }
-  } */
 
   @keyframes caretFlash {
     0% {
@@ -307,16 +330,23 @@ const Word = styled.div`
   margin: 4px;
   display: inline-block;
 
+  &.error {
+    span {
+      text-decoration: underline;
+      text-decoration-color: ${colors.fail};
+    }
+  }
+
   span {
     user-select: none;
-    color: ${colors.text};
-    opacity: 0.5;
+    color: ${colors.text}80;
+    /* opacity: 0.5; */
     font-size: 24px;
     transition: 40ms;
 
     &.extra {
       /* opacity: 1; */
-      background: ${colors.background};
+      color: ${colors.fail};
       text-decoration: underline;
     }
   }
@@ -324,18 +354,16 @@ const Word = styled.div`
 
 const Letter = styled.span`
   user-select: none;
-  color: ${colors.text};
-  opacity: 0.5;
+  color: ${colors.text}80;
+  /* opacity: 0.5; */
   font-size: 24px;
   transition: 40ms;
 
   &.correct {
     color: ${colors.secondary};
-    opacity: 1;
   }
   &.incorrect {
     color: ${colors.fail};
-    opacity: 1;
     text-decoration: underline;
   }
 `;
@@ -343,6 +371,7 @@ const Letter = styled.span`
 const FocusAlert = styled.div`
   width: 100%;
   height: 100%;
+  pointer-events: none;
   display: grid;
   place-items: center;
   position: absolute;

@@ -43,7 +43,7 @@ const Wrapper = styled.div`
   left: 50%;
   transform: translate(-50%);
 
-  margin-top: 60px;
+  margin-top: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
