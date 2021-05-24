@@ -11,31 +11,58 @@ const TypingGame: React.FC<Props> = () => {
   const { quote } = useData();
   const caretRef = useRef<HTMLDivElement>(null);
   const [words] = useState<string[]>(quote.split(" "));
+  const [wordLength, setWordLength] = useState<number>(0);
   const [focus, setFocus] = useState<boolean>(true);
   const wordsRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState<number>(0);
-  // const [key, setKey] = useState<string>("");
+  const [currentKey, setKey] = useState<string>("");
   const [input, setInput] = useState<string>("");
+  const [oldInput, setOldInput] = useState<string>("");
   const [caret, setCaret] = useState<{ left: number; top: number }>({
     left: 0,
     top: 0,
   });
 
+  // Get word length
+  useEffect(() => {
+    setWordLength(wordsRef.current!.children[current].childNodes.length);
+  }, [current]);
+
+  // key down handler
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    setKey(e.key);
     const key = keyValidation(e.key);
-    if (key === "Backspace") {
-      setInput(input.slice(0, -1));
-      if (input.length === 0) return;
-      wordsRef.current?.children[current].children[
-        input.length - 1
-      ].classList.remove("correct", "incorrect");
-      return;
-    }
+
     if (key === " ") {
+      // let wordsLen = current - 1;
+      // if (wordsLen === -1) wordsLen = 0;
+
+      wordsRef.current?.children[current].childNodes.forEach((letter) => {
+        // console.log(letter.classList.contains("siema"));
+      });
+
+      setOldInput(input);
       setCurrent(current + 1);
       setInput("");
       return;
     }
+
+    if (key === "Backspace") {
+      if (input.length === 0) return;
+
+      if (wordLength < input.length) {
+        wordsRef.current?.children[current].children[input.length - 1].remove();
+        setInput(input.slice(0, -1));
+        return;
+      } else {
+        setInput(input.slice(0, -1));
+        wordsRef.current?.children[current].children[
+          input.length - 1
+        ].classList.remove("correct", "incorrect");
+        return;
+      }
+    }
+
     // setKey(key);
     setInput(input + key);
   };
@@ -62,31 +89,42 @@ const TypingGame: React.FC<Props> = () => {
     }
   };
 
+  // Caret position
   useEffect(() => {
     const ref = wordsRef.current;
-    // const letterWidth = ref?.offsetWidth;
+    let inputLen = input.length - 1;
+    if (inputLen === -1) inputLen = 0;
+
+    // append a letter if needed
+    if (wordLength < input.length) {
+      if (currentKey !== "Backspace") {
+        const letter = document.createElement("span");
+        letter.classList.add("extra");
+        letter.innerText = input.slice(-1);
+        wordsRef.current?.children[current].appendChild(letter);
+      }
+    }
 
     const caretHandler = () => {
-      if (ref?.children[current].children[input.length] === undefined) {
-        return setCaret({
-          ...caret,
-          left: caret.left + 14,
-        });
-      }
       const position =
-        ref?.children[current].children[input.length].getBoundingClientRect();
+        ref?.children[current].children[inputLen].getBoundingClientRect();
 
-      setCaret({ left: position!.left, top: position!.top });
+      if (input.length === 0) {
+        return setCaret({ left: position!.left, top: position!.top });
+      }
+
+      setCaret({ left: position!.right, top: position!.top });
     };
+    caretHandler();
 
     window.addEventListener("resize", caretHandler);
-    caretHandler();
     return () => {
       window.removeEventListener("resize", caretHandler);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input, current]);
+  }, [input]);
 
+  // Caret flashing animation
   useEffect(() => {
     if (caret.left === 0) return;
     const ref = caretRef.current;
@@ -100,6 +138,7 @@ const TypingGame: React.FC<Props> = () => {
     };
   }, [caret]);
 
+  // Caret animation
   useEffect(() => {
     const ref = caretRef.current;
     ref?.animate(
@@ -169,13 +208,12 @@ const TypingGame: React.FC<Props> = () => {
           onBlur={() => setTimeout(() => setFocus(false), 300)}
           onKeyDown={inputHandler}
         />
-        {focus && (
-          <Caret
-            className="caret-flash-animation"
-            ref={caretRef}
-            style={{ top: caret.top }}
-          />
-        )}
+        <Caret
+          className={focus ? "" : "hidden"}
+          ref={caretRef}
+          style={{ top: caret.top }}
+        />
+
         {!focus && <FocusAlert>Click or press any key to focus</FocusAlert>}
         <Words className={focus ? "" : "blur"} ref={wordsRef}>
           {words.map((word, index) => {
@@ -268,6 +306,20 @@ const Words = styled.div`
 const Word = styled.div`
   margin: 4px;
   display: inline-block;
+
+  span {
+    user-select: none;
+    color: ${colors.text};
+    opacity: 0.5;
+    font-size: 24px;
+    transition: 40ms;
+
+    &.extra {
+      /* opacity: 1; */
+      background: ${colors.background};
+      text-decoration: underline;
+    }
+  }
 `;
 
 const Letter = styled.span`
