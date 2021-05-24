@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { colors } from "./Colors";
 
 export const GlobalStyle = createGlobalStyle`
 * {
@@ -7,6 +8,10 @@ export const GlobalStyle = createGlobalStyle`
    box-sizing: border-box;
    font-family: 'Fira Code', monospace;
    font-variant-ligatures: none;
+}
+
+body {
+   background-color: ${colors.body};
 }
 
 a {

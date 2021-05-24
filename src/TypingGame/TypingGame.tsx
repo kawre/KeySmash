@@ -10,14 +10,17 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const TypingGame: React.FC<Props> = () => {
+  // context
   const { quote } = useData();
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  // ref
   const inputRef = useRef<HTMLInputElement>(null);
+  const wordsRef = useRef<HTMLDivElement>(null);
   const caretRef = useRef<HTMLDivElement>(null);
+  // state
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [words] = useState<string[]>(quote.split(" "));
   const [wordLength, setWordLength] = useState<number>(0);
   const [focus, setFocus] = useState<boolean>(true);
-  const wordsRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState<number>(0);
   const [currentKey, setKey] = useState<string>("");
   const [input, setInput] = useState<string>("");
@@ -28,50 +31,66 @@ const TypingGame: React.FC<Props> = () => {
     top: 0,
   });
 
-  // key down handler
-  const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    setKey(e.key);
-    setIsPlaying(true);
-    const key = keyValidation(e.key);
+  // Space handler
+  const spaceHandler = (): void => {
+    previousWord();
+    const ref = wordsRef.current;
+    let inputLen = input.length - 1;
+    if (inputLen === -1) inputLen = 0;
 
-    if (key === " ") {
-      wordsRef.current?.children[current].childNodes.forEach((i, index) => {
-        const doesContain =
-          wordsRef.current?.children[current].children[
-            index
-          ].classList.contains("correct");
+    console.log("space");
+    console.log("previous input:", inputHistory[current - 1]);
 
-        if (!doesContain) {
-          wordsRef.current?.children[current].classList.add("error");
-        }
-      });
+    setInputHistory([...inputHistory, input]);
+    setCurrent(current + 1);
+    setInput("");
+  };
 
-      setInputHistory([...inputHistory, input]);
-      setCurrent(current + 1);
-      setInput("");
+  const previousWord = () => {
+    wordsRef.current?.children[current].childNodes.forEach((i, index) => {
+      const doesContain =
+        wordsRef.current?.children[current].children[index].classList.contains(
+          "correct"
+        );
+      if (!doesContain) {
+        wordsRef.current?.children[current].classList.add("error");
+      }
+    });
+  };
+
+  // Backspace handler
+  const backspaceHandler = () => {
+    if (input.length === 0 && canGoBack) {
+      wordsRef.current?.children[current - 1].classList.remove("error");
+      setCurrent(current - 1);
+      setInput(inputHistory[current - 1]);
+    }
+    if (input.length === 0) return;
+
+    if (wordLength < input.length) {
+      wordsRef.current?.children[current].children[input.length - 1].remove();
+      setInput(input.slice(0, -1));
       return;
     }
+    setInput(input.slice(0, -1));
+    wordsRef.current?.children[current].children[
+      input.length - 1
+    ].classList.remove("incorrect");
+    wordsRef.current?.children[current].children[
+      input.length - 1
+    ].classList.remove("correct");
+  };
 
-    if (key === "Backspace") {
-      if (input.length === 0 && canGoBack) {
-        wordsRef.current?.children[current - 1].classList.remove("error");
-        setCurrent(current - 1);
-        setInput(inputHistory[current - 1]);
-      }
-      if (input.length === 0) return;
+  // key down handler
+  const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    console.log(e.key);
+    const key = keyValidation(e.key);
+    if (key === "") return;
+    setKey(e.key);
+    setIsPlaying(true);
 
-      if (wordLength < input.length) {
-        wordsRef.current?.children[current].children[input.length - 1].remove();
-        setInput(input.slice(0, -1));
-        return;
-      } else {
-        setInput(input.slice(0, -1));
-        wordsRef.current?.children[current].children[
-          input.length - 1
-        ].classList.remove("correct", "incorrect");
-        return;
-      }
-    }
+    if (key === " ") return spaceHandler();
+    if (key === "Backspace") return backspaceHandler();
 
     setInput(input + key);
   };
@@ -87,16 +106,23 @@ const TypingGame: React.FC<Props> = () => {
       ref?.children[wordIdx].classList.add("active");
 
       if (letterIdx < input.length) {
-        console.log(input);
-        console.log("idx:", letterIdx, "length:", input.length);
-        if (letter === input[letterIdx]) {
+        if (letter === input[letterIdx])
           ref?.children[wordIdx].children[letterIdx].classList.add("correct");
-        } else {
+        else
           ref?.children[wordIdx].children[letterIdx].classList.add("incorrect");
-        }
       }
     } else {
       ref?.children[wordIdx].classList.remove("active");
+    }
+  };
+
+  // append letter on text overflow
+  const appendLetter = () => {
+    if (currentKey !== "Backspace") {
+      const letter = document.createElement("span");
+      letter.classList.add("extra");
+      letter.innerText = input.slice(-1);
+      wordsRef.current?.children[current].appendChild(letter);
     }
   };
 
@@ -107,22 +133,20 @@ const TypingGame: React.FC<Props> = () => {
     if (inputLen === -1) inputLen = 0;
 
     // append a letter if needed
-    if (wordLength < input.length) {
-      if (currentKey !== "Backspace") {
-        const letter = document.createElement("span");
-        letter.classList.add("extra");
-        letter.innerText = input.slice(-1);
-        wordsRef.current?.children[current].appendChild(letter);
-      }
-    }
+    if (wordLength < input.length) appendLetter();
 
     const caretHandler = () => {
       const position =
         ref?.children[current].children[inputLen].getBoundingClientRect();
 
-      if (input.length === 0) {
+      if (input.length === 0)
         return setCaret({ left: position!.left, top: position!.top });
-      }
+
+      console.log("1 input:", input);
+      console.log(
+        "2 current letter:",
+        ref?.children[current].children[inputLen]
+      );
 
       setCaret({ left: position!.right, top: position!.top });
     };
@@ -136,6 +160,7 @@ const TypingGame: React.FC<Props> = () => {
   // Get word length
   useEffect(() => {
     setWordLength(words[current].length);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
@@ -145,10 +170,7 @@ const TypingGame: React.FC<Props> = () => {
     const oldWord =
       wordsRef.current?.children[current - 1].classList.contains("error");
 
-    if (oldWord) {
-      setCanGoBack(true);
-      return;
-    }
+    if (oldWord) return setCanGoBack(true);
     setCanGoBack(false);
   }, [current]);
 
@@ -161,8 +183,8 @@ const TypingGame: React.FC<Props> = () => {
     }, 1500);
 
     return () => {
-      ref?.classList.remove("caret-flash-animation");
       clearTimeout(timeout);
+      ref?.classList.remove("caret-flash-animation");
     };
   }, [caret]);
 
