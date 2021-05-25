@@ -6,6 +6,7 @@ import { colors } from "../Shared/Global/Colors";
 
 interface Props {
   letter: Element;
+  minusLetter: Element;
   focus: boolean;
   input: string;
   word: Element;
@@ -13,14 +14,19 @@ interface Props {
   currentKey: string;
   isPlaying: boolean;
   current: number;
+  inputHistory: string[];
+  overflowCurrent: number;
 }
 
 // Component ---------------------------------------------------------------------
 const Caret: React.FC<Props> = ({
   focus,
+  overflowCurrent,
+  inputHistory,
   letter,
   currentKey,
   input,
+  minusLetter,
   word,
   words,
   isPlaying,
@@ -31,6 +37,71 @@ const Caret: React.FC<Props> = ({
     left: 0,
     top: 0,
   });
+
+  // caret position
+  useEffect(() => {
+    if (input === inputHistory[overflowCurrent] && currentKey === "Backspace")
+      return caretLastLetter();
+    if (currentKey === " ") return caretGoNextWord();
+    if (words[current].length <= input.length && currentKey === "Backspace")
+      return caretOverflowGoBack();
+
+    if (currentKey === "Backspace") return caretGoBack();
+    if (input.length === 0) return caretFirstLetter();
+    if (words[current].length <= input.length) return caretOverflow();
+    return caretGoForward();
+  }, [letter, word?.childElementCount]);
+
+  const caretFirstLetter = () => {
+    if (!word) return;
+    const position = word.getBoundingClientRect();
+    caretAnimation(position.left);
+    setCaret({ ...caret, top: position.top });
+  };
+
+  const caretLastLetter = () => {
+    if (!word) return;
+    console.log(input, inputHistory[overflowCurrent]);
+    const position = word.getBoundingClientRect();
+    caretAnimation(position!.right);
+    setCaret({ ...caret, top: position!.top });
+  };
+
+  const caretGoForward = () => {
+    if (!letter) return;
+    const position = letter.getBoundingClientRect();
+    caretAnimation(position.left);
+    setCaret({ ...caret, top: position.top });
+  };
+
+  const caretGoBack = () => {
+    if (!letter) return;
+    const position = letter.getBoundingClientRect();
+    caretAnimation(position.left);
+    setCaret({ ...caret, top: position?.top });
+  };
+
+  const caretOverflowGoBack = () => {
+    if (!word) return;
+    const position = word.lastElementChild?.getBoundingClientRect();
+    console.log(word.lastElementChild);
+    caretAnimation(position!.right);
+    setCaret({ ...caret, top: position!.top });
+  };
+
+  const caretOverflow = () => {
+    if (!word) return;
+    const position = word.lastElementChild?.getBoundingClientRect();
+    caretAnimation(position!.right);
+    setCaret({ ...caret, top: position!.top });
+  };
+
+  const caretGoNextWord = () => {
+    if (!word) return;
+    const position = word.getBoundingClientRect();
+    caretAnimation(position.left);
+    setCaret({ ...caret, top: position.top });
+  };
 
   // on load caret position
   useEffect(() => {
@@ -51,43 +122,6 @@ const Caret: React.FC<Props> = ({
       { duration: 100, fill: "forwards" }
     );
   };
-
-  // caret position
-  useEffect(() => {
-    let position: DOMRect;
-
-    if (currentKey === "Backspace") {
-      if (!letter) return;
-      position = letter?.getBoundingClientRect();
-      caretAnimation(position.left);
-      setCaret({ ...caret, top: position?.top });
-      return;
-    }
-
-    if (currentKey === " ") {
-      if (!word) return;
-      position = word?.getBoundingClientRect();
-      caretAnimation(position.left);
-      setCaret({ ...caret, top: position?.top });
-      return;
-    }
-
-    if (words[current].length <= input.length) {
-      if (!word) return;
-      position = word?.getBoundingClientRect();
-      setCaret({ ...caret, top: position.top });
-      caretAnimation(position.right);
-      return;
-    }
-
-    if (!letter) return;
-    position = letter?.getBoundingClientRect();
-
-    setCaret({ ...caret, top: position?.top });
-
-    // if (input.length === 0) return caretAnimation(position.left);
-    caretAnimation(position.left);
-  }, [letter]);
 
   // caret flash animation on stop
   useEffect(() => {

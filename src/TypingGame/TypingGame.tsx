@@ -28,6 +28,7 @@ const TypingGame: React.FC<Props> = () => {
   const [minusLetter, setMinusLetter] = useState<Element>();
   const [plusWord, setPlusWord] = useState<Element>();
   const [word, setWord] = useState<Element>();
+  const [overflowCurrent, setOverflowCurrent] = useState<number>(0);
   const [minusWord, setMinusWord] = useState<Element>();
   const [input, setInput] = useState<string>("");
   const [inputHistory, setInputHistory] = useState<string[]>([]);
@@ -42,11 +43,28 @@ const TypingGame: React.FC<Props> = () => {
 
     setIsPlaying(true);
 
-    if (input.length + 1 > words[current].length) return;
+    if (input.length + 1 > words[current].length) createLetter(key);
+    else letterValidation(key, e.key);
 
-    letterValidation(key, e.key);
     setInput(input + key);
   };
+
+  const createLetter = (key: string) => {
+    const letter = document.createElement("span");
+    letter.textContent = key;
+    letter.classList.add("extra");
+    word?.appendChild(letter);
+    setOverflowCurrent(current);
+  };
+
+  useEffect(() => {
+    if (words[current].length > input.length || currentKey !== "Backspace")
+      return;
+    console.log(current, overflowCurrent);
+    console.log(wordsRef.current?.children[current]);
+
+    word?.lastElementChild?.remove();
+  }, [input, overflowCurrent, current]);
 
   // TODO: WORKING
   const spaceHandler = (): void => {
@@ -78,13 +96,6 @@ const TypingGame: React.FC<Props> = () => {
 
     if (letter?.innerHTML === key) letter?.classList.add("correct");
     else letter?.classList.add("incorrect");
-  };
-
-  // create letter
-  const createLetter = (key: string) => {
-    let letter = document.createElement("span");
-    letter.textContent = key;
-    word?.appendChild(letter);
   };
 
   // current word / letter
@@ -136,9 +147,12 @@ const TypingGame: React.FC<Props> = () => {
           ref={inputRef}
         />
         <Caret
+          inputHistory={inputHistory}
+          overflowCurrent={overflowCurrent}
           words={words}
           input={input}
           letter={letter!}
+          minusLetter={minusLetter!}
           word={word!}
           currentKey={currentKey}
           focus={focus}
