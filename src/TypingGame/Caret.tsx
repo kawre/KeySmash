@@ -14,15 +14,13 @@ interface Props {
   currentKey: string;
   isPlaying: boolean;
   current: number;
-  inputHistory: string[];
-  overflowCurrent: number;
+  overflowCurrent: string;
 }
 
 // Component ---------------------------------------------------------------------
 const Caret: React.FC<Props> = ({
   focus,
   overflowCurrent,
-  inputHistory,
   letter,
   currentKey,
   input,
@@ -40,7 +38,7 @@ const Caret: React.FC<Props> = ({
 
   // caret position
   useEffect(() => {
-    if (input === inputHistory[overflowCurrent] && currentKey === "Backspace")
+    if (input === overflowCurrent && currentKey === "Backspace")
       return caretLastLetter();
     if (currentKey === " ") return caretGoNextWord();
     if (words[current].length <= input.length && currentKey === "Backspace")
@@ -61,7 +59,7 @@ const Caret: React.FC<Props> = ({
 
   const caretLastLetter = () => {
     if (!word) return;
-    console.log(input, inputHistory[overflowCurrent]);
+    console.log(input, overflowCurrent);
     const position = word.getBoundingClientRect();
     caretAnimation(position!.right);
     setCaret({ ...caret, top: position!.top });

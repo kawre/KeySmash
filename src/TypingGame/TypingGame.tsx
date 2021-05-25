@@ -26,9 +26,8 @@ const TypingGame: React.FC<Props> = () => {
   const [currentKey, setCurrentKey] = useState<string>("");
   const [letter, setLetter] = useState<Element>();
   const [minusLetter, setMinusLetter] = useState<Element>();
-  const [plusWord, setPlusWord] = useState<Element>();
   const [word, setWord] = useState<Element>();
-  const [overflowCurrent, setOverflowCurrent] = useState<number>(0);
+  const [overflowCurrent, setOverflowCurrent] = useState<string>("");
   const [minusWord, setMinusWord] = useState<Element>();
   const [input, setInput] = useState<string>("");
   const [inputHistory, setInputHistory] = useState<string[]>([]);
@@ -54,14 +53,15 @@ const TypingGame: React.FC<Props> = () => {
     letter.textContent = key;
     letter.classList.add("extra");
     word?.appendChild(letter);
-    setOverflowCurrent(current);
+    setOverflowCurrent(input);
   };
 
   useEffect(() => {
     if (words[current].length > input.length || currentKey !== "Backspace")
       return;
-    console.log(current, overflowCurrent);
+    console.log(input, overflowCurrent);
     console.log(wordsRef.current?.children[current]);
+    console.log(word?.lastElementChild);
 
     word?.lastElementChild?.remove();
   }, [input, overflowCurrent, current]);
@@ -105,7 +105,6 @@ const TypingGame: React.FC<Props> = () => {
     setMinusLetter(
       wordsRef.current?.children[current].children[input.length - 1]
     );
-    setPlusWord(wordsRef.current?.children[current + 1]);
     setWord(wordsRef.current?.children[current]);
     setMinusWord(wordsRef.current?.children[current - 1]);
   }, [input, word]);
@@ -147,7 +146,6 @@ const TypingGame: React.FC<Props> = () => {
           ref={inputRef}
         />
         <Caret
-          inputHistory={inputHistory}
           overflowCurrent={overflowCurrent}
           words={words}
           input={input}
