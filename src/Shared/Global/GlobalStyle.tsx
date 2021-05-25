@@ -27,8 +27,4 @@ button {
    cursor: pointer;
    transition: .25s;
 }
-
-.hidden {
-   display: none !important;
-}
 `;
