@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useData } from "../Contexts/DataContext";
 import { colors } from "../Shared/Global/Colors";
+import Caret from "./Caret";
 import { keyValidation } from "./KeyValidation";
 import RepeatTest from "./RepeatTest";
 import TypingStats from "./TypingStats";
@@ -17,14 +18,12 @@ const TypingGame: React.FC<Props> = () => {
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
   const wordsRef = useRef<HTMLDivElement>(null);
-  const caretRef = useRef<HTMLDivElement>(null);
   // state
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [words] = useState<string[]>(quote.split(" "));
   const [focus, setFocus] = useState<boolean>(true);
   const [current, setCurrent] = useState<number>(0);
   const [currentKey, setCurrentKey] = useState<string>("");
-
   const [letter, setLetter] = useState<Element>();
   const [minusLetter, setMinusLetter] = useState<Element>();
   const [plusWord, setPlusWord] = useState<Element>();
@@ -33,10 +32,6 @@ const TypingGame: React.FC<Props> = () => {
   const [input, setInput] = useState<string>("");
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
-  const [caret, setCaret] = useState<{ left: number; top: number }>({
-    left: 0,
-    top: 0,
-  });
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     const key = keyValidation(e.key);
@@ -46,25 +41,40 @@ const TypingGame: React.FC<Props> = () => {
     if (key === "Backspace") return backspaceHandler();
     if (key === " ") return spaceHandler();
 
+    if (input.length >= words[current].length) return;
+
     setInput(input + key);
+    console.log(input);
   };
 
+  // TODO: WORKING
   const spaceHandler = (): void => {
+    if (input === "") return;
     setInputHistory([...inputHistory, input]);
     setCurrent(current + 1);
     setInput("");
   };
 
   const backspaceHandler = (): void => {
-    if (canGoBack && input.length === 0) return jumpToPrevWord();
+    if (canGoBack && input.length === 0) {
+      let newCurrent = current - 1;
+
+      minusWord?.classList.remove("error");
+      setCurrent(newCurrent);
+      setInput(inputHistory[newCurrent]);
+      setInputHistory(inputHistory.slice(0, -1));
+      return;
+    }
+
     setInput(input.slice(0, -1));
+
+    if (!minusLetter) return;
+    minusLetter?.classList.remove("incorrect", "correct");
   };
 
-  // letter validation
+  // FIXME: letter validation
   useEffect(() => {
-    if (currentKey === " ") return;
-    if (currentKey === "Backspace")
-      return minusLetter?.classList.remove("incorrect", "correct");
+    if (currentKey === " " || currentKey === "Backspace") return;
 
     const key = input.slice(-1);
 
@@ -72,7 +82,7 @@ const TypingGame: React.FC<Props> = () => {
     else letter?.classList.add("incorrect");
   }, [input, current]);
 
-  // Current word / letter
+  // current word / letter
   useEffect(() => {
     if (!wordsRef) return;
 
@@ -83,15 +93,13 @@ const TypingGame: React.FC<Props> = () => {
     setPlusWord(wordsRef.current?.children[current + 1]);
     setWord(wordsRef.current?.children[current]);
     setMinusWord(wordsRef.current?.children[current - 1]);
-    console.log(current, input.length);
-    console.log(wordsRef.current?.children[current].children[input.length - 1]);
-    console.log(input.split(""));
-  }, [input]);
+  }, [input, current]);
 
-  // Active word
+  // active / error word class
   useEffect(() => {
-    if (!minusWord) return;
+    word?.classList.add("active");
 
+    if (!minusWord) return;
     const wordChildren = minusWord?.childNodes;
 
     wordChildren.forEach((child, index) => {
@@ -102,102 +110,20 @@ const TypingGame: React.FC<Props> = () => {
       }
     });
 
-    word?.classList.add("active");
-    return () => {
-      word?.classList.remove("active");
-      setCanGoBack(false);
-    };
+    return () => word?.classList.remove("active");
   }, [word]);
 
-  // smooth caret animation
-  const caretAnimation = (x: number): void => {
-    caretRef.current?.animate(
-      { left: `${x}px` },
-      { duration: 100, fill: "forwards" }
-    );
-  };
-
-  // on load caret position
-  useEffect(() => {
-    if (!caretRef || !letter) return;
-
-    const position = letter?.getBoundingClientRect();
-
-    setCaret({ ...caret, top: position.top });
-
-    if (caretRef.current?.classList.contains("onload-hidden"))
-      caretRef.current?.classList.remove("onload-hidden");
-  }, [caretRef.current]);
-
+  // append new letter on text overflow
   // useEffect(() => {
+  //   if (input.length <= words[current].length) return;
+  //   word?.appendChild(createNewLetter(input.slice(-1)));
+  // }, [input, current]);
 
-  //   return () =>
-  // }, [minusWord]);
-
-  // useEffect(() => {}, [letter]);
-
-  const jumpToPrevWord = () => {
-    let newCurrent = current - 1;
-
-    minusWord?.classList.remove("error");
-    setCurrent(newCurrent);
-    setInput(inputHistory[newCurrent]);
-    setInputHistory(inputHistory.slice(0, -1));
+  const createNewLetter = (character: string) => {
+    let letter = document.createElement("span");
+    letter.textContent = character;
+    return letter;
   };
-
-  // caret position
-  useEffect(() => {
-    let position: DOMRect;
-
-    if (currentKey === "Backspace") {
-      if (!letter) return;
-
-      position = letter?.getBoundingClientRect();
-      caretAnimation(position.left);
-      setCaret({ ...caret, top: position?.top });
-      return;
-    }
-
-    if (currentKey === " ") {
-      if (!word) return;
-      position = word?.getBoundingClientRect();
-      caretAnimation(position.left);
-      setCaret({ ...caret, top: position?.top });
-      return;
-    }
-
-    if (!letter) return;
-    position = letter?.getBoundingClientRect();
-
-    setCaret({ ...caret, top: position?.top });
-
-    // if (input.length === 0) return caretAnimation(position.left);
-    caretAnimation(position.left);
-  }, [letter]);
-
-  // caret flash animation on stop
-  useEffect(() => {
-    if (!isPlaying) return;
-    caretRef.current?.classList.remove("caret-flash-animation");
-    const timeout = setTimeout(
-      () => caretRef.current?.classList.add("caret-flash-animation"),
-      1500
-    );
-
-    return () => clearTimeout(timeout);
-  }, [letter]);
-
-  // append new letters on text overflow
-  useEffect(() => {
-    if (words[current].length >= input.length) return;
-    // console.log(letter);
-    // if (currentKey === "Backspace") return letter?.remove();
-    const newLetter = document.createElement("span");
-    newLetter.classList.add("extra");
-    newLetter.innerText = input.slice(-1);
-
-    word?.appendChild(newLetter);
-  }, [input]);
 
   return (
     <Wrapper>
@@ -210,16 +136,17 @@ const TypingGame: React.FC<Props> = () => {
           ref={inputRef}
         />
         <Caret
-          className={`caret-flash-animation onload-hidden ${
-            focus ? "" : "hidden"
-          }`}
-          ref={caretRef}
-          style={{ top: caret.top }}
+          words={words}
+          input={input}
+          letter={letter!}
+          word={word!}
+          currentKey={currentKey}
+          focus={focus}
+          isPlaying={isPlaying}
+          current={current}
         />
-
         {/* {!focus && <FocusAlert>Click or press any key to focus</FocusAlert>} */}
         <TypingStats isPlaying={isPlaying} />
-
         <Words className={focus ? "" : "blur"} ref={wordsRef}>
           {words.map((word, index) => {
             return (
@@ -262,38 +189,6 @@ const Input = styled.input`
   display: block;
 `;
 
-const Caret = styled.div`
-  position: fixed;
-  width: 3px;
-  background: ${colors.secondary};
-  height: 32px;
-  border-radius: 999px;
-
-  &.caret-flash-animation {
-    animation: caretFlash 1000ms infinite;
-  }
-
-  &.onload-hidden {
-    display: none !important;
-  }
-
-  &.hidden {
-    display: none !important;
-  }
-
-  @keyframes caretFlash {
-    0% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-`;
-
 const Words = styled.div`
   &.blur {
     filter: blur(10px);
@@ -305,13 +200,6 @@ const Word = styled.div`
   margin: 4px;
   display: inline-block;
 
-  &.error {
-    span {
-      text-decoration: underline;
-      text-decoration-color: ${colors.fail};
-    }
-  }
-
   span {
     user-select: none;
     color: ${colors.text}80;
@@ -320,8 +208,7 @@ const Word = styled.div`
     transition: 40ms;
 
     &.extra {
-      /* opacity: 1; */
-      color: ${colors.fail};
+      color: ${colors.background};
       text-decoration: underline;
     }
   }
