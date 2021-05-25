@@ -58,8 +58,6 @@ const Caret: React.FC<Props> = ({
 
     if (currentKey === "Backspace") {
       if (!letter) return;
-
-      console.log("siema");
       position = letter?.getBoundingClientRect();
       caretAnimation(position.left);
       setCaret({ ...caret, top: position?.top });

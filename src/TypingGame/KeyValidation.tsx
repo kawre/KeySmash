@@ -49,6 +49,7 @@ export const keyValidation = (key: string) => {
       "Clear",
       "End",
       "Tab",
+      "Backspace",
       undefined,
     ].includes(key)
   ) {

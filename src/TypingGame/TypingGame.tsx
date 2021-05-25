@@ -34,17 +34,18 @@ const TypingGame: React.FC<Props> = () => {
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    const key = keyValidation(e.key);
-    setIsPlaying(true);
     setCurrentKey(e.key);
+    if (e.key === "Backspace") return backspaceHandler();
+    if (e.key === " ") return spaceHandler();
 
-    if (key === "Backspace") return backspaceHandler();
-    if (key === " ") return spaceHandler();
+    const key = keyValidation(e.key);
 
-    if (input.length >= words[current].length) return;
+    setIsPlaying(true);
 
+    if (input.length + 1 > words[current].length) return;
+
+    letterValidation(key, e.key);
     setInput(input + key);
-    console.log(input);
   };
 
   // TODO: WORKING
@@ -72,20 +73,23 @@ const TypingGame: React.FC<Props> = () => {
     minusLetter?.classList.remove("incorrect", "correct");
   };
 
-  // FIXME: letter validation
-  useEffect(() => {
-    if (currentKey === " " || currentKey === "Backspace") return;
-
-    const key = input.slice(-1);
+  const letterValidation = (key: string, eventKey: string) => {
+    if (eventKey === " " || eventKey === "Backspace" || key === "") return;
 
     if (letter?.innerHTML === key) letter?.classList.add("correct");
     else letter?.classList.add("incorrect");
-  }, [input, current]);
+  };
+
+  // create letter
+  const createLetter = (key: string) => {
+    let letter = document.createElement("span");
+    letter.textContent = key;
+    word?.appendChild(letter);
+  };
 
   // current word / letter
   useEffect(() => {
     if (!wordsRef) return;
-
     setLetter(wordsRef.current?.children[current].children[input.length]);
     setMinusLetter(
       wordsRef.current?.children[current].children[input.length - 1]
@@ -93,12 +97,10 @@ const TypingGame: React.FC<Props> = () => {
     setPlusWord(wordsRef.current?.children[current + 1]);
     setWord(wordsRef.current?.children[current]);
     setMinusWord(wordsRef.current?.children[current - 1]);
-  }, [input, current]);
+  }, [input, word]);
 
-  // active / error word class
+  // set error word
   useEffect(() => {
-    word?.classList.add("active");
-
     if (!minusWord) return;
     const wordChildren = minusWord?.childNodes;
 
@@ -109,21 +111,19 @@ const TypingGame: React.FC<Props> = () => {
         minusWord?.classList.add("error");
       }
     });
-
-    return () => word?.classList.remove("active");
   }, [word]);
 
-  // append new letter on text overflow
-  // useEffect(() => {
-  //   if (input.length <= words[current].length) return;
-  //   word?.appendChild(createNewLetter(input.slice(-1)));
-  // }, [input, current]);
+  // get if can go back
+  useEffect(() => {
+    if (!minusWord) return;
+    if (!minusWord.classList.contains("error")) setCanGoBack(false);
+  }, [minusWord]);
 
-  const createNewLetter = (character: string) => {
-    let letter = document.createElement("span");
-    letter.textContent = character;
-    return letter;
-  };
+  // set active word
+  useEffect(() => {
+    word?.classList.add("active");
+    return () => word?.classList.remove("active");
+  }, [word]);
 
   return (
     <Wrapper>
