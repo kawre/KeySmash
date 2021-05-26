@@ -5,11 +5,11 @@ import { colors } from "../Shared/Global/Colors";
 // Types -------------------------------------------------------------------------
 
 interface Props {
-  letter: Element;
-  minusLetter: Element;
+  letter: Element | undefined;
+  minusLetter: Element | undefined;
   focus: boolean;
   input: string;
-  word: Element;
+  word: Element | undefined;
   words: string[];
   isPlaying: boolean;
   current: number;
@@ -36,16 +36,16 @@ const Caret: React.FC<Props> = ({
     else caretOverflow();
   }, [letter, minusLetter]);
 
-  const caretOverflow = () => {
-    if (!word.lastElementChild) return;
-    const position = word.lastElementChild.getBoundingClientRect();
-    caretAnimation(position.right, position.top);
-  };
-
   const caretCurrentLetter = () => {
     if (!letter) return;
     const position = letter.getBoundingClientRect();
     caretAnimation(position.left, position.top);
+  };
+
+  const caretOverflow = () => {
+    if (!word?.lastElementChild) return;
+    const position = word.lastElementChild.getBoundingClientRect();
+    caretAnimation(position.right, position.top);
   };
 
   // on load caret position
@@ -69,7 +69,6 @@ const Caret: React.FC<Props> = ({
     if (!isPlaying) return;
     setCaretFlash(false);
     const timeout = setTimeout(() => setCaretFlash(true), 1250);
-
     return () => clearTimeout(timeout);
   }, [letter, minusLetter]);
 
@@ -90,7 +89,6 @@ const Wrapper = styled.div`
   position: fixed;
   width: 3px;
   background: ${colors.secondary};
-  /* height: 32px; */
   border-radius: 99px;
 
   &.caret-flash-animation {

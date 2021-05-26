@@ -58,9 +58,10 @@ const TypingGame: React.FC<Props> = () => {
 
   const backspaceHandler = () => {
     if (canGoBack && input.length === 0) {
+      if (!minusWord) return;
       let newCurrent = current - 1;
 
-      minusWord?.classList.remove("error");
+      minusWord.classList.remove("error");
       setCurrent(newCurrent);
       setInput(inputHistory[newCurrent]);
       setInputHistory(inputHistory.slice(0, -1));
@@ -70,7 +71,7 @@ const TypingGame: React.FC<Props> = () => {
     setInput(input.slice(0, -1));
 
     if (!minusLetter) return;
-    minusLetter?.classList.remove("incorrect", "correct");
+    minusLetter.classList.remove("incorrect", "correct");
   };
 
   const spaceHandler = () => {
@@ -81,51 +82,58 @@ const TypingGame: React.FC<Props> = () => {
   };
 
   const createLetter = (key: string) => {
+    if (!word) return;
     const letter = document.createElement("span");
     letter.textContent = key;
     letter.classList.add("extra");
-    word?.appendChild(letter);
+    word.appendChild(letter);
   };
 
   const letterValidation = (key: string, eventKey: string) => {
-    if (eventKey === " " || eventKey === "Backspace") return;
+    if (eventKey === " " || eventKey === "Backspace" || !letter) return;
 
-    if (letter?.innerHTML === key) letter?.classList.add("correct");
-    else letter?.classList.add("incorrect");
+    if (letter.innerHTML === key) letter.classList.add("correct");
+    else letter.classList.add("incorrect");
   };
 
   // overflow removal handler
   useEffect(() => {
-    if (words[current].length > input.length || currentKey !== "Backspace")
+    if (
+      words[current].length > input.length ||
+      currentKey !== "Backspace" ||
+      !wordsRef.current
+    )
       return;
 
-    const currentWord = wordsRef.current?.children[current];
+    const currentWord = wordsRef.current.children[current];
 
-    if (currentWord?.childElementCount === input.length + 1)
-      return currentWord?.lastElementChild?.remove();
+    if (currentWord.childElementCount === input.length + 1) {
+      if (!currentWord.lastElementChild) return;
+      currentWord.lastElementChild.remove();
+    }
   }, [input]);
 
   // current word / letter
   useEffect(() => {
-    if (!wordsRef) return;
-    setLetter(wordsRef.current?.children[current].children[input.length]);
+    if (!wordsRef.current) return;
+    setLetter(wordsRef.current.children[current].children[input.length]);
     setMinusLetter(
-      wordsRef.current?.children[current].children[input.length - 1]
+      wordsRef.current.children[current].children[input.length - 1]
     );
-    setWord(wordsRef.current?.children[current]);
-    setMinusWord(wordsRef.current?.children[current - 1]);
+    setWord(wordsRef.current.children[current]);
+    setMinusWord(wordsRef.current.children[current - 1]);
   }, [input, word]);
 
   // set error word
   useEffect(() => {
     if (!minusWord) return;
-    const wordChildren = minusWord?.childNodes;
+    const wordChildren = minusWord.childNodes;
 
     wordChildren.forEach((child, index) => {
-      const childClass = minusWord?.children[index].classList;
+      const childClass = minusWord.children[index].classList;
       if (!childClass.contains("correct")) {
         setCanGoBack(true);
-        minusWord?.classList.add("error");
+        minusWord.classList.add("error");
       }
     });
   }, [word]);
@@ -138,8 +146,9 @@ const TypingGame: React.FC<Props> = () => {
 
   // set active word
   useEffect(() => {
-    word?.classList.add("active");
-    return () => word?.classList.remove("active");
+    if (!word) return;
+    word.classList.add("active");
+    return () => word.classList.remove("active");
   }, [word]);
 
   return (
@@ -150,9 +159,9 @@ const TypingGame: React.FC<Props> = () => {
           <Caret
             words={words}
             input={input}
-            letter={letter!}
-            minusLetter={minusLetter!}
-            word={word!}
+            letter={letter}
+            minusLetter={minusLetter}
+            word={word}
             focus={focus}
             isPlaying={isPlaying}
             current={current}
@@ -212,51 +221,57 @@ const GameContainer = styled.div`
 
 const Input = styled.input`
   position: absolute;
-  background: transparent;
   opacity: 0;
-  cursor: default;
-  color: transparent;
   height: 100%;
   width: 100%;
   padding: 0;
   margin: 0;
+  color: transparent;
+  background: none;
   border: none;
   outline: none;
-  display: block;
+  cursor: default;
   z-index: 99;
 `;
 
 const Words = styled.div`
   &.blur {
-    /* filter: blur(10px); */
-    transition: 200ms;
+    filter: blur(8px);
+    transition: 300ms;
+    opacity: 0.25;
   }
 `;
 
 const Word = styled.div`
   display: inline-block;
   border-bottom: 2px solid transparent;
+  color: ${colors.text}80;
   margin: 6px;
   user-select: none;
-  color: ${colors.text}80;
   line-height: 24px;
   font-size: 24px;
-  transition: 1000ms;
+  transition: 50ms;
 
   &.error {
     border-bottom: 2px solid ${colors.fail};
   }
+
+  span {
+    &.extra {
+      transition: 1000ms;
+      color: ${colors.text}40 !important;
+    }
+  }
 `;
 
 const Letter = styled.span`
+  transition: 50ms;
+
   &.correct {
     color: ${colors.secondary};
   }
   &.incorrect {
     color: ${colors.fail};
-  }
-  &.extra {
-    color: ${colors.text}40;
   }
 `;
 
@@ -265,18 +280,16 @@ const FocusAlert = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  pointer-events: none;
-  display: grid;
-  place-items: center;
   display: flex;
   align-items: center;
   user-select: none;
-  font-size: 18px;
+  font-size: 16px;
+  pointer-events: none;
   z-index: 98;
 
   svg {
     margin-right: 5px;
-    margin-bottom: 2px;
+    margin-bottom: 2.5px;
     width: 30px;
     height: 30px;
   }
