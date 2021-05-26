@@ -35,6 +35,7 @@ const TypingGame: React.FC<Props> = () => {
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     setCurrentKey(e.key);
+    if (e.ctrlKey && e.key === "Backspace") return ctrlBackspaceHandler();
     if (e.key === "Backspace") return backspaceHandler();
     if (e.key === " ") return spaceHandler();
 
@@ -45,6 +46,14 @@ const TypingGame: React.FC<Props> = () => {
     if (input.length + 1 > words[current].length) createLetter(key);
     else letterValidation(key, e.key);
     setInput(input + key);
+  };
+
+  const ctrlBackspaceHandler = () => {
+    if (!word) return;
+
+    console.log(word.childNodes);
+
+    setInput("");
   };
 
   const backspaceHandler = () => {
@@ -219,47 +228,35 @@ const Input = styled.input`
 
 const Words = styled.div`
   &.blur {
-    filter: blur(10px);
+    /* filter: blur(10px); */
     transition: 200ms;
   }
 `;
 
 const Word = styled.div`
-  margin: 4px;
   display: inline-block;
+  border-bottom: 2px solid transparent;
+  margin: 6px;
+  user-select: none;
+  color: ${colors.text}80;
+  line-height: 24px;
+  font-size: 24px;
+  transition: 1000ms;
 
   &.error {
-    span {
-      text-decoration: underline;
-      text-decoration-color: ${colors.fail};
-    }
-  }
-
-  span {
-    user-select: none;
-    color: ${colors.text}80;
-    font-size: 24px;
-    transition: 50ms;
-
-    &.extra {
-      background: ${colors.background};
-    }
+    border-bottom: 2px solid ${colors.fail};
   }
 `;
 
 const Letter = styled.span`
-  user-select: none;
-  color: ${colors.text}80;
-  /* opacity: 0.5; */
-  font-size: 24px;
-  transition: 40ms;
-
   &.correct {
     color: ${colors.secondary};
   }
   &.incorrect {
     color: ${colors.fail};
-    text-decoration: underline;
+  }
+  &.extra {
+    color: ${colors.text}40;
   }
 `;
 

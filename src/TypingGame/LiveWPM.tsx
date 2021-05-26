@@ -6,6 +6,7 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const LiveWPM: React.FC<Props> = () => {
+  // console.log("siema");
   return <Wrapper></Wrapper>;
 };
 

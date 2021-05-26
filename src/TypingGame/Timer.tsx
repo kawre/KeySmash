@@ -12,7 +12,6 @@ const Timer: React.FC<Props> = ({ isPlaying }) => {
 
   useEffect(() => {
     if (!isPlaying) return;
-
     const interval = setInterval(() => setTimer(timer + 1), 1000);
     return () => clearInterval(interval);
   }, [isPlaying, timer]);

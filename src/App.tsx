@@ -1,5 +1,6 @@
 import { Route, Switch } from "react-router";
 import styled from "styled-components";
+import AddQuote from "./AddQuote/AddQuote";
 import { AuthProvider } from "./Contexts/AuthContext";
 import { DataProvider } from "./Contexts/DataContext";
 import Header from "./Shared/Components/Header";
@@ -13,19 +14,14 @@ const App = () => {
     <AuthProvider>
       <Wrapper>
         <Header />
-        <Switch>
-          <Route exact path="/login" component={LoginForm} />
-          <Route exact path="/register" component={RegisterForm} />
-          <Route
-            exact
-            path="/"
-            component={() => (
-              <DataProvider>
-                <TypingGame />
-              </DataProvider>
-            )}
-          />
-        </Switch>
+        <DataProvider>
+          <Switch>
+            <Route exact path="/login" component={LoginForm} />
+            <Route exact path="/register" component={RegisterForm} />
+            <Route exact path="/add-quote" component={AddQuote} />
+            <Route exact path="/" component={() => <TypingGame />} />
+          </Switch>
+        </DataProvider>
       </Wrapper>
     </AuthProvider>
   );

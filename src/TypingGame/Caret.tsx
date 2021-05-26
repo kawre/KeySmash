@@ -27,57 +27,39 @@ const Caret: React.FC<Props> = ({
   current,
 }) => {
   const caretRef = useRef<HTMLDivElement>(null);
-  const [showCaret, setShowCaret] = useState<boolean>(false);
+  // const [showCaret, setShowCaret] = useState<boolean>(false);
   const [caretFlash, setCaretFlash] = useState<boolean>(true);
-  const [caret, setCaret] = useState<{ left: number; top: number }>({
-    left: 0,
-    top: 0,
-  });
-
-  const caretPositionHandler = () => {
-    if (input.length >= words[current].length) return caretOverflow();
-    if (input.length === 0) return caretFirstLetter();
-    caretCurrentLetter();
-  };
 
   // caret position
   useEffect(() => {
-    caretPositionHandler();
+    if (input.length < words[current].length) caretCurrentLetter();
+    else caretOverflow();
   }, [letter, minusLetter]);
 
   const caretOverflow = () => {
     if (!word.lastElementChild) return;
     const position = word.lastElementChild.getBoundingClientRect();
-    caretAnimation(position.right);
-    setCaret({ ...caret, top: position.top });
-  };
-
-  const caretFirstLetter = () => {
-    if (!word) return;
-    const position = word.getBoundingClientRect();
-    caretAnimation(position.left);
-    setCaret({ ...caret, top: position.top });
+    caretAnimation(position.right, position.top);
   };
 
   const caretCurrentLetter = () => {
     if (!letter) return;
     const position = letter.getBoundingClientRect();
-    caretAnimation(position.left);
-    setCaret({ ...caret, top: position.top });
+    caretAnimation(position.left, position.top);
   };
 
   // on load caret position
   useEffect(() => {
-    if (!caretRef) return;
-    caretFirstLetter();
-    setShowCaret(true);
-  }, [caretRef]);
+    if (!caretRef.current || !letter) return;
+    const height = letter.getBoundingClientRect().height;
+    caretRef.current.style.height = `${height}px`;
+  }, [caretRef, letter]);
 
   // smooth caret animation
-  const caretAnimation = (x: number) => {
-    // caretRef.current?.style.top =
-    caretRef.current?.animate(
-      { left: `${x}px` },
+  const caretAnimation = (left: number, top: number) => {
+    if (!caretRef.current) return;
+    caretRef.current.animate(
+      { left: `${left}px`, top: `${top}px` },
       { duration: 100, fill: "forwards" }
     );
   };
@@ -86,21 +68,17 @@ const Caret: React.FC<Props> = ({
   useEffect(() => {
     if (!isPlaying) return;
     setCaretFlash(false);
-    const timeout = setTimeout(() => setCaretFlash(true), 1500);
+    const timeout = setTimeout(() => setCaretFlash(true), 1250);
 
     return () => clearTimeout(timeout);
   }, [letter, minusLetter]);
 
   const caretFlashClass = caretFlash ? "caret-flash-animation" : "";
-  const showCaretClass = showCaret ? "" : "hidden";
-  const caretHidden = focus ? "" : "hidden";
+  // const showCaretClass = showCaret ? "" : "hidden";
+  const caretHidden = focus ? "" : " hidden";
 
   return (
-    <Wrapper
-      className={`${caretFlashClass} ${showCaretClass} ${caretHidden}`}
-      style={{ top: caret.top }}
-      ref={caretRef}
-    />
+    <Wrapper className={`${caretFlashClass}${caretHidden}`} ref={caretRef} />
   );
 };
 
@@ -112,7 +90,7 @@ const Wrapper = styled.div`
   position: fixed;
   width: 3px;
   background: ${colors.secondary};
-  height: 32px;
+  /* height: 32px; */
   border-radius: 99px;
 
   &.caret-flash-animation {
@@ -134,7 +112,8 @@ const Wrapper = styled.div`
       transform: scaleY(1);
       opacity: 1;
     }
-    50% {
+    60%,
+    40% {
       transform: scaleY(0.4);
       opacity: 0;
     }
