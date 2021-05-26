@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Route, Switch } from "react-router";
 import styled from "styled-components";
 import AddQuote from "./AddQuote/AddQuote";
@@ -10,6 +11,7 @@ import { colors } from "./Shared/Global/Colors";
 import TypingGame from "./TypingGame/TypingGame";
 
 const App = () => {
+  const [show, setShow] = useState<boolean>(true);
   return (
     <AuthProvider>
       <Wrapper>
@@ -19,7 +21,11 @@ const App = () => {
             <Route exact path="/login" component={LoginForm} />
             <Route exact path="/register" component={RegisterForm} />
             <Route exact path="/add-quote" component={AddQuote} />
-            <Route exact path="/" component={() => <TypingGame />} />
+            <Route
+              exact
+              path="/"
+              component={() => (show ? <TypingGame setShow={setShow} /> : null)}
+            />
           </Switch>
         </DataProvider>
       </Wrapper>

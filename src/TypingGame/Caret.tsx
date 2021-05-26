@@ -51,8 +51,9 @@ const Caret: React.FC<Props> = ({
   // on load caret position
   useEffect(() => {
     if (!caretRef.current || !letter) return;
-    const height = letter.getBoundingClientRect().height;
-    caretRef.current.style.height = `${height}px`;
+    const rect = letter.getBoundingClientRect();
+    caretRef.current.style.height = `${rect.height}px`;
+    // caretRef.current.style.width = `${rect.width / 5}px`;
   }, [caretRef, letter]);
 
   // smooth caret animation
@@ -67,6 +68,7 @@ const Caret: React.FC<Props> = ({
   // caret flash animation on stop
   useEffect(() => {
     if (!isPlaying) return;
+
     setCaretFlash(false);
     const timeout = setTimeout(() => setCaretFlash(true), 1250);
     return () => clearTimeout(timeout);
@@ -74,10 +76,10 @@ const Caret: React.FC<Props> = ({
 
   const caretFlashClass = caretFlash ? "caret-flash-animation" : "";
   // const showCaretClass = showCaret ? "" : "hidden";
-  const caretHidden = focus ? "" : " hidden";
+  const caretHidden = focus ? "" : "hidden";
 
   return (
-    <Wrapper className={`${caretFlashClass}${caretHidden}`} ref={caretRef} />
+    <Wrapper className={`${caretFlashClass} ${caretHidden}`} ref={caretRef} />
   );
 };
 
@@ -87,8 +89,8 @@ export default Caret;
 
 const Wrapper = styled.div`
   position: fixed;
-  width: 3px;
   background: ${colors.secondary};
+  width: 3px;
   border-radius: 99px;
 
   &.caret-flash-animation {

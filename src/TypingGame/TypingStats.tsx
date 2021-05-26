@@ -2,21 +2,22 @@ import React from "react";
 import styled from "styled-components";
 import { colors } from "../Shared/Global/Colors";
 import LiveWPM from "./LiveWPM";
-import Timer from "./Timer";
 // Types -------------------------------------------------------------------------
 
 interface Props {
+  timer: number;
   isPlaying: boolean;
+  current: number;
 }
 
 // Component ---------------------------------------------------------------------
-const TypingStats: React.FC<Props> = ({ isPlaying }) => {
+const TypingStats: React.FC<Props> = ({ isPlaying, timer, current }) => {
   return (
     <Wrapper>
       {isPlaying && (
         <>
-          <Timer isPlaying={isPlaying} />
-          <LiveWPM />
+          <Timer>{timer}</Timer>
+          <LiveWPM current={current} timer={timer} />
         </>
       )}
     </Wrapper>
@@ -31,7 +32,15 @@ const Wrapper = styled.div`
   margin: 0 4px;
   margin-bottom: 10px;
   height: 32px;
+  display: flex;
+  align-items: center;
 
   color: ${colors.background};
   font-size: 24px;
+
+  div {
+    margin-right: 20px;
+  }
 `;
+
+const Timer = styled.div``;

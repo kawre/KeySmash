@@ -10,10 +10,12 @@ import RepeatTest from "./RepeatTest";
 import TypingStats from "./TypingStats";
 // Types -------------------------------------------------------------------------
 
-interface Props {}
+interface Props {
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 // Component ---------------------------------------------------------------------
-const TypingGame: React.FC<Props> = () => {
+const TypingGame: React.FC<Props> = ({ setShow }) => {
   // context
   const { quote } = useData();
   // ref
@@ -32,10 +34,10 @@ const TypingGame: React.FC<Props> = () => {
   const [input, setInput] = useState<string>("");
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
+  const [timer, setTimer] = useState<number>(0);
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     setCurrentKey(e.key);
-    if (e.ctrlKey && e.key === "Backspace") return ctrlBackspaceHandler();
     if (e.key === "Backspace") return backspaceHandler();
     if (e.key === " ") return spaceHandler();
 
@@ -46,14 +48,6 @@ const TypingGame: React.FC<Props> = () => {
     if (input.length + 1 > words[current].length) createLetter(key);
     else letterValidation(key, e.key);
     setInput(input + key);
-  };
-
-  const ctrlBackspaceHandler = () => {
-    if (!word) return;
-
-    console.log(word.childNodes);
-
-    setInput("");
   };
 
   const backspaceHandler = () => {
@@ -151,10 +145,17 @@ const TypingGame: React.FC<Props> = () => {
     return () => word.classList.remove("active");
   }, [word]);
 
+  // timer
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => setTimer(timer + 1), 1000);
+    return () => clearInterval(interval);
+  }, [isPlaying, timer]);
+
   return (
     <Wrapper>
       <Game>
-        <TypingStats isPlaying={isPlaying} />
+        <TypingStats current={current} timer={timer} isPlaying={isPlaying} />
         <GameContainer>
           <Caret
             words={words}
@@ -173,11 +174,11 @@ const TypingGame: React.FC<Props> = () => {
             </FocusAlert>
           )}
           <Input
-            tabIndex={0}
+            tabIndex={1}
             autoFocus
             autoComplete="off"
             onFocus={() => setFocus(true)}
-            onBlur={() => setTimeout(() => setFocus(false), 500)}
+            onBlur={() => setTimeout(() => setFocus(false), 1000)}
             onKeyDown={inputHandler}
             ref={inputRef}
           />
@@ -193,7 +194,7 @@ const TypingGame: React.FC<Props> = () => {
             })}
           </Words>
         </GameContainer>
-        <RepeatTest />
+        <RepeatTest setShow={setShow} />
       </Game>
     </Wrapper>
   );
