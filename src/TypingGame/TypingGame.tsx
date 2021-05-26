@@ -59,12 +59,12 @@ const TypingGame: React.FC<Props> = () => {
   useEffect(() => {
     if (words[current].length > input.length || currentKey !== "Backspace")
       return;
-    console.log(input, overflowCurrent);
-    console.log(wordsRef.current?.children[current]);
-    console.log(word?.lastElementChild);
 
-    word?.lastElementChild?.remove();
-  }, [input, overflowCurrent, current]);
+    const currentWord = wordsRef.current?.children[current];
+
+    if (currentWord?.childElementCount === input.length + 1)
+      return currentWord?.lastElementChild?.remove();
+  }, [input]);
 
   // TODO: WORKING
   const spaceHandler = (): void => {
@@ -212,16 +212,21 @@ const Word = styled.div`
   margin: 4px;
   display: inline-block;
 
+  &.error {
+    span {
+      text-decoration: underline;
+      text-decoration-color: ${colors.fail};
+    }
+  }
+
   span {
     user-select: none;
     color: ${colors.text}80;
-    /* opacity: 0.5; */
     font-size: 24px;
-    transition: 40ms;
+    transition: 50ms;
 
     &.extra {
-      color: ${colors.background};
-      text-decoration: underline;
+      background: ${colors.background};
     }
   }
 `;

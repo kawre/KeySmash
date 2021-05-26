@@ -38,17 +38,11 @@ const Caret: React.FC<Props> = ({
 
   // caret position
   useEffect(() => {
-    if (input === overflowCurrent && currentKey === "Backspace")
-      return caretLastLetter();
-    if (currentKey === " ") return caretGoNextWord();
-    if (words[current].length <= input.length && currentKey === "Backspace")
-      return caretOverflowGoBack();
-
-    if (currentKey === "Backspace") return caretGoBack();
+    if (input.length >= words[current].length) return caretOverflow();
+    //
     if (input.length === 0) return caretFirstLetter();
-    if (words[current].length <= input.length) return caretOverflow();
-    return caretGoForward();
-  }, [letter, word?.childElementCount]);
+    return caretCurrentLetter();
+  }, [letter, minusLetter]);
 
   const caretFirstLetter = () => {
     if (!word) return;
@@ -57,47 +51,17 @@ const Caret: React.FC<Props> = ({
     setCaret({ ...caret, top: position.top });
   };
 
-  const caretLastLetter = () => {
-    if (!word) return;
-    console.log(input, overflowCurrent);
-    const position = word.getBoundingClientRect();
-    caretAnimation(position!.right);
-    setCaret({ ...caret, top: position!.top });
-  };
-
-  const caretGoForward = () => {
+  const caretCurrentLetter = () => {
     if (!letter) return;
     const position = letter.getBoundingClientRect();
     caretAnimation(position.left);
     setCaret({ ...caret, top: position.top });
   };
 
-  const caretGoBack = () => {
-    if (!letter) return;
-    const position = letter.getBoundingClientRect();
-    caretAnimation(position.left);
-    setCaret({ ...caret, top: position?.top });
-  };
-
-  const caretOverflowGoBack = () => {
-    if (!word) return;
-    const position = word.lastElementChild?.getBoundingClientRect();
-    console.log(word.lastElementChild);
-    caretAnimation(position!.right);
-    setCaret({ ...caret, top: position!.top });
-  };
-
   const caretOverflow = () => {
-    if (!word) return;
-    const position = word.lastElementChild?.getBoundingClientRect();
-    caretAnimation(position!.right);
-    setCaret({ ...caret, top: position!.top });
-  };
-
-  const caretGoNextWord = () => {
-    if (!word) return;
-    const position = word.getBoundingClientRect();
-    caretAnimation(position.left);
+    if (!word.lastElementChild) return;
+    const position = word.lastElementChild.getBoundingClientRect();
+    caretAnimation(position.right);
     setCaret({ ...caret, top: position.top });
   };
 
