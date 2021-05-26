@@ -50,6 +50,7 @@ export const keyValidation = (key: string) => {
       "End",
       "Tab",
       "Backspace",
+      "Enter",
       undefined,
     ].includes(key)
   ) {

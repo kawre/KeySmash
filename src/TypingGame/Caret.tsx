@@ -11,18 +11,14 @@ interface Props {
   input: string;
   word: Element;
   words: string[];
-  currentKey: string;
   isPlaying: boolean;
   current: number;
-  overflowCurrent: string;
 }
 
 // Component ---------------------------------------------------------------------
 const Caret: React.FC<Props> = ({
   focus,
-  overflowCurrent,
   letter,
-  currentKey,
   input,
   minusLetter,
   word,
@@ -31,18 +27,30 @@ const Caret: React.FC<Props> = ({
   current,
 }) => {
   const caretRef = useRef<HTMLDivElement>(null);
+  const [showCaret, setShowCaret] = useState<boolean>(false);
+  const [caretFlash, setCaretFlash] = useState<boolean>(true);
   const [caret, setCaret] = useState<{ left: number; top: number }>({
     left: 0,
     top: 0,
   });
 
+  const caretPositionHandler = () => {
+    if (input.length >= words[current].length) return caretOverflow();
+    if (input.length === 0) return caretFirstLetter();
+    caretCurrentLetter();
+  };
+
   // caret position
   useEffect(() => {
-    if (input.length >= words[current].length) return caretOverflow();
-    //
-    if (input.length === 0) return caretFirstLetter();
-    return caretCurrentLetter();
+    caretPositionHandler();
   }, [letter, minusLetter]);
+
+  const caretOverflow = () => {
+    if (!word.lastElementChild) return;
+    const position = word.lastElementChild.getBoundingClientRect();
+    caretAnimation(position.right);
+    setCaret({ ...caret, top: position.top });
+  };
 
   const caretFirstLetter = () => {
     if (!word) return;
@@ -58,27 +66,16 @@ const Caret: React.FC<Props> = ({
     setCaret({ ...caret, top: position.top });
   };
 
-  const caretOverflow = () => {
-    if (!word.lastElementChild) return;
-    const position = word.lastElementChild.getBoundingClientRect();
-    caretAnimation(position.right);
-    setCaret({ ...caret, top: position.top });
-  };
-
   // on load caret position
   useEffect(() => {
-    if (!caretRef || !letter) return;
-
-    const position = letter?.getBoundingClientRect();
-
-    setCaret({ ...caret, top: position.top });
-
-    if (caretRef.current?.classList.contains("onload-hidden"))
-      caretRef.current?.classList.remove("onload-hidden");
-  }, [caretRef.current]);
+    if (!caretRef) return;
+    caretFirstLetter();
+    setShowCaret(true);
+  }, [caretRef]);
 
   // smooth caret animation
-  const caretAnimation = (x: number): void => {
+  const caretAnimation = (x: number) => {
+    // caretRef.current?.style.top =
     caretRef.current?.animate(
       { left: `${x}px` },
       { duration: 100, fill: "forwards" }
@@ -88,20 +85,21 @@ const Caret: React.FC<Props> = ({
   // caret flash animation on stop
   useEffect(() => {
     if (!isPlaying) return;
-    caretRef.current?.classList.remove("caret-flash-animation");
-    const timeout = setTimeout(
-      () => caretRef.current?.classList.add("caret-flash-animation"),
-      1500
-    );
+    setCaretFlash(false);
+    const timeout = setTimeout(() => setCaretFlash(true), 1500);
 
     return () => clearTimeout(timeout);
-  }, [letter]);
+  }, [letter, minusLetter]);
+
+  const caretFlashClass = caretFlash ? "caret-flash-animation" : "";
+  const showCaretClass = showCaret ? "" : "hidden";
+  const caretHidden = focus ? "" : "hidden";
 
   return (
     <Wrapper
-      className={`caret-flash-animation onload-hidden ${focus ? "" : "hidden"}`}
-      ref={caretRef}
+      className={`${caretFlashClass} ${showCaretClass} ${caretHidden}`}
       style={{ top: caret.top }}
+      ref={caretRef}
     />
   );
 };
@@ -115,14 +113,10 @@ const Wrapper = styled.div`
   width: 3px;
   background: ${colors.secondary};
   height: 32px;
-  border-radius: 999px;
+  border-radius: 99px;
 
   &.caret-flash-animation {
     animation: caretFlash 1000ms infinite;
-  }
-
-  &.onload-hidden {
-    display: none !important;
   }
 
   &.hidden {
@@ -130,14 +124,19 @@ const Wrapper = styled.div`
   }
 
   @keyframes caretFlash {
-    0% {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+    80%,
+    20% {
+      transform: scaleY(1);
       opacity: 1;
     }
     50% {
+      transform: scaleY(0.4);
       opacity: 0;
-    }
-    100% {
-      opacity: 1;
     }
   }
 `;
