@@ -4,16 +4,15 @@ import { useTypingData } from "../Contexts/TypingGameContext";
 import { colors } from "../Shared/Global/Colors";
 // Types -------------------------------------------------------------------------
 
-interface Props {
-  characters: number;
-  errors: number;
-}
+interface Props {}
 
 // Component ---------------------------------------------------------------------
-const TypingStats: React.FC<Props> = ({ errors, characters }) => {
+const TypingStats: React.FC<Props> = () => {
   const {
     isPlaying,
     time,
+    characters,
+    errors,
     wpm,
     setWPM,
     cpm,
@@ -32,7 +31,7 @@ const TypingStats: React.FC<Props> = ({ errors, characters }) => {
     setAcc(Math.floor((diff / characters) * 100));
     setCPM(Math.floor(diff / minute));
     setWPM(Math.floor(diff / minute / 5));
-    setRaw(characters / minute / 5);
+    setRaw(Math.floor(characters / minute / 5));
   }, [time]);
 
   return (

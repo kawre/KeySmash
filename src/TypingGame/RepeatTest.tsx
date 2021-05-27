@@ -3,26 +3,21 @@ import styled from "styled-components";
 import { FaRedoAlt } from "react-icons/fa";
 import { colors } from "../Shared/Global/Colors";
 import { useTypingData } from "../Contexts/TypingGameContext";
+import Button from "../Shared/Components/Button";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
 const RepeatTest: React.FC<Props> = () => {
-  const { getRandomQuote, setShowing } = useTypingData();
-  const repeatHandler = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    getRandomQuote();
-    setShowing(false);
-    setTimeout(() => setShowing(true), 250);
-  };
+  const { repeatTest } = useTypingData();
 
   return (
     <Wrapper>
-      <Icon onClickCapture={repeatHandler} tabIndex={2}>
+      {/* <Icon onClickCapture={repeatTest} tabIndex={2}></Icon> */}
+      <Button tabIndex={2} type="test" onClickCapture={repeatTest}>
         <FaRedoAlt />
-      </Icon>
+      </Button>
     </Wrapper>
   );
 };

@@ -22,15 +22,7 @@ const App = () => {
             <Route exact path="/login" component={LoginForm} />
             <Route exact path="/register" component={RegisterForm} />
             <Route exact path="/add-quote" component={AddQuote} />
-            <Route
-              exact
-              path="/"
-              component={() => (
-                <TypingGameContext>
-                  <TypingGame />
-                </TypingGameContext>
-              )}
-            />
+            <Route exact path="/" component={TypingGameContext} />
           </Switch>
         </DataProvider>
       </Wrapper>

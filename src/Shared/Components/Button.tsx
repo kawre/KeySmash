@@ -11,13 +11,29 @@ interface Props {
   padding?: number;
   margin?: string;
   disabled?: boolean;
-  type: "logout" | "icon" | "login" | "signup" | "submit";
+  type: "logout" | "icon" | "login" | "signup" | "submit" | "test";
   reversed?: boolean;
+  onClickCapture?: any;
+  tabIndex?: number;
 }
 
 // Component ---------------------------------------------------------------------
-const Button: React.FC<Props> = ({ reversed, disabled, type, children }) => {
+const Button: React.FC<Props> = ({
+  onClickCapture,
+  reversed,
+  disabled,
+  type,
+  tabIndex,
+  children,
+}) => {
   const { logOut } = useAuth();
+
+  if (type === "test")
+    return (
+      <Test tabIndex={tabIndex} onClickCapture={onClickCapture}>
+        {children}
+      </Test>
+    );
 
   if (type === "icon") {
     return <IconButton>{children}</IconButton>;
@@ -115,4 +131,35 @@ const SubmitButton = styled.button`
   border-radius: 4px;
   display: grid;
   place-items: center;
+`;
+
+const Test = styled.button`
+  display: flex;
+  padding: 16px 32px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  transition: 150ms ease;
+
+  &:hover,
+  &:focus {
+    color: ${colors.main};
+    svg {
+      color: ${colors.main};
+    }
+  }
+
+  &:active,
+  &:focus {
+    background: ${colors.sub};
+  }
+
+  svg {
+    transition: 150ms ease;
+    width: 100%;
+    height: 100%;
+    min-width: 20px;
+    min-height: 20px;
+    color: ${colors.sub};
+  }
 `;

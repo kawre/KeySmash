@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { firestore } from "../firebase";
 import PostTestStats from "../TypingGame/PostTestResults";
+import TypingGame from "../TypingGame/TypingGame";
 // Types -------------------------------------------------------------------------
 
 interface Context {
@@ -23,6 +24,11 @@ interface Context {
   setPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   results: boolean;
   setResults: React.Dispatch<React.SetStateAction<boolean>>;
+  characters: number;
+  setCharacters: React.Dispatch<React.SetStateAction<number>>;
+  errors: number;
+  setErrors: React.Dispatch<React.SetStateAction<number>>;
+  repeatTest: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 const TypingContext = createContext<Context>(undefined!);
@@ -42,6 +48,8 @@ const TypingGameContext: React.FC = ({ children }) => {
   const [acc, setAcc] = useState<Context["acc"]>(0);
   const [time, setTime] = useState<Context["time"]>(0);
   const [results, setResults] = useState<Context["results"]>(false);
+  const [characters, setCharacters] = useState<Context["characters"]>(0);
+  const [errors, setErrors] = useState<Context["errors"]>(0);
 
   const getRandomQuote = () => {
     const ref = firestore
@@ -55,6 +63,12 @@ const TypingGameContext: React.FC = ({ children }) => {
 
       setWords(randomQuote.quote.split(" "));
     });
+  };
+
+  const repeatTest = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    getRandomQuote();
+    setShowing(false);
+    setTimeout(() => setShowing(true), 250);
   };
 
   useEffect(() => {
@@ -97,11 +111,16 @@ const TypingGameContext: React.FC = ({ children }) => {
     setPlaying,
     results,
     setResults,
+    characters,
+    setCharacters,
+    errors,
+    setErrors,
+    repeatTest,
   };
 
   return (
     <TypingContext.Provider value={value}>
-      {isShowing && children}
+      {isShowing && <TypingGame />}
       <PostTestStats />
     </TypingContext.Provider>
   );

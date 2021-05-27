@@ -15,8 +15,18 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const TypingGame: React.FC<Props> = () => {
   // context
-  const { words, time, setPlaying, isPlaying, setShowing, setResults } =
-    useTypingData();
+  const {
+    words,
+    time,
+    setPlaying,
+    isPlaying,
+    setShowing,
+    setResults,
+    characters,
+    setCharacters,
+    errors,
+    setErrors,
+  } = useTypingData();
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
   const wordsRef = useRef<HTMLDivElement>(null);
@@ -31,8 +41,6 @@ const TypingGame: React.FC<Props> = () => {
   const [input, setInput] = useState<string>("");
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
-  const [characters, setCharacters] = useState<number>(0);
-  const [errors, setErrors] = useState<number>(0);
 
   // TODO: DISPLAY STATS ELEMENT ON TEST COMPLETION
   // TODO: POST MATCH STATS
@@ -191,7 +199,7 @@ const TypingGame: React.FC<Props> = () => {
   return (
     <Wrapper>
       <Game>
-        <TypingStats characters={characters} errors={errors} />
+        <TypingStats />
         <GameContainer>
           <Caret
             input={input}

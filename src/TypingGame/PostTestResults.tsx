@@ -8,7 +8,8 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const PostTestStats: React.FC<Props> = () => {
-  const { results, setResults, wpm, cpm, acc, raw } = useTypingData();
+  const { results, setResults, wpm, cpm, acc, raw, characters, errors, time } =
+    useTypingData();
   return (
     <Wrapper className={`${!results && "hidden"}`}>
       <Top>
@@ -23,10 +24,28 @@ const PostTestStats: React.FC<Props> = () => {
           </Acc>
         </TopLeft>
         <TopRight>
-          <Graph>graph</Graph>
+          <Graph></Graph>
         </TopRight>
       </Top>
-      <Bottom></Bottom>
+      <Bottom>
+        <Raw>
+          <p>raw</p>
+          {raw}
+        </Raw>
+        <Characters>
+          <p>characters</p>
+          <div>
+            <span className="correct">{characters}</span>
+            <span className="slash">/</span>
+            <span className="error">{errors}</span>
+          </div>
+        </Characters>
+        <Time>
+          <p>time</p>
+          {time}s
+        </Time>
+      </Bottom>
+      <Panel></Panel>
     </Wrapper>
   );
 };
@@ -51,23 +70,69 @@ const Wrapper = styled.div`
   }
 `;
 
+// Top
 const Top = styled.div`
   display: flex;
+  margin-bottom: 25px;
 `;
 
-const Bottom = styled.div``;
-
+// Top left
 const TopLeft = styled.div`
   flex-shrink: 0;
+  padding-right: 25px;
 `;
-
-const TopRight = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
-const Graph = styled.div``;
 
 const WPM = styled.div``;
 
 const Acc = styled.div``;
+
+// Top right
+const TopRight = styled.div`
+  width: 100%;
+`;
+
+const Graph = styled.div`
+  width: 100%;
+  height: 100%;
+  background: ${colors.sub};
+`;
+
+// Bottom
+
+const Bottom = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    font-size: 32px;
+
+    p {
+      font-size: 16px;
+    }
+  }
+`;
+
+const Characters = styled.div`
+  span {
+    &.error {
+      color: ${colors.error};
+    }
+    &.correct {
+      color: ${colors.main};
+    }
+    &.slash {
+      padding: 0 10px;
+      color: ${colors.sub};
+    }
+  }
+`;
+
+const Time = styled.div``;
+
+const Raw = styled.div``;
+
+// Panel
+const Panel = styled.div`
+  display: flex;
+  justify-content: center;
+`;
