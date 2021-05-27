@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { firestore } from "../firebase";
-import PostTestStats from "../TypingGame/PostTestStats";
+import PostTestStats from "../TypingGame/PostTestResults";
 // Types -------------------------------------------------------------------------
 
 interface Context {
@@ -17,8 +17,8 @@ interface Context {
   setRaw: React.Dispatch<React.SetStateAction<number>>;
   acc: number;
   setAcc: React.Dispatch<React.SetStateAction<number>>;
-  timer: number;
-  setTimer: React.Dispatch<React.SetStateAction<number>>;
+  time: number;
+  setTime: React.Dispatch<React.SetStateAction<number>>;
   isPlaying: boolean;
   setPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   results: boolean;
@@ -40,7 +40,7 @@ const TypingGameContext: React.FC = ({ children }) => {
   const [cpm, setCPM] = useState<Context["cpm"]>(0);
   const [raw, setRaw] = useState<Context["raw"]>(0);
   const [acc, setAcc] = useState<Context["acc"]>(0);
-  const [timer, setTimer] = useState<Context["timer"]>(0);
+  const [time, setTime] = useState<Context["time"]>(0);
   const [results, setResults] = useState<Context["results"]>(false);
 
   const getRandomQuote = () => {
@@ -74,9 +74,9 @@ const TypingGameContext: React.FC = ({ children }) => {
   // timer
   useEffect(() => {
     if (!isPlaying) return;
-    const interval = setInterval(() => setTimer(timer + 1), 1000);
+    const interval = setInterval(() => setTime(time + 1), 1000);
     return () => clearInterval(interval);
-  }, [isPlaying, timer]);
+  }, [isPlaying, time]);
 
   const value = {
     getRandomQuote,
@@ -91,8 +91,8 @@ const TypingGameContext: React.FC = ({ children }) => {
     setRaw,
     acc,
     setAcc,
-    timer,
-    setTimer,
+    time,
+    setTime,
     isPlaying,
     setPlaying,
     results,

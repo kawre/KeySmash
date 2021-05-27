@@ -7,7 +7,7 @@ import { keyValidation } from "./KeyValidation";
 import RepeatTest from "./RepeatTest";
 import TypingStats from "./TypingStats";
 import { useTypingData } from "../Contexts/TypingGameContext";
-import PostTestStats from "./PostTestStats";
+import PostTestStats from "./PostTestResults";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -15,7 +15,8 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const TypingGame: React.FC<Props> = () => {
   // context
-  const { words, timer, setPlaying, isPlaying } = useTypingData();
+  const { words, time, setPlaying, isPlaying, setShowing, setResults } =
+    useTypingData();
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
   const wordsRef = useRef<HTMLDivElement>(null);
@@ -104,9 +105,18 @@ const TypingGame: React.FC<Props> = () => {
 
   const letterValidation = (key: string, eventKey: string) => {
     if (eventKey === " " || eventKey === "Backspace" || !letter) return;
-
-    if (letter.innerHTML === key) return letter.classList.add("correct");
-
+    if (letter.innerHTML === key) {
+      letter.classList.add("correct");
+      if (
+        words.length === current + 1 &&
+        words[current].length === input.length + 1
+      ) {
+        setShowing(false);
+        setResults(true);
+        setPlaying(false);
+      }
+      return;
+    }
     letter.classList.add("incorrect");
     setErrors(errors + 1);
   };

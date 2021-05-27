@@ -14,7 +14,10 @@ const Header: React.FC<Props> = () => {
   return (
     <Wrapper>
       <Link to="/">
-        <Logo>soon...</Logo>
+        <Logo>
+          <small>monkey see</small>
+          monkeyclone
+        </Logo>
       </Link>
       <Menu>
         {user ? (
@@ -51,9 +54,20 @@ const Wrapper = styled.div`
 `;
 
 const Logo = styled.h1`
-  font-size: 35px;
+  position: relative;
+  font-size: 36px;
   color: ${colors.main};
-  font-weight: 500;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  user-select: none;
+
+  small {
+    position: absolute;
+    color: ${colors.sub};
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 500;
+  }
 `;
 
 const Menu = styled.div`

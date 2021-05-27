@@ -25,6 +25,7 @@ button {
    outline: none;
    border: none;
    background: none;
+   user-select: none;
    font-size: 14px;
    font-weight: 600;
    cursor: pointer;

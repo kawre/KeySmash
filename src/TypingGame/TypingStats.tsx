@@ -13,7 +13,7 @@ interface Props {
 const TypingStats: React.FC<Props> = ({ errors, characters }) => {
   const {
     isPlaying,
-    timer,
+    time,
     wpm,
     setWPM,
     cpm,
@@ -25,21 +25,21 @@ const TypingStats: React.FC<Props> = ({ errors, characters }) => {
   } = useTypingData();
 
   useEffect(() => {
-    if (timer === 0) return;
+    if (time === 0) return;
     const diff = characters - errors;
-    const minute = timer / 60;
+    const minute = time / 60;
 
     setAcc(Math.floor((diff / characters) * 100));
     setCPM(Math.floor(diff / minute));
     setWPM(Math.floor(diff / minute / 5));
     setRaw(characters / minute / 5);
-  }, [timer]);
+  }, [time]);
 
   return (
     <Wrapper>
       {isPlaying && (
         <>
-          <Timer>{timer}</Timer>
+          <Timer>{time}</Timer>
           <WPM>{wpm}</WPM>
         </>
       )}
