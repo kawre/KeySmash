@@ -42,7 +42,7 @@ const Wrapper = styled.input`
   height: 50px;
   padding: 0 25px;
   margin-bottom: 15px;
-  border: 2px solid ${colors.border};
+  border: 2px solid ${colors.sub};
   transition: 150ms ease;
   font-size: 16px;
 
@@ -56,6 +56,6 @@ const Wrapper = styled.input`
 
   &:focus {
     background-color: ${colors.background};
-    border-color: ${colors.primary};
+    border-color: ${colors.main};
   }
 `;

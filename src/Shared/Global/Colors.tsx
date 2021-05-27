@@ -1,9 +1,9 @@
 export const colors = {
-  primary: "#ccffbd",
-  secondary: "#7eca9c",
-  background: "#40394a",
-  body: "#1c1427",
-  text: "#f8f5f1",
-  border: "#efefef40",
-  fail: "#e8505b",
+  background: "#262a33",
+  main: "#43ffaf",
+  caret: "#43ffaf",
+  sub: "#526777",
+  text: "#e5f7ef",
+  error: "#ff5f5f",
+  errorExtra: "#d22a2a",
 };

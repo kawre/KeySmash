@@ -23,8 +23,8 @@ const Header: React.FC<Props> = () => {
           </>
         ) : (
           <>
-            <Button reversed={true} type="login" />
-            <Button type="signup" />
+            <Button type="login" />
+            <Button reversed={true} type="signup" />
           </>
         )}
       </Menu>
@@ -51,7 +51,7 @@ const Wrapper = styled.div`
 
 const Logo = styled.h1`
   font-size: 35px;
-  color: ${colors.secondary};
+  color: ${colors.main};
   font-weight: 500;
 `;
 

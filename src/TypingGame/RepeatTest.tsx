@@ -39,7 +39,7 @@ const Wrapper = styled.div`
 const Icon = styled.button`
   cursor: pointer;
   height: 40px;
-  padding: 10px;
+  padding: 12px;
   width: 40px;
   transition: 150ms ease;
   border-radius: 4px;
@@ -47,10 +47,10 @@ const Icon = styled.button`
 
   &:hover,
   &:focus {
-    background: ${colors.background};
+    background: ${colors.sub};
 
     svg {
-      color: ${colors.secondary};
+      color: ${colors.main};
     }
   }
 
@@ -58,6 +58,6 @@ const Icon = styled.button`
     transition: 150ms ease;
     width: 100%;
     height: 100%;
-    color: ${colors.text}80;
+    color: ${colors.sub};
   }
 `;

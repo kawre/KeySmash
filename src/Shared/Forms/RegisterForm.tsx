@@ -92,10 +92,10 @@ const Wrapper = styled.div`
     padding-top: 15px;
     margin: auto;
     width: fit-content;
-    border-top: 1px solid ${colors.border};
+    /* border-top: 1px solid ${colors.sub}; */
 
     a {
-      color: ${colors.secondary};
+      color: ${colors.sub};
     }
   }
 `;

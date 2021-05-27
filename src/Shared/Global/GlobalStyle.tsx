@@ -1,5 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import { colors } from "./Colors";
+import onLoadBackground from "../Images/onload-background.jpg";
 
 export const GlobalStyle = createGlobalStyle`
 * {
@@ -11,7 +12,8 @@ export const GlobalStyle = createGlobalStyle`
 }
 
 body {
-   background-color: ${colors.body};
+   transition: background 100ms ease;
+   background: ${colors.background};
 }
 
 a {

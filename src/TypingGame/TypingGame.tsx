@@ -246,7 +246,7 @@ const Words = styled.div`
 const Word = styled.div`
   display: inline-block;
   border-bottom: 2px solid transparent;
-  color: ${colors.text}80;
+  color: ${colors.sub};
   margin: 6px;
   user-select: none;
   line-height: 24px;
@@ -254,13 +254,13 @@ const Word = styled.div`
   transition: 50ms;
 
   &.error {
-    border-bottom: 2px solid ${colors.fail};
+    border-bottom: 2px solid ${colors.error};
   }
 
   span {
     &.extra {
       transition: 1000ms;
-      color: ${colors.text}40 !important;
+      color: ${colors.errorExtra} !important;
     }
   }
 `;
@@ -269,14 +269,15 @@ const Letter = styled.span`
   transition: 50ms;
 
   &.correct {
-    color: ${colors.secondary};
+    color: ${colors.main};
   }
   &.incorrect {
-    color: ${colors.fail};
+    color: ${colors.error};
   }
 `;
 
 const FocusAlert = styled.div`
+  color: ${colors.text};
   position: absolute;
   left: 50%;
   top: 50%;
@@ -289,7 +290,6 @@ const FocusAlert = styled.div`
   z-index: 98;
 
   svg {
-    margin-right: 5px;
     margin-bottom: 2.5px;
     width: 30px;
     height: 30px;

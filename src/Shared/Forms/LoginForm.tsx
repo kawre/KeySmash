@@ -66,7 +66,7 @@ export default LoginForm;
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
-  background: ${colors.body};
+  background: ${colors.background};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,10 +83,10 @@ const Wrapper = styled.div`
     padding-top: 15px;
     margin: auto;
     width: fit-content;
-    border-top: 1px solid ${colors.border};
+    border-top: 1px solid ${colors.sub};
 
     a {
-      color: ${colors.secondary};
+      color: ${colors.main};
     }
   }
 `;

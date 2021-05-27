@@ -85,21 +85,24 @@ const IconButton = styled.div`
 const AccoutButton = styled.button`
   height: 35px;
   padding: 0 20px;
-  background: ${colors.secondary};
+  background: transparent;
   border-radius: 4px;
+  color: ${colors.sub};
 
   &:hover {
-    background: ${colors.background};
-    color: ${colors.secondary};
+    background: ${colors.sub};
+    color: ${colors.main};
   }
 
   &.reversed {
-    background: ${colors.background};
-    color: ${colors.secondary};
+    background: ${colors.main};
+    color: ${colors.background};
+    border: 2px solid transparent;
 
     &:hover {
-      background: ${colors.primary};
-      color: ${colors.background};
+      background: transparent;
+      color: ${colors.main};
+      border: 2px solid ${colors.main};
     }
   }
 `;
@@ -107,8 +110,8 @@ const AccoutButton = styled.button`
 const SubmitButton = styled.button`
   height: 35px;
   width: 100%;
-  background: ${colors.secondary};
-  color: ${colors.body};
+  background: ${colors.sub};
+  color: ${colors.background};
   border-radius: 4px;
   display: grid;
   place-items: center;

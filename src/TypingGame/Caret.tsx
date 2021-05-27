@@ -89,7 +89,7 @@ export default Caret;
 
 const Wrapper = styled.div`
   position: fixed;
-  background: ${colors.secondary};
+  background: ${colors.caret};
   width: 3px;
   border-radius: 99px;
 

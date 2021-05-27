@@ -43,7 +43,7 @@ const AddQuote: React.FC<Props> = () => {
         />
         <Button disabled={loading} type="submit">
           {loading ? (
-            <Loader type="ThreeDots" color={colors.body} height={5} />
+            <Loader type="ThreeDots" color={colors.background} height={5} />
           ) : (
             "Submit"
           )}
@@ -75,7 +75,7 @@ const Textarea = styled.textarea`
   width: 100%;
   min-height: 200px;
   max-height: 400px;
-  background: ${colors.background}80;
+  background: ${colors.background};
   border-radius: 4px;
   font-size: 18px;
   color: ${colors.text};
@@ -90,7 +90,7 @@ const Textarea = styled.textarea`
   }
 
   &:focus {
-    border: 2px solid ${colors.secondary}80;
+    border: 2px solid ${colors.main};
   }
 `;
 
@@ -98,5 +98,5 @@ const Button = styled.button`
   height: 35px;
   border-radius: 4px;
   width: 100%;
-  background: ${colors.secondary};
+  background: ${colors.main};
 `;
