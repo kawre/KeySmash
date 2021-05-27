@@ -1,6 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { useTypingData } from "../Contexts/TypingGameContext";
 import { colors } from "../Shared/Global/Colors";
 // Types -------------------------------------------------------------------------
 
@@ -9,9 +9,6 @@ interface Props {
   minusLetter: Element | undefined;
   focus: boolean;
   input: string;
-  word: Element | undefined;
-  words: string[];
-  isPlaying: boolean;
   current: number;
 }
 
@@ -21,14 +18,14 @@ const Caret: React.FC<Props> = ({
   letter,
   input,
   minusLetter,
-  word,
-  words,
-  isPlaying,
   current,
 }) => {
+  const { isPlaying, words } = useTypingData();
   const caretRef = useRef<HTMLDivElement>(null);
-  // const [showCaret, setShowCaret] = useState<boolean>(false);
   const [caretFlash, setCaretFlash] = useState<boolean>(true);
+  const [caretSize, setCaretSize] = useState<{ width: number; height: number }>(
+    { width: 0, height: 0 }
+  );
 
   // caret position
   useEffect(() => {
@@ -38,22 +35,21 @@ const Caret: React.FC<Props> = ({
 
   const caretCurrentLetter = () => {
     if (!letter) return;
-    const position = letter.getBoundingClientRect();
-    caretAnimation(position.left, position.top);
+    const rect = letter.getBoundingClientRect();
+    caretAnimation(rect.left, rect.top);
   };
 
   const caretOverflow = () => {
-    if (!word?.lastElementChild) return;
-    const position = word.lastElementChild.getBoundingClientRect();
-    caretAnimation(position.right, position.top);
+    if (!minusLetter) return;
+    const rect = minusLetter.getBoundingClientRect();
+    caretAnimation(rect.right, rect.top);
   };
 
   // on load caret position
   useEffect(() => {
-    if (!caretRef.current || !letter) return;
+    if (!letter || caretSize.height !== 0 || caretSize.width !== 0) return;
     const rect = letter.getBoundingClientRect();
-    caretRef.current.style.height = `${rect.height}px`;
-    // caretRef.current.style.width = `${rect.width / 5}px`;
+    setCaretSize({ width: rect.width / 5, height: rect.height });
   }, [caretRef, letter]);
 
   // smooth caret animation
@@ -68,18 +64,20 @@ const Caret: React.FC<Props> = ({
   // caret flash animation on stop
   useEffect(() => {
     if (!isPlaying) return;
-
     setCaretFlash(false);
     const timeout = setTimeout(() => setCaretFlash(true), 1250);
     return () => clearTimeout(timeout);
   }, [letter, minusLetter]);
 
-  const caretFlashClass = caretFlash ? "caret-flash-animation" : "";
-  // const showCaretClass = showCaret ? "" : "hidden";
-  const caretHidden = focus ? "" : "hidden";
+  const caretFlashClass = caretFlash && "caret-flash-animation";
+  const caretHidden = !focus && "hidden";
 
   return (
-    <Wrapper className={`${caretFlashClass} ${caretHidden}`} ref={caretRef} />
+    <Wrapper
+      style={{ height: caretSize.height, width: caretSize.width }}
+      className={`${caretFlashClass} ${caretHidden}`}
+      ref={caretRef}
+    />
   );
 };
 
@@ -90,7 +88,6 @@ export default Caret;
 const Wrapper = styled.div`
   position: fixed;
   background: ${colors.caret};
-  width: 2.5px;
   border-radius: 99px;
 
   &.caret-flash-animation {
@@ -104,8 +101,8 @@ const Wrapper = styled.div`
   @keyframes caretFlash {
     0%,
     100% {
-      opacity: 1;
       transform: scaleY(1);
+      opacity: 1;
     }
     80%,
     20% {

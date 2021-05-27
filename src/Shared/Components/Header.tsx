@@ -37,11 +37,12 @@ export default Header;
 // Styled ------------------------------------------------------------------------
 
 const Wrapper = styled.div`
-  width: 1000px;
+  width: 950px;
   position: absolute;
   top: 0;
   left: 50%;
   transform: translate(-50%);
+  z-index: 99;
 
   margin-top: 40px;
   display: flex;

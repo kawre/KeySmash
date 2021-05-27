@@ -13,7 +13,6 @@ const RepeatTest: React.FC<Props> = () => {
   const repeatHandler = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    console.log(e);
     getRandomQuote();
     setShowing(false);
     setTimeout(() => setShowing(true), 250);

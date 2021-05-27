@@ -1,7 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useData } from "../Contexts/DataContext";
 import { colors } from "../Shared/Global/Colors";
 import Caret from "./Caret";
 import { FcCursor } from "react-icons/fc";
@@ -9,6 +7,7 @@ import { keyValidation } from "./KeyValidation";
 import RepeatTest from "./RepeatTest";
 import TypingStats from "./TypingStats";
 import { useTypingData } from "../Contexts/TypingGameContext";
+import PostTestStats from "./PostTestStats";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -16,13 +15,11 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const TypingGame: React.FC<Props> = () => {
   // context
-  const { quote } = useTypingData();
+  const { words, timer, setPlaying, isPlaying } = useTypingData();
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
   const wordsRef = useRef<HTMLDivElement>(null);
   // state
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [words] = useState<string[]>(quote);
   const [focus, setFocus] = useState<boolean>(true);
   const [current, setCurrent] = useState<number>(0);
   const [currentKey, setCurrentKey] = useState<string>("");
@@ -33,9 +30,13 @@ const TypingGame: React.FC<Props> = () => {
   const [input, setInput] = useState<string>("");
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
-  const [timer, setTimer] = useState<number>(0);
   const [characters, setCharacters] = useState<number>(0);
   const [errors, setErrors] = useState<number>(0);
+
+  // TODO: DISPLAY STATS ELEMENT ON TEST COMPLETION
+  // TODO: POST MATCH STATS
+  // TODO: SMOOTH TRANSITION ON TEST RESTART
+  // TODO: HOST TYPING STATS ON FIREBASE => WPM & CPM
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     setCurrentKey(e.key);
@@ -45,26 +46,12 @@ const TypingGame: React.FC<Props> = () => {
     const key = keyValidation(e.key);
     if (key === "") return;
 
-    setIsPlaying(true);
+    setPlaying(true);
     setCharacters(characters + 1);
     if (input.length + 1 > words[current].length) createLetter(key);
     else letterValidation(key, e.key);
     setInput(input + key);
   };
-
-  useEffect(() => {
-    if (timer === 0) return;
-    const charSum = characters - errors;
-
-    let minute = timer / 60;
-    let cpm = Math.floor(charSum / minute);
-    let wpm = Math.floor(cpm / 5);
-    console.log("wpm:", wpm, "cpm:", cpm);
-  }, [timer]);
-
-  useEffect(() => {
-    console.log("characters:", characters, "errors:", errors);
-  }, [errors, characters]);
 
   const backspaceHandler = () => {
     if (current === 0 && input.length === 0) return;
@@ -76,14 +63,27 @@ const TypingGame: React.FC<Props> = () => {
       setCurrent(newCurrent);
       setInput(inputHistory[newCurrent]);
       setInputHistory(inputHistory.slice(0, -1));
+
+      if (!minusWord) return;
+      const classNames = ["incorrect", "correct", "extra"];
+      minusWord.childNodes.forEach((x, index) => {
+        const child = minusWord.children[index];
+
+        if (
+          !classNames.some((className) => child.classList.contains(className))
+        ) {
+          setErrors((i) => i - 1);
+          setCharacters((i) => i - 1);
+        }
+      });
       return;
     }
 
     setInput(input.slice(0, -1));
-
     if (!minusLetter) return;
     if (minusLetter.classList.contains("incorrect")) setErrors(errors - 1);
     minusLetter.classList.remove("incorrect", "correct");
+    setCharacters(characters - 1);
   };
 
   const spaceHandler = () => {
@@ -110,11 +110,6 @@ const TypingGame: React.FC<Props> = () => {
     letter.classList.add("incorrect");
     setErrors(errors + 1);
   };
-
-  // useEffect(() => {
-  //   console.log(current + 1 >= words.length);
-  //   if (current - 1 >= words.length) return setCurrent(words.length);
-  // }, [current]);
 
   // overflow removal handler
   useEffect(() => {
@@ -149,13 +144,23 @@ const TypingGame: React.FC<Props> = () => {
   useEffect(() => {
     if (!minusWord) return;
     const wordChildren = minusWord.childNodes;
+    const classNames = ["incorrect", "correct", "extra"];
 
-    wordChildren.forEach((child, index) => {
-      const childClass = minusWord.children[index].classList;
-      if (!childClass.contains("correct")) {
-        setCanGoBack(true);
+    wordChildren.forEach((i, index) => {
+      const minusChild = minusWord.children[index].classList;
+
+      if (!minusChild.contains("correct")) {
         minusWord.classList.add("error");
-        // setErrors((i) => i + 1);
+        setCanGoBack(true);
+      }
+
+      if (
+        !classNames.some((className) => minusChild.contains(className)) &&
+        currentKey === " "
+      ) {
+        setErrors((i) => i + 1);
+        setCharacters((i) => i + 1);
+        return;
       }
     });
   }, [word]);
@@ -173,26 +178,16 @@ const TypingGame: React.FC<Props> = () => {
     return () => word.classList.remove("active");
   }, [word]);
 
-  // timer
-  useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => setTimer(timer + 1), 1000);
-    return () => clearInterval(interval);
-  }, [isPlaying, timer]);
-
   return (
     <Wrapper>
       <Game>
-        <TypingStats current={current} timer={timer} isPlaying={isPlaying} />
+        <TypingStats characters={characters} errors={errors} />
         <GameContainer>
           <Caret
-            words={words}
             input={input}
             letter={letter}
             minusLetter={minusLetter}
-            word={word}
             focus={focus}
-            isPlaying={isPlaying}
             current={current}
           />
           {!focus && (
@@ -251,7 +246,7 @@ const Wrapper = styled.div`
 
 const Game = styled.div`
   position: relative;
-  width: 1000px;
+  width: 950px;
 `;
 
 const GameContainer = styled.div`
@@ -289,7 +284,6 @@ const Word = styled.div`
   user-select: none;
   line-height: 24px;
   font-size: 24px;
-  transition: 50ms;
 
   &.error {
     border-bottom: 2px solid ${colors.error};
@@ -297,7 +291,6 @@ const Word = styled.div`
 
   span {
     &.extra {
-      transition: 1000ms;
       color: ${colors.errorExtra} !important;
     }
   }
