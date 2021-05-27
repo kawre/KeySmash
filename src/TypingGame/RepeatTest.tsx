@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { FaRedoAlt } from "react-icons/fa";
 import { colors } from "../Shared/Global/Colors";
@@ -9,10 +9,11 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const RepeatTest: React.FC<Props> = () => {
-  const { getRandomQuote, isShowing, setShowing } = useTypingData();
+  const { getRandomQuote, setShowing } = useTypingData();
   const repeatHandler = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
+    console.log(e);
     getRandomQuote();
     setShowing(false);
     setTimeout(() => setShowing(true), 250);

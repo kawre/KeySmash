@@ -37,7 +37,7 @@ const TypingGameContext: React.FC = ({ children }) => {
 
   useEffect(() => {
     const getQuote = async () => {
-      setShowing(false);
+      // setShowing(false);
       try {
         await getRandomQuote();
       } catch {

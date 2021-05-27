@@ -90,7 +90,7 @@ export default Caret;
 const Wrapper = styled.div`
   position: fixed;
   background: ${colors.caret};
-  width: 3px;
+  width: 2.5px;
   border-radius: 99px;
 
   &.caret-flash-animation {

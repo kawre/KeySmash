@@ -34,6 +34,8 @@ const TypingGame: React.FC<Props> = () => {
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(0);
+  const [characters, setCharacters] = useState<number>(0);
+  const [errors, setErrors] = useState<number>(0);
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     setCurrentKey(e.key);
@@ -44,12 +46,28 @@ const TypingGame: React.FC<Props> = () => {
     if (key === "") return;
 
     setIsPlaying(true);
+    setCharacters(characters + 1);
     if (input.length + 1 > words[current].length) createLetter(key);
     else letterValidation(key, e.key);
     setInput(input + key);
   };
 
+  useEffect(() => {
+    if (timer === 0) return;
+    const charSum = characters - errors;
+
+    let minute = timer / 60;
+    let cpm = Math.floor(charSum / minute);
+    let wpm = Math.floor(cpm / 5);
+    console.log("wpm:", wpm, "cpm:", cpm);
+  }, [timer]);
+
+  useEffect(() => {
+    console.log("characters:", characters, "errors:", errors);
+  }, [errors, characters]);
+
   const backspaceHandler = () => {
+    if (current === 0 && input.length === 0) return;
     if (canGoBack && input.length === 0) {
       if (!minusWord) return;
       let newCurrent = current - 1;
@@ -64,11 +82,12 @@ const TypingGame: React.FC<Props> = () => {
     setInput(input.slice(0, -1));
 
     if (!minusLetter) return;
+    if (minusLetter.classList.contains("incorrect")) setErrors(errors - 1);
     minusLetter.classList.remove("incorrect", "correct");
   };
 
   const spaceHandler = () => {
-    if (input === "") return;
+    if (current + 1 >= words.length || input === "") return;
     setInputHistory([...inputHistory, input]);
     setCurrent(current + 1);
     setInput("");
@@ -76,6 +95,7 @@ const TypingGame: React.FC<Props> = () => {
 
   const createLetter = (key: string) => {
     if (!word) return;
+    setErrors(errors + 1);
     const letter = document.createElement("span");
     letter.textContent = key;
     letter.classList.add("extra");
@@ -85,9 +105,16 @@ const TypingGame: React.FC<Props> = () => {
   const letterValidation = (key: string, eventKey: string) => {
     if (eventKey === " " || eventKey === "Backspace" || !letter) return;
 
-    if (letter.innerHTML === key) letter.classList.add("correct");
-    else letter.classList.add("incorrect");
+    if (letter.innerHTML === key) return letter.classList.add("correct");
+
+    letter.classList.add("incorrect");
+    setErrors(errors + 1);
   };
+
+  // useEffect(() => {
+  //   console.log(current + 1 >= words.length);
+  //   if (current - 1 >= words.length) return setCurrent(words.length);
+  // }, [current]);
 
   // overflow removal handler
   useEffect(() => {
@@ -103,6 +130,7 @@ const TypingGame: React.FC<Props> = () => {
     if (currentWord.childElementCount === input.length + 1) {
       if (!currentWord.lastElementChild) return;
       currentWord.lastElementChild.remove();
+      setErrors(errors - 1);
     }
   }, [input]);
 
@@ -127,6 +155,7 @@ const TypingGame: React.FC<Props> = () => {
       if (!childClass.contains("correct")) {
         setCanGoBack(true);
         minusWord.classList.add("error");
+        // setErrors((i) => i + 1);
       }
     });
   }, [word]);
@@ -208,6 +237,16 @@ const Wrapper = styled.div`
   height: 100vh;
   display: grid;
   place-items: center;
+  animation: fadeIn 100ms forwards;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 `;
 
 const Game = styled.div`
