@@ -1,21 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { FaRedoAlt } from "react-icons/fa";
 import { colors } from "../Shared/Global/Colors";
+import { useTypingData } from "../Contexts/TypingGameContext";
 // Types -------------------------------------------------------------------------
 
-interface Props {
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface Props {}
 
 // Component ---------------------------------------------------------------------
-const RepeatTest: React.FC<Props> = ({ setShow }) => {
+const RepeatTest: React.FC<Props> = () => {
+  const { getRandomQuote, isShowing, setShowing } = useTypingData();
   const repeatHandler = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    setShow(false);
-    setTimeout(() => setShow(true), 500);
+    getRandomQuote();
+    setShowing(false);
+    setTimeout(() => setShowing(true), 250);
   };
+
   return (
     <Wrapper>
       <Icon onClickCapture={repeatHandler} tabIndex={2}>

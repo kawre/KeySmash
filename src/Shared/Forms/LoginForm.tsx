@@ -82,8 +82,9 @@ const Wrapper = styled.div`
     color: ${colors.text};
     padding-top: 15px;
     margin: auto;
+    margin-top: 20px;
     width: fit-content;
-    border-top: 1px solid ${colors.sub};
+    border-top: 1px solid ${colors.main};
 
     a {
       color: ${colors.main};

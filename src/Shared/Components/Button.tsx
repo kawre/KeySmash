@@ -110,7 +110,7 @@ const AccoutButton = styled.button`
 const SubmitButton = styled.button`
   height: 35px;
   width: 100%;
-  background: ${colors.sub};
+  background: ${colors.main};
   color: ${colors.background};
   border-radius: 4px;
   display: grid;

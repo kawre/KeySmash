@@ -8,22 +8,21 @@ import { FcCursor } from "react-icons/fc";
 import { keyValidation } from "./KeyValidation";
 import RepeatTest from "./RepeatTest";
 import TypingStats from "./TypingStats";
+import { useTypingData } from "../Contexts/TypingGameContext";
 // Types -------------------------------------------------------------------------
 
-interface Props {
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface Props {}
 
 // Component ---------------------------------------------------------------------
-const TypingGame: React.FC<Props> = ({ setShow }) => {
+const TypingGame: React.FC<Props> = () => {
   // context
-  const { quote } = useData();
+  const { quote } = useTypingData();
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
   const wordsRef = useRef<HTMLDivElement>(null);
   // state
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [words] = useState<string[]>(quote.split(" "));
+  const [words] = useState<string[]>(quote);
   const [focus, setFocus] = useState<boolean>(true);
   const [current, setCurrent] = useState<number>(0);
   const [currentKey, setCurrentKey] = useState<string>("");
@@ -194,7 +193,7 @@ const TypingGame: React.FC<Props> = ({ setShow }) => {
             })}
           </Words>
         </GameContainer>
-        <RepeatTest setShow={setShow} />
+        <RepeatTest />
       </Game>
     </Wrapper>
   );
@@ -237,9 +236,9 @@ const Input = styled.input`
 
 const Words = styled.div`
   &.blur {
-    filter: blur(8px);
+    filter: blur(4px);
     transition: 300ms;
-    opacity: 0.25;
+    opacity: 0.4;
   }
 `;
 

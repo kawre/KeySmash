@@ -4,6 +4,7 @@ import styled from "styled-components";
 import AddQuote from "./AddQuote/AddQuote";
 import { AuthProvider } from "./Contexts/AuthContext";
 import { DataProvider } from "./Contexts/DataContext";
+import TypingGameContext from "./Contexts/TypingGameContext";
 import Header from "./Shared/Components/Header";
 import LoginForm from "./Shared/Forms/LoginForm";
 import RegisterForm from "./Shared/Forms/RegisterForm";
@@ -24,7 +25,11 @@ const App = () => {
             <Route
               exact
               path="/"
-              component={() => (show ? <TypingGame setShow={setShow} /> : null)}
+              component={() => (
+                <TypingGameContext>
+                  <TypingGame />
+                </TypingGameContext>
+              )}
             />
           </Switch>
         </DataProvider>

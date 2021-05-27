@@ -35,16 +35,16 @@ export default TextField;
 // Styled ------------------------------------------------------------------------
 
 const Wrapper = styled.input`
-  background: transparent;
-  color: ${colors.text};
+  /* background: ${colors.text}1a; */
   outline: none;
   border-radius: 6px;
   height: 50px;
   padding: 0 25px;
   margin-bottom: 15px;
-  border: 2px solid ${colors.sub};
   transition: 150ms ease;
   font-size: 16px;
+  color: ${colors.text};
+  border: 2px solid ${colors.sub};
 
   &:hover {
     background-color: ${colors.background};
@@ -52,6 +52,7 @@ const Wrapper = styled.input`
 
   &::placeholder {
     font-weight: 500;
+    color: ${colors.sub};
   }
 
   &:focus {
