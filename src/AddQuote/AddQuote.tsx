@@ -75,7 +75,7 @@ const Textarea = styled.textarea`
   width: 100%;
   min-height: 200px;
   max-height: 400px;
-  background: ${colors.background};
+  background: #0000001a;
   border-radius: 4px;
   font-size: 18px;
   color: ${colors.text};
@@ -85,12 +85,9 @@ const Textarea = styled.textarea`
   resize: vertical;
   transition: border 150ms;
 
-  &:hover {
-    border: 2px solid ${colors.background};
-  }
-
+  &:hover,
   &:focus {
-    border: 2px solid ${colors.main};
+    border: 2px solid ${colors.sub};
   }
 `;
 

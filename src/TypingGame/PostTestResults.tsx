@@ -1,17 +1,43 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { useTypingData } from "../Contexts/TypingGameContext";
+import Button from "../Shared/Components/Button";
 import { colors } from "../Shared/Global/Colors";
+import { FaChevronRight } from "react-icons/fa";
+import TypingChart from "./TypingChart";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
 const PostTestStats: React.FC<Props> = () => {
-  const { results, setResults, wpm, cpm, acc, raw, characters, errors, time } =
-    useTypingData();
+  const {
+    results,
+    setResults,
+    wpm,
+    cpm,
+    acc,
+    raw,
+    characters,
+    errors,
+    time,
+    repeatTest,
+  } = useTypingData();
+
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const repeatHandler = () => {
+    if (!resultsRef.current) return;
+    const ref = resultsRef.current.classList;
+    ref.add("fade-out");
+    setTimeout(() => {
+      ref.remove("fade-out");
+      repeatTest();
+    }, 150);
+  };
+
   return (
-    <Wrapper className={`${!results && "hidden"}`}>
+    <Wrapper ref={resultsRef} className={`${!results && "hidden"}`}>
       <Top>
         <TopLeft>
           <WPM>
@@ -23,15 +49,21 @@ const PostTestStats: React.FC<Props> = () => {
             {acc}%
           </Acc>
         </TopLeft>
-        <TopRight>
-          <Graph></Graph>
-        </TopRight>
+        {/* <TopRight> */}
+        {/* <Graph> */}
+        <TypingChart />
+        {/* </Graph> */}
+        {/* </TopRight> */}
       </Top>
       <Bottom>
         <Raw>
           <p>raw</p>
           {raw}
         </Raw>
+        <Cpm>
+          <p>cpm</p>
+          {cpm}
+        </Cpm>
         <Characters>
           <p>characters</p>
           <div>
@@ -45,7 +77,11 @@ const PostTestStats: React.FC<Props> = () => {
           {time}s
         </Time>
       </Bottom>
-      <Panel></Panel>
+      <Panel>
+        <Button type="test" tabIndex={0} onClickCapture={repeatHandler}>
+          <FaChevronRight />
+        </Button>
+      </Panel>
     </Wrapper>
   );
 };
@@ -62,24 +98,49 @@ const Wrapper = styled.div`
   width: 950px;
   font-size: 64px;
   color: ${colors.main};
+  animation: fadeIn 300ms forwards;
 
   p {
     font-size: 32px;
     color: ${colors.sub};
     line-height: 15px;
   }
+
+  &.fade-out {
+    animation: fadeOut 150ms forwards;
+  }
+
+  @keyframes fadeOut {
+    0% {
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -45%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 `;
 
 // Top
 const Top = styled.div`
   display: flex;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 `;
 
 // Top left
 const TopLeft = styled.div`
   flex-shrink: 0;
-  padding-right: 25px;
+  margin-right: 15px;
 `;
 
 const WPM = styled.div``;
@@ -89,6 +150,7 @@ const Acc = styled.div``;
 // Top right
 const TopRight = styled.div`
   width: 100%;
+  height: 200px;
 `;
 
 const Graph = styled.div`
@@ -121,7 +183,7 @@ const Characters = styled.div`
       color: ${colors.main};
     }
     &.slash {
-      padding: 0 10px;
+      padding: 0 6px;
       color: ${colors.sub};
     }
   }
@@ -131,8 +193,11 @@ const Time = styled.div``;
 
 const Raw = styled.div``;
 
+const Cpm = styled.div``;
+
 // Panel
 const Panel = styled.div`
+  margin-top: 15px;
   display: flex;
   justify-content: center;
 `;

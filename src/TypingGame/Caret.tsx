@@ -7,20 +7,13 @@ import { colors } from "../Shared/Global/Colors";
 interface Props {
   letter: Element | undefined;
   minusLetter: Element | undefined;
-  focus: boolean;
   input: string;
   current: number;
 }
 
 // Component ---------------------------------------------------------------------
-const Caret: React.FC<Props> = ({
-  focus,
-  letter,
-  input,
-  minusLetter,
-  current,
-}) => {
-  const { isPlaying, words } = useTypingData();
+const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
+  const { isPlaying, words, focus } = useTypingData();
   const caretRef = useRef<HTMLDivElement>(null);
   const [caretFlash, setCaretFlash] = useState<boolean>(true);
   const [caretSize, setCaretSize] = useState<{ width: number; height: number }>(

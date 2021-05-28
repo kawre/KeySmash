@@ -26,12 +26,13 @@ const TypingGame: React.FC<Props> = () => {
     setCharacters,
     errors,
     setErrors,
+    focus,
+    setFocus,
   } = useTypingData();
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
   const wordsRef = useRef<HTMLDivElement>(null);
   // state
-  const [focus, setFocus] = useState<boolean>(true);
   const [current, setCurrent] = useState<number>(0);
   const [currentKey, setCurrentKey] = useState<string>("");
   const [letter, setLetter] = useState<Element>();
@@ -41,6 +42,7 @@ const TypingGame: React.FC<Props> = () => {
   const [input, setInput] = useState<string>("");
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
+  const [blur, setBlur] = useState<boolean>(true);
 
   // TODO: DISPLAY STATS ELEMENT ON TEST COMPLETION
   // TODO: POST MATCH STATS
@@ -129,6 +131,10 @@ const TypingGame: React.FC<Props> = () => {
     setErrors(errors + 1);
   };
 
+  useEffect(() => {
+    console.log(letter);
+  }, [letter]);
+
   // overflow removal handler
   useEffect(() => {
     if (
@@ -196,6 +202,13 @@ const TypingGame: React.FC<Props> = () => {
     return () => word.classList.remove("active");
   }, [word]);
 
+  // blur on focus loss
+  useEffect(() => {
+    if (focus) return setBlur(false);
+    const timeout = setTimeout(() => setBlur(true), 750);
+    return () => clearTimeout(timeout);
+  }, [focus]);
+
   return (
     <Wrapper>
       <Game>
@@ -205,10 +218,9 @@ const TypingGame: React.FC<Props> = () => {
             input={input}
             letter={letter}
             minusLetter={minusLetter}
-            focus={focus}
             current={current}
           />
-          {!focus && (
+          {blur && (
             <FocusAlert>
               <FcCursor />
               Click or press any key to focus
@@ -219,11 +231,11 @@ const TypingGame: React.FC<Props> = () => {
             autoFocus
             autoComplete="off"
             onFocus={() => setFocus(true)}
-            onBlur={() => setTimeout(() => setFocus(false), 1000)}
+            onBlur={() => setFocus(false)}
             onKeyDown={inputHandler}
             ref={inputRef}
           />
-          <Words className={focus ? "" : "blur"} ref={wordsRef}>
+          <Words className={blur ? "blur" : ""} ref={wordsRef}>
             {words.map((word, index) => {
               return (
                 <Word key={word + index}>
@@ -250,7 +262,7 @@ const Wrapper = styled.div`
   height: 100vh;
   display: grid;
   place-items: center;
-  animation: fadeIn 100ms forwards;
+  animation: fadeIn 150ms forwards;
 
   @keyframes fadeIn {
     0% {

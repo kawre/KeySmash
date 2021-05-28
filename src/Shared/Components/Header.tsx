@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
 import { colors } from "../Global/Colors";
+import { FaKeyboard } from "react-icons/fa";
+import { TiUser } from "react-icons/ti";
 import Button from "./Button";
 // Types -------------------------------------------------------------------------
 
@@ -13,12 +15,26 @@ const Header: React.FC<Props> = () => {
   const { user } = useAuth();
   return (
     <Wrapper>
-      <Link to="/">
-        <Logo>
-          <small>monkey see</small>
-          monkeyclone
-        </Logo>
-      </Link>
+      <Left>
+        <Link to="/">
+          <Logo>
+            <small>monkey see</small>
+            <p>monkeyclone</p>
+          </Logo>
+        </Link>
+        <Navigation>
+          <Link to="/">
+            <Button type="icon">
+              <FaKeyboard />
+            </Button>
+          </Link>
+          <Link to="">
+            <Button type="icon">
+              <TiUser />
+            </Button>
+          </Link>
+        </Navigation>
+      </Left>
       <Menu>
         {user ? (
           <>
@@ -41,33 +57,52 @@ export default Header;
 
 const Wrapper = styled.div`
   width: 950px;
+  height: 50px;
   position: absolute;
   top: 0;
   left: 50%;
   transform: translate(-50%);
   z-index: 99;
 
-  margin-top: 30px;
+  margin-top: 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-const Logo = styled.h1`
+const Left = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100%;
+`;
+
+const Logo = styled.div`
   position: relative;
-  font-size: 36px;
   color: ${colors.main};
-  font-weight: 400;
-  letter-spacing: -0.5px;
+  white-space: nowrap;
   user-select: none;
+  transition: 250ms;
+
+  p {
+    font-size: 36px;
+    line-height: 36px;
+  }
 
   small {
     position: absolute;
+    top: -6px;
     color: ${colors.sub};
-    font-size: 11px;
-    line-height: 14px;
+    font-size: 10.3px;
     font-weight: 500;
   }
+`;
+
+const Navigation = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-top: 2px;
+  padding-left: 10px;
 `;
 
 const Menu = styled.div`

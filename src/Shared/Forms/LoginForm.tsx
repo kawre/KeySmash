@@ -35,13 +35,13 @@ const LoginForm = () => {
         {({ isSubmitting }) => (
           <Form>
             <Field
-              placeholder="Email"
+              placeholder="email"
               name="email"
               type="email"
               as={TextField}
             />
             <Field
-              placeholder="Password"
+              placeholder="password"
               name="password"
               type="password"
               as={TextField}
@@ -80,11 +80,9 @@ const Wrapper = styled.div`
   small {
     text-align: center;
     color: ${colors.text};
-    padding-top: 15px;
+    padding-top: 20px;
     margin: auto;
-    margin-top: 20px;
     width: fit-content;
-    border-top: 1px solid ${colors.main};
 
     a {
       color: ${colors.main};

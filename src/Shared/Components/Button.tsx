@@ -87,14 +87,18 @@ export default Button;
 // Styled ------------------------------------------------------------------------
 
 const IconButton = styled.div`
+  display: flex;
+  transition: 250ms;
+  color: ${colors.sub};
   cursor: pointer;
-  height: 33px;
-  width: 36px;
   padding: 8px;
 
+  &:hover {
+    color: ${colors.text};
+  }
+
   svg {
-    width: 100%;
-    height: 100%;
+    width: 20px;
   }
 `;
 
@@ -106,31 +110,39 @@ const AccoutButton = styled.button`
   color: ${colors.sub};
 
   &:hover {
-    background: ${colors.sub};
     color: ${colors.main};
+  }
+  &:active {
+    background: ${colors.sub};
   }
 
   &.reversed {
     background: ${colors.main};
     color: ${colors.background};
-    border: 2px solid transparent;
 
     &:hover {
-      background: transparent;
       color: ${colors.main};
-      border: 2px solid ${colors.main};
+      background: ${colors.background};
+    }
+
+    &:active {
+      background: ${colors.sub};
     }
   }
 `;
 
 const SubmitButton = styled.button`
-  height: 35px;
+  padding: 10px 0;
   width: 100%;
-  background: ${colors.main};
-  color: ${colors.background};
+  background: #0000001a;
+  color: ${colors.text};
   border-radius: 4px;
-  display: grid;
-  place-items: center;
+  text-align: center;
+
+  &:hover {
+    background: ${colors.main};
+    color: ${colors.background};
+  }
 `;
 
 const Test = styled.button`
@@ -139,7 +151,7 @@ const Test = styled.button`
   border-radius: 4px;
   outline: none;
   cursor: pointer;
-  transition: 150ms ease;
+  transition: 250ms ease;
 
   &:hover,
   &:focus {
@@ -155,11 +167,9 @@ const Test = styled.button`
   }
 
   svg {
-    transition: 150ms ease;
-    width: 100%;
-    height: 100%;
-    min-width: 20px;
-    min-height: 20px;
+    transition: 250ms ease;
+    height: 20px;
+    width: 20px;
     color: ${colors.sub};
   }
 `;

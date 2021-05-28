@@ -6,10 +6,10 @@ import TypingGame from "../TypingGame/TypingGame";
 // Types -------------------------------------------------------------------------
 
 interface Context {
+  // states
   setShowing: React.Dispatch<React.SetStateAction<boolean>>;
   isShowing: boolean;
   words: string[];
-  getRandomQuote: () => Promise<void>;
   wpm: number;
   setWPM: React.Dispatch<React.SetStateAction<number>>;
   cpm: number;
@@ -28,19 +28,24 @@ interface Context {
   setCharacters: React.Dispatch<React.SetStateAction<number>>;
   errors: number;
   setErrors: React.Dispatch<React.SetStateAction<number>>;
-  repeatTest: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  focus: boolean;
+  setFocus: React.Dispatch<React.SetStateAction<boolean>>;
+  // functions
+  getRandomQuote: () => Promise<void>;
+  repeatTest: () => void;
 }
 
-const TypingContext = createContext<Context>(undefined!);
+const TypingGameContext = createContext<Context>(undefined!);
 
 export function useTypingData() {
-  return useContext(TypingContext);
+  return useContext(TypingGameContext);
 }
 
 // Component ---------------------------------------------------------------------
-const TypingGameContext: React.FC = ({ children }) => {
+const TypingContext: React.FC = () => {
   const [isPlaying, setPlaying] = useState<Context["isPlaying"]>(false);
   const [isShowing, setShowing] = useState<Context["isShowing"]>(false);
+  const [focus, setFocus] = useState<Context["focus"]>(false);
   const [words, setWords] = useState<Context["words"]>([""]);
   const [wpm, setWPM] = useState<Context["wpm"]>(0);
   const [cpm, setCPM] = useState<Context["cpm"]>(0);
@@ -65,15 +70,28 @@ const TypingGameContext: React.FC = ({ children }) => {
     });
   };
 
-  const repeatTest = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const repeatTest = () => {
     getRandomQuote();
+    defaultStates();
+    setTimeout(() => setShowing(true), 150);
+  };
+
+  const defaultStates = () => {
+    setPlaying(false);
     setShowing(false);
-    setTimeout(() => setShowing(true), 250);
+    setFocus(true);
+    setWPM(0);
+    setCPM(0);
+    setRaw(0);
+    setAcc(0);
+    setTime(0);
+    setResults(false);
+    setCharacters(0);
+    setErrors(0);
   };
 
   useEffect(() => {
     const getQuote = async () => {
-      // setShowing(false);
       try {
         await getRandomQuote();
       } catch {
@@ -116,17 +134,19 @@ const TypingGameContext: React.FC = ({ children }) => {
     errors,
     setErrors,
     repeatTest,
+    focus,
+    setFocus,
   };
 
   return (
-    <TypingContext.Provider value={value}>
+    <TypingGameContext.Provider value={value}>
       {isShowing && <TypingGame />}
       <PostTestStats />
-    </TypingContext.Provider>
+    </TypingGameContext.Provider>
   );
 };
 
-export default TypingGameContext;
+export default TypingContext;
 
 // Styled ------------------------------------------------------------------------
 

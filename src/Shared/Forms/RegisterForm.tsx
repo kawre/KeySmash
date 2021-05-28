@@ -38,19 +38,19 @@ const RegisterForm = () => {
         {({ isSubmitting }) => (
           <Form>
             <Field
-              placeholder="Username"
+              placeholder="username"
               name="username"
               type="username"
               as={TextField}
             />
             <Field
-              placeholder="Password"
+              placeholder="password"
               name="password"
               type="password"
               as={TextField}
             />
             <Field
-              placeholder="Email"
+              placeholder="email"
               name="email"
               type="email"
               as={TextField}
@@ -89,13 +89,12 @@ const Wrapper = styled.div`
   small {
     text-align: center;
     color: ${colors.text};
-    padding-top: 15px;
+    padding-top: 20px;
     margin: auto;
     width: fit-content;
-    /* border-top: 1px solid ${colors.sub}; */
 
     a {
-      color: ${colors.sub};
+      color: ${colors.main};
     }
   }
 `;
