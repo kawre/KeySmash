@@ -49,11 +49,7 @@ const PostTestStats: React.FC<Props> = () => {
             {acc}%
           </Acc>
         </TopLeft>
-        {/* <TopRight> */}
-        {/* <Graph> */}
         <TypingChart />
-        {/* </Graph> */}
-        {/* </TopRight> */}
       </Top>
       <Bottom>
         <Raw>
@@ -151,12 +147,6 @@ const Acc = styled.div``;
 const TopRight = styled.div`
   width: 100%;
   height: 200px;
-`;
-
-const Graph = styled.div`
-  width: 100%;
-  height: 100%;
-  background: ${colors.sub};
 `;
 
 // Bottom

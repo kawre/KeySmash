@@ -64,9 +64,10 @@ const TypingContext: React.FC = () => {
 
     return ref.get().then((quotes) => {
       const randomQuote =
-        quotes.docs[Math.floor(Math.random() * quotes.docs.length)].data();
+        quotes.docs[Math.floor(Math.random() * quotes.docs.length)].data()
+          .quote;
 
-      setWords(randomQuote.quote.split(" "));
+      setWords(randomQuote.split(" "));
     });
   };
 
