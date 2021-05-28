@@ -42,12 +42,7 @@ const TypingGame: React.FC<Props> = () => {
   const [input, setInput] = useState<string>("");
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
-  const [blur, setBlur] = useState<boolean>(true);
-
-  // TODO: DISPLAY STATS ELEMENT ON TEST COMPLETION
-  // TODO: POST MATCH STATS
-  // TODO: SMOOTH TRANSITION ON TEST RESTART
-  // TODO: HOST TYPING STATS ON FIREBASE => WPM & CPM
+  const [blur, setBlur] = useState<boolean>(false);
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     setCurrentKey(e.key);
@@ -130,10 +125,6 @@ const TypingGame: React.FC<Props> = () => {
     letter.classList.add("incorrect");
     setErrors(errors + 1);
   };
-
-  useEffect(() => {
-    console.log(letter);
-  }, [letter]);
 
   // overflow removal handler
   useEffect(() => {
