@@ -1,20 +1,13 @@
 import { createGlobalStyle } from "styled-components";
-import { colors } from "./Colors";
-import onLoadBackground from "../Images/onload-background.jpg";
 import { font } from "./Font";
 
-export const GlobalStyle = createGlobalStyle`
+const GlobalStyle = createGlobalStyle`
 * {
    margin: 0;
    padding: 0;
    box-sizing: border-box;
    font-family: ${font};
    font-variant-ligatures: none;
-}
-
-body {
-   transition: background 100ms ease;
-   background: ${colors.background};
 }
 
 a {
@@ -37,3 +30,5 @@ button {
    opacity: 0;
 }
 `;
+
+export default GlobalStyle;
