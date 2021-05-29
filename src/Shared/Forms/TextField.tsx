@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { colors } from "../Global/Colors";
 // Types -------------------------------------------------------------------------
 
 interface Props {
@@ -44,10 +43,10 @@ const Wrapper = styled.input`
   margin-bottom: 15px;
   transition: 150ms ease;
   font-size: 16px;
-  color: ${colors.text};
+  color: ${(props) => props.theme.text};
 
   &::placeholder {
     font-weight: 500;
-    color: ${colors.sub};
+    color: ${(props) => props.theme.sub};
   }
 `;

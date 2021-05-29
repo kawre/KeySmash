@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useData } from "../Contexts/DataContext";
-import { colors } from "../Shared/Global/Colors";
 import Loader from "react-loader-spinner";
 // Types -------------------------------------------------------------------------
 
@@ -43,7 +42,7 @@ const AddQuote: React.FC<Props> = () => {
         />
         <Button disabled={loading} type="submit">
           {loading ? (
-            <Loader type="ThreeDots" color={colors.background} height={5} />
+            <Loader type="ThreeDots" color="#ffffff" height={5} />
           ) : (
             "Submit"
           )}
@@ -78,7 +77,7 @@ const Textarea = styled.textarea`
   background: #0000001a;
   border-radius: 4px;
   font-size: 18px;
-  color: ${colors.text};
+  color: ${(props) => props.theme.text};
   padding: 15px;
   outline: none;
   border: 2px solid transparent;
@@ -87,7 +86,7 @@ const Textarea = styled.textarea`
 
   &:hover,
   &:focus {
-    border: 2px solid ${colors.sub};
+    border: 2px solid ${(props) => props.theme.sub};
   }
 `;
 
@@ -95,5 +94,5 @@ const Button = styled.button`
   height: 35px;
   border-radius: 4px;
   width: 100%;
-  background: ${colors.main};
+  background: ${(props) => props.theme.main};
 `;

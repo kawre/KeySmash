@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import styled from "styled-components";
 import { firestore } from "../firebase";
 import PostTestStats from "../TypingGame/PostTestResults";
 import TypingGame from "../TypingGame/TypingGame";
@@ -148,7 +147,3 @@ const TypingContext: React.FC = () => {
 };
 
 export default TypingContext;
-
-// Styled ------------------------------------------------------------------------
-
-const Wrapper = styled.div``;

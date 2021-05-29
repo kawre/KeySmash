@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { colors } from "../Shared/Global/Colors";
 import Caret from "./Caret";
 import { FcCursor } from "react-icons/fc";
 import { keyValidation } from "./KeyValidation";
 import RepeatTest from "./RepeatTest";
 import TypingStats from "./TypingStats";
 import { useTypingData } from "../Contexts/TypingGameContext";
-import PostTestStats from "./PostTestResults";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -300,19 +298,19 @@ const Words = styled.div`
 const Word = styled.div`
   display: inline-block;
   border-bottom: 2px solid transparent;
-  color: ${colors.sub};
+  color: ${(props) => props.theme.sub};
   margin: 6px;
   user-select: none;
   line-height: 24px;
   font-size: 24px;
 
   &.error {
-    border-bottom: 2px solid ${colors.error};
+    border-bottom: 2px solid ${(props) => props.theme.error};
   }
 
   span {
     &.extra {
-      color: ${colors.errorExtra} !important;
+      color: ${({ theme }) => theme.errorExtra} !important;
     }
   }
 `;
@@ -321,15 +319,15 @@ const Letter = styled.span`
   transition: 50ms;
 
   &.correct {
-    color: ${colors.main};
+    color: ${(props) => props.theme.main};
   }
   &.incorrect {
-    color: ${colors.error};
+    color: ${(props) => props.theme.error};
   }
 `;
 
 const FocusAlert = styled.div`
-  color: ${colors.text};
+  color: ${(props) => props.theme.text};
   position: absolute;
   left: 50%;
   top: 50%;

@@ -3,12 +3,11 @@ import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
 import Button from "../Components/Button";
-import { colors } from "../Global/Colors";
 import TextField from "./TextField";
 // Types -------------------------------------------------------------------------
 
 // Component ---------------------------------------------------------------------
-const LoginForm = () => {
+const LoginForm: React.FC = () => {
   const { user, logIn } = useAuth();
 
   if (user !== null) return <Redirect to="/" />;
@@ -66,7 +65,7 @@ export default LoginForm;
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
-  background: ${colors.background};
+  background: ${(props) => props.theme.background};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -79,13 +78,13 @@ const Wrapper = styled.div`
 
   small {
     text-align: center;
-    color: ${colors.text};
+    color: ${(props) => props.theme.text};
     padding-top: 20px;
     margin: auto;
     width: fit-content;
 
     a {
-      color: ${colors.main};
+      color: ${(props) => props.theme.main};
     }
   }
 `;

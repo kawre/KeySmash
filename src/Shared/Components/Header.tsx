@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
-import { colors } from "../Global/Colors";
 import { FaKeyboard } from "react-icons/fa";
 import { TiUser } from "react-icons/ti";
 import Button from "./Button";
@@ -78,7 +77,7 @@ const Left = styled.div`
 
 const Logo = styled.div`
   position: relative;
-  color: ${colors.main};
+  color: ${(props) => props.theme.main};
   white-space: nowrap;
   user-select: none;
   transition: 250ms;
@@ -91,7 +90,7 @@ const Logo = styled.div`
   small {
     position: absolute;
     top: -6px;
-    color: ${colors.sub};
+    color: ${(props) => props.theme.sub};
     font-size: 10.3px;
     font-weight: 500;
   }

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTypingData } from "../Contexts/TypingGameContext";
-import { colors } from "../Shared/Global/Colors";
 // Types -------------------------------------------------------------------------
 
 interface Props {
@@ -80,7 +79,7 @@ export default Caret;
 
 const Wrapper = styled.div`
   position: fixed;
-  background: ${colors.caret};
+  background: ${(props) => props.theme.caret};
   border-radius: 99px;
 
   &.caret-flash-animation {

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { FaRedoAlt } from "react-icons/fa";
-import { colors } from "../Shared/Global/Colors";
 import { useTypingData } from "../Contexts/TypingGameContext";
 import Button from "../Shared/Components/Button";
 // Types -------------------------------------------------------------------------
@@ -44,10 +43,10 @@ const Icon = styled.button`
 
   &:hover,
   &:focus {
-    background: ${colors.sub};
+    background: ${(props) => props.theme.sub};
 
     svg {
-      color: ${colors.main};
+      color: ${(props) => props.theme.main};
     }
   }
 
@@ -55,6 +54,6 @@ const Icon = styled.button`
     transition: 150ms ease;
     width: 100%;
     height: 100%;
-    color: ${colors.sub};
+    color: ${(props) => props.theme.sub};
   }
 `;

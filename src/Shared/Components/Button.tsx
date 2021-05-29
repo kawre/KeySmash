@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
-import { colors } from "../Global/Colors";
 import Loader from "react-loader-spinner";
 // Types -------------------------------------------------------------------------
 
@@ -71,7 +70,7 @@ const Button: React.FC<Props> = ({
     return (
       <SubmitButton disabled={disabled}>
         {disabled ? (
-          <Loader type="ThreeDots" color={colors.background} height={8} />
+          <Loader type="ThreeDots" color="#ffffff" height={8} />
         ) : (
           children
         )}
@@ -89,12 +88,12 @@ export default Button;
 const IconButton = styled.div`
   display: flex;
   transition: 250ms;
-  color: ${colors.sub};
+  color: ${(props) => props.theme.sub};
   cursor: pointer;
   padding: 8px;
 
   &:hover {
-    color: ${colors.text};
+    color: ${(props) => props.theme.text};
   }
 
   svg {
@@ -107,26 +106,26 @@ const AccoutButton = styled.button`
   padding: 0 20px;
   background: transparent;
   border-radius: 4px;
-  color: ${colors.sub};
+  color: ${(props) => props.theme.sub};
 
   &:hover {
-    color: ${colors.main};
+    color: ${(props) => props.theme.main};
   }
   &:active {
-    background: ${colors.sub};
+    background: ${(props) => props.theme.sub};
   }
 
   &.reversed {
-    background: ${colors.main};
-    color: ${colors.background};
+    background: ${(props) => props.theme.main};
+    color: ${(props) => props.theme.background};
 
     &:hover {
-      color: ${colors.main};
-      background: ${colors.background};
+      color: ${(props) => props.theme.main};
+      background: ${(props) => props.theme.background};
     }
 
     &:active {
-      background: ${colors.sub};
+      background: ${(props) => props.theme.sub};
     }
   }
 `;
@@ -135,13 +134,13 @@ const SubmitButton = styled.button`
   padding: 10px 0;
   width: 100%;
   background: #0000001a;
-  color: ${colors.text};
+  color: ${(props) => props.theme.text};
   border-radius: 4px;
   text-align: center;
 
   &:hover {
-    background: ${colors.main};
-    color: ${colors.background};
+    background: ${(props) => props.theme.main};
+    color: ${(props) => props.theme.background};
   }
 `;
 
@@ -155,21 +154,21 @@ const Test = styled.button`
 
   &:hover,
   &:focus {
-    color: ${colors.main};
+    color: ${(props) => props.theme.main};
     svg {
-      color: ${colors.main};
+      color: ${(props) => props.theme.main};
     }
   }
 
   &:active,
   &:focus {
-    background: ${colors.sub};
+    background: ${(props) => props.theme.sub};
   }
 
   svg {
     transition: 250ms ease;
     height: 20px;
     width: 20px;
-    color: ${colors.sub};
+    color: ${(props) => props.theme.sub};
   }
 `;

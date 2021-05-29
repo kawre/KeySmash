@@ -3,15 +3,10 @@ import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
 import Button from "../Components/Button";
-import { colors } from "../Global/Colors";
 import TextField from "./TextField";
 
-// Types -------------------------------------------------------------------------
-
-// interface Props {}
-
 // Component ---------------------------------------------------------------------
-const RegisterForm = () => {
+const RegisterForm: React.FC = () => {
   const { user, signUp } = useAuth();
 
   if (user !== null) return <Redirect to="/" />;
@@ -88,13 +83,13 @@ const Wrapper = styled.div`
 
   small {
     text-align: center;
-    color: ${colors.text};
+    color: ${(props) => props.theme.text};
     padding-top: 20px;
     margin: auto;
     width: fit-content;
 
     a {
-      color: ${colors.main};
+      color: ${(props) => props.theme.main};
     }
   }
 `;

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Line, defaults } from "react-chartjs-2";
 import styled from "styled-components";
 import { useTypingData } from "../Contexts/TypingGameContext";
-import { colors } from "../Shared/Global/Colors";
 import { font } from "../Shared/Global/Font";
 // Types -------------------------------------------------------------------------
 
@@ -15,7 +14,7 @@ const TypingChart: React.FC<Props> = () => {
   const [wpms, setWPMS] = useState<number[]>([]);
   const [raws, setRaws] = useState<number[]>([]);
   const [err, setErr] = useState<number[]>([]);
-  const [errs, setErrs] = useState<number[]>([]);
+  // const [errs, setErrs] = useState<number[]>([]);
 
   useEffect(() => {
     if (time === 0) return;
@@ -25,11 +24,9 @@ const TypingChart: React.FC<Props> = () => {
     setErr([...err, errors]);
   }, [raw]);
 
-  console.log(err);
-
   defaults.font.family = font;
   defaults.font.size = 14;
-  defaults.color = colors.sub;
+  // defaults.color = colors.sub;
 
   const data = {
     labels: labels,
@@ -67,7 +64,37 @@ const TypingChart: React.FC<Props> = () => {
     ],
   };
 
-  const options = {};
+  const options = {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            autoSkip: true,
+            autoSkipPadding: 40,
+          },
+          display: true,
+          scaleLabel: {
+            display: false,
+            labelString: "Seconds",
+          },
+        },
+      ],
+      yAxes: [
+        {
+          id: "wpm",
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+  };
 
   if (!results) return null;
   return (

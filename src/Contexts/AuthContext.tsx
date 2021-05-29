@@ -1,22 +1,17 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { ThemeProvider } from "styled-components";
 import { auth, firestore } from "../firebase";
+import { UserDataTypes } from "../Shared/Types/AuthTypes";
 
-interface Value {
+interface Context {
   signUp: (email: string, password: string, username: string) => Promise<void>;
-  user: {
-    uid: string;
-  } | null;
-  userData: {
-    layout: string;
-    username: string;
-    id: string;
-    email: string;
-  } | null;
   logIn: (email: string, password: string) => Promise<void>;
   logOut: () => Promise<void>;
+  user: firebase.default.User | null;
+  userData: UserDataTypes | null;
 }
 
-const AuthContext = createContext<Value>(undefined!);
+const AuthContext = createContext<Context>(undefined!);
 
 // use auth
 export function useAuth() {
@@ -27,8 +22,8 @@ export function useAuth() {
 export const AuthProvider: React.FC = ({ children }) => {
   // States
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<Value["user"]>(null);
-  const [userData, setUserData] = useState<Value["userData"]>(null);
+  const [user, setUser] = useState<Context["user"]>(null);
+  const [userData, setUserData] = useState<Context["userData"]>(null);
 
   // reference
   const ref = firestore.collection("users");
@@ -68,32 +63,34 @@ export const AuthProvider: React.FC = ({ children }) => {
   };
 
   // get current user DATA
-  const getUserData = (user: Value["user"]) => {
-    if (user === null) return;
-
+  const getUserData = (user: Context["user"]) => {
     return ref
-      .doc(user.uid)
+      .doc(user?.uid)
       .get()
-      .then((res: any) => {
+      .then((res) => {
         const data = res.data()!;
 
-        setUserData({
+        return setUserData({
           layout: data.layout,
           username: data.username,
           id: data.id,
           email: data.email,
+          theme: data.theme,
         });
       });
   };
+  useEffect(() => {
+    if (!userData) return;
+  }, [userData]);
 
   // get current user
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user: Value["user"]) => {
-      setLoading(true);
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) return setLoading(false);
 
       try {
-        setUser(user!);
-        await getUserData(user!);
+        setUser(user);
+        await getUserData(user);
       } catch {
         console.log("something went wrong");
       }
@@ -101,16 +98,15 @@ export const AuthProvider: React.FC = ({ children }) => {
     });
 
     return unsubscribe;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // global values
   const value = {
-    signUp,
-    user,
-    logIn,
-    logOut,
     userData,
+    signUp,
+    logOut,
+    logIn,
+    user,
   };
 
   return (

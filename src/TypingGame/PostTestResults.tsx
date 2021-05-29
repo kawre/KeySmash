@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import styled from "styled-components";
 import { useTypingData } from "../Contexts/TypingGameContext";
 import Button from "../Shared/Components/Button";
-import { colors } from "../Shared/Global/Colors";
 import { FaChevronRight } from "react-icons/fa";
 import TypingChart from "./TypingChart";
 // Types -------------------------------------------------------------------------
@@ -93,12 +92,12 @@ const Wrapper = styled.div`
   transform: translate(-50%, -50%);
   width: 950px;
   font-size: 64px;
-  color: ${colors.main};
+  color: ${(props) => props.theme.main};
   animation: fadeIn 300ms forwards;
 
   p {
     font-size: 32px;
-    color: ${colors.sub};
+    color: ${(props) => props.theme.sub};
     line-height: 15px;
   }
 
@@ -167,14 +166,14 @@ const Bottom = styled.div`
 const Characters = styled.div`
   span {
     &.error {
-      color: ${colors.error};
+      color: ${(props) => props.theme.error};
     }
     &.correct {
-      color: ${colors.main};
+      color: ${(props) => props.theme.main};
     }
     &.slash {
       padding: 0 6px;
-      color: ${colors.sub};
+      color: ${(props) => props.theme.sub};
     }
   }
 `;

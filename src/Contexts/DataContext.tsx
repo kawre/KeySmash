@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { ThemeProvider } from "styled-components";
 import { firestore } from "../firebase";
 
 interface Props {

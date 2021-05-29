@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useTypingData } from "../Contexts/TypingGameContext";
-import { colors } from "../Shared/Global/Colors";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -57,7 +56,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
 
-  color: ${colors.sub};
+  color: ${(props) => props.theme.sub};
   font-size: 24px;
 
   div {
