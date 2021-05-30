@@ -15,7 +15,7 @@ const AddTheme: React.FC<Props> = () => {
     <Wrapper>
       <Formik
         initialValues={{
-          theme: "",
+          name: "",
           background: "",
           main: "",
           caret: "",
@@ -32,7 +32,7 @@ const AddTheme: React.FC<Props> = () => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <Field placeholder="theme" name="theme" as={TextField} />
+            <Field placeholder="name" name="name" as={TextField} />
             <Field placeholder="background" name="background" as={TextField} />
             <Field placeholder="main" name="main" as={TextField} />
             <Field placeholder="caret" name="caret" as={TextField} />

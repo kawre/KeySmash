@@ -38,20 +38,21 @@ export const AuthProvider: React.FC = ({ children }) => {
   const signUp = (email: string, password: string, username: string) => {
     const createUser = auth.createUserWithEmailAndPassword(email, password);
 
-    return createUser.then((cred: any) => {
-      const id = cred?.user?.uid;
+    return createUser
+      .then((cred: any) => {
+        const id = cred?.user?.uid;
 
-      ref.doc(id).set({
-        layout: "qwerty",
-        username: username,
-        id: id,
-        email: email,
-        theme: "serika dark",
+        ref.doc(id).set({
+          layout: "qwerty",
+          username: username,
+          id: id,
+          email: email,
+          theme: "serika dark",
+        });
+      })
+      .then(() => {
+        window.location.reload();
       });
-    });
-    // .then(() => {
-    //   window.location.reload();
-    // });
   };
 
   // log in
@@ -69,30 +70,29 @@ export const AuthProvider: React.FC = ({ children }) => {
   };
 
   // get current user DATA
-  const getUserData = (user: Context["user"]) => {
-    return ref
-      .doc(user?.uid)
-      .get()
-      .then((res) => {
-        const data = res.data()!;
+  const getUserData = (user: firebase.default.User) => {
+    const ref = firestore.collection("users").doc(user?.uid);
 
-        setUserData({
-          layout: data.layout,
-          username: data.username,
-          id: data.id,
-          email: data.email,
-          theme: data.theme,
-        });
+    return ref.onSnapshot((res) => {
+      const user = res.data()!;
+      setUserData({
+        layout: user.layout,
+        username: user.username,
+        id: user.id,
+        email: user.email,
+        theme: user.theme,
       });
+    });
   };
 
   // get current user
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (!user) return loadingRef.current?.classList.add("hidden");
+
       try {
         setUser(user);
-        await getUserData(user);
+        getUserData(user);
       } catch {
         console.log("something went wrong");
       }

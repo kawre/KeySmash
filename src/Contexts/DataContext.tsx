@@ -1,16 +1,10 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { firestore } from "../firebase";
 import { useAuth } from "./AuthContext";
 
-interface Theme {
-  theme: string;
+type Theme = {
+  name: string;
   background: string;
   main: string;
   caret: string;
@@ -18,7 +12,28 @@ interface Theme {
   text: string;
   error: string;
   errorExtra: string;
-}
+};
+
+type Colors = {
+  name?: string;
+  background?: string;
+  main?: string;
+  caret?: string;
+  sub?: string;
+  text?: string;
+  error?: string;
+  errorExtra?: string;
+};
+
+type ColorsNonNull = {
+  background: string;
+  main: string;
+  caret: string;
+  sub: string;
+  text: string;
+  error: string;
+  errorExtra: string;
+};
 
 interface Context {
   sendFinalResults: (
@@ -28,8 +43,11 @@ interface Context {
     time: number
   ) => any;
   addQuote: (quote: string) => any;
-  quote: string;
   addTheme: (color: Theme) => Promise<any>;
+  changeTheme: (theme: string) => Promise<void>;
+  quote: string;
+  themes: Colors[];
+  theme: ColorsNonNull;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -40,8 +58,19 @@ export function useData() {
 
 export const DataProvider: React.FC = ({ children }) => {
   const { user, userData } = useAuth();
-  const [quote, setQuote] = useState<string>("");
+  const [quote, setQuote] = useState<Context["quote"]>("");
+  const [themes, setThemes] = useState<Context["themes"]>([]);
+  const [theme, setTheme] = useState<Context["theme"]>({
+    background: "#323437",
+    main: "#e2b714",
+    caret: "#e2b714",
+    sub: "#646669",
+    text: "#d1d0c5",
+    error: "#ca4754",
+    errorExtra: "#7e2a33",
+  });
 
+  // send final results
   const sendFinalResults = (
     game: "key-smash" | "typing-game",
     id: string,
@@ -62,6 +91,7 @@ export const DataProvider: React.FC = ({ children }) => {
     });
   };
 
+  // append a quote to the data base
   const addQuote = (quote: string) => {
     const ref = firestore
       .collection("game-data")
@@ -73,6 +103,7 @@ export const DataProvider: React.FC = ({ children }) => {
     });
   };
 
+  // get random quotes
   const getRandomQuote = () => {
     const ref = firestore
       .collection("game-data")
@@ -87,20 +118,19 @@ export const DataProvider: React.FC = ({ children }) => {
     });
   };
 
-  const getThemes = () => {
-    const ref = firestore.collection("themes");
+  // get themes
+  const getThemes = async () => {
+    const ref = await firestore.collection("themes").get();
 
-    ref.get().then((themes) => {
-      themes.docs.forEach((theme) => {
-        console.log(theme.data());
-      });
-    });
+    return ref.docs.map((theme) => theme.data());
   };
 
+  // add theme
   const addTheme = (color: Theme) => {
-    const ref = firestore.collection("themes").doc(color.theme);
+    const ref = firestore.collection("themes").doc(color.name);
 
     return ref.set({
+      name: color.name,
       background: color.background,
       main: color.main,
       caret: color.caret,
@@ -111,7 +141,29 @@ export const DataProvider: React.FC = ({ children }) => {
     });
   };
 
-  const setTheme = (theme: string) => {
+  // curret theme
+  const currentTheme = async () => {
+    if (!userData) return;
+    const res = await firestore.collection("themes").doc(userData.theme).get();
+    const theme = res.data()!;
+
+    setTheme({
+      background: theme.background,
+      main: theme.main,
+      caret: theme.caret,
+      sub: theme.sub,
+      text: theme.text,
+      error: theme.error,
+      errorExtra: theme.errorExtra,
+    });
+  };
+
+  useEffect(() => {
+    currentTheme();
+  }, [userData]);
+
+  // change theme
+  const changeTheme = (theme: string) => {
     const ref = firestore.collection("users").doc(user?.uid);
 
     return ref.update({
@@ -120,28 +172,28 @@ export const DataProvider: React.FC = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!userData) return;
-    getThemes();
-    // setTheme("superuser");
-  }, [userData]);
-
-  useEffect(() => {
-    const quoteHandler = async () => {
+    const dataHandler = async () => {
       try {
-        const res = await getRandomQuote();
-        setQuote(res.quote);
+        const quoteRes = await getRandomQuote();
+        const themesRes = await getThemes();
+        setQuote(quoteRes.quote);
+        setThemes(themesRes);
       } catch {
         console.log("error");
       }
     };
-    quoteHandler();
+    dataHandler();
   }, []);
 
   const value = {
     sendFinalResults,
+    changeTheme,
+    getThemes,
     addQuote,
-    quote,
     addTheme,
+    themes,
+    theme,
+    quote,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
