@@ -5,14 +5,15 @@ import { useAuth } from "../../Contexts/AuthContext";
 import { FaKeyboard } from "react-icons/fa";
 import Button from "./Button";
 import { RiSettings3Fill } from "react-icons/ri";
-import { RiUser3Fill } from "react-icons/ri";
+import { FaRegUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
 const Header: React.FC<Props> = () => {
-  const { user } = useAuth();
+  const { userData } = useAuth();
   return (
     <Wrapper>
       <Left>
@@ -35,13 +36,20 @@ const Header: React.FC<Props> = () => {
           </Link>
           <Link to="">
             <Button type="icon">
-              <RiUser3Fill />
+              {userData ? (
+                <>
+                  <FaUser style={{ padding: "1px" }} />
+                  <p>{userData?.username}</p>
+                </>
+              ) : (
+                <FaRegUser style={{ padding: "1px" }} />
+              )}
             </Button>
           </Link>
         </Navigation>
       </Left>
       <Menu>
-        {user ? (
+        {userData ? (
           <>
             <Button reversed={true} type="logout" />
           </>

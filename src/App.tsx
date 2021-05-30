@@ -6,7 +6,6 @@ import Header from "./Shared/Components/Header";
 import LoginForm from "./Shared/Forms/LoginForm";
 import RegisterForm from "./Shared/Forms/RegisterForm";
 import { useEffect, useState } from "react";
-import { useAuth } from "./Contexts/AuthContext";
 import Settings from "./Settings/Settings";
 import AddTheme from "./AddQuote/AddTheme";
 import { useData } from "./Contexts/DataContext";
@@ -14,8 +13,16 @@ import { useData } from "./Contexts/DataContext";
 const App = () => {
   const { theme } = useData();
 
+  const [localTheme, setLocalTheme] = useState<object[]>(
+    JSON.parse(localStorage.getItem("theme")!)
+  );
+
+  useEffect(() => {
+    setLocalTheme(JSON.parse(localStorage.getItem("theme")!));
+  }, [theme]);
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={localTheme}>
       <Wrapper>
         <Router>
           <Header />
@@ -39,4 +46,5 @@ const Wrapper = styled.div`
   min-height: 100vh;
   overflow: hidden;
   background: ${({ theme }) => theme.background};
+  transition: 250ms ease;
 `;

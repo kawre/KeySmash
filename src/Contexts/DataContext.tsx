@@ -156,11 +156,15 @@ export const DataProvider: React.FC = ({ children }) => {
       error: theme.error,
       errorExtra: theme.errorExtra,
     });
+    localStorage.setItem("theme", JSON.stringify(theme));
   };
 
   useEffect(() => {
     currentTheme();
-  }, [userData]);
+    const theme = JSON.parse(localStorage.getItem("theme")!);
+    console.log(theme.background);
+    // console.log(theme);
+  }, [userData?.theme]);
 
   // change theme
   const changeTheme = (theme: string) => {

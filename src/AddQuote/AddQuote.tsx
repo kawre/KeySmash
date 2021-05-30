@@ -8,7 +8,7 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const AddQuote: React.FC<Props> = () => {
-  const { addQuote } = useData();
+  const { addQuote, theme } = useData();
   const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -42,7 +42,7 @@ const AddQuote: React.FC<Props> = () => {
         />
         <Button disabled={loading} type="submit">
           {loading ? (
-            <Loader type="ThreeDots" color="#ffffff" height={5} />
+            <Loader type="ThreeDots" color={theme.text} height={5} />
           ) : (
             "Submit"
           )}
@@ -68,6 +68,7 @@ const Headline = styled.p`
   font-size: 20px;
   text-align: center;
   margin-bottom: 20px;
+  color: ${({ theme }) => theme.text};
 `;
 
 const Textarea = styled.textarea`

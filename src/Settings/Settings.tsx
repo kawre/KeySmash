@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import ThemeSwitcher from "./ThemeSwitcher";
+import ThemeIndex from "./Theme/ThemeIndex";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -9,7 +9,7 @@ interface Props {}
 const Settings: React.FC<Props> = () => {
   return (
     <Wrapper>
-      <ThemeSwitcher />
+      <ThemeIndex />
     </Wrapper>
   );
 };

@@ -93,6 +93,12 @@ const IconButton = styled.div`
   color: ${(props) => props.theme.sub};
   cursor: pointer;
   padding: 8px;
+  font-size: 12px;
+  align-items: center;
+
+  p {
+    margin-left: 5px;
+  }
 
   &:hover {
     color: ${(props) => props.theme.text};
