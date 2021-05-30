@@ -2,6 +2,7 @@ import { Field, Form, Formik } from "formik";
 import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
+import { useData } from "../../Contexts/DataContext";
 import Button from "../Components/Button";
 import TextField from "./TextField";
 // Types -------------------------------------------------------------------------
@@ -65,7 +66,7 @@ export default LoginForm;
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
-  background: ${(props) => props.theme.background};
+  background: ${({ theme }) => theme.background};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,13 +79,13 @@ const Wrapper = styled.div`
 
   small {
     text-align: center;
-    color: ${(props) => props.theme.text};
+    color: ${({ theme }) => theme.text};
     padding-top: 20px;
     margin: auto;
     width: fit-content;
 
     a {
-      color: ${(props) => props.theme.main};
+      color: ${({ theme }) => theme.main};
     }
   }
 `;

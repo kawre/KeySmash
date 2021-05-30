@@ -114,9 +114,9 @@ const TypingGame: React.FC<Props> = () => {
         words.length === current + 1 &&
         words[current].length === input.length + 1
       ) {
-        setPlaying(false);
         setDisabled(true);
         setTimeout(() => {
+          setPlaying(false);
           setShowing(false);
           setResults(true);
         }, 100);

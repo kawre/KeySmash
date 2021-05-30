@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
 import Loader from "react-loader-spinner";
+import { useData } from "../../Contexts/DataContext";
 // Types -------------------------------------------------------------------------
 
 interface Props {
@@ -26,6 +27,7 @@ const Button: React.FC<Props> = ({
   children,
 }) => {
   const { logOut } = useAuth();
+  const { theme } = useData();
 
   if (type === "test")
     return (
@@ -70,7 +72,7 @@ const Button: React.FC<Props> = ({
     return (
       <SubmitButton disabled={disabled}>
         {disabled ? (
-          <Loader type="ThreeDots" color="#ffffff" height={8} />
+          <Loader type="ThreeDots" color={theme.text} height={8} />
         ) : (
           children
         )}
@@ -97,7 +99,8 @@ const IconButton = styled.div`
   }
 
   svg {
-    width: 20px;
+    min-width: 20px;
+    min-height: 20px;
   }
 `;
 

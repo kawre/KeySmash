@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
 import { FaKeyboard } from "react-icons/fa";
-import { TiUser } from "react-icons/ti";
 import Button from "./Button";
+import { RiSettings3Fill } from "react-icons/ri";
+import { RiUser3Fill } from "react-icons/ri";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -27,9 +28,14 @@ const Header: React.FC<Props> = () => {
               <FaKeyboard />
             </Button>
           </Link>
+          <Link to="/settings">
+            <Button type="icon">
+              <RiSettings3Fill />
+            </Button>
+          </Link>
           <Link to="">
             <Button type="icon">
-              <TiUser />
+              <RiUser3Fill />
             </Button>
           </Link>
         </Navigation>
