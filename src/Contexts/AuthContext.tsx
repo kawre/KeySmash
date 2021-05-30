@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { ThemeProvider } from "styled-components";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import styled from "styled-components";
 import { auth, firestore } from "../firebase";
 import { UserDataTypes } from "../Shared/Types/AuthTypes";
 
@@ -21,7 +27,7 @@ export function useAuth() {
 // Component
 export const AuthProvider: React.FC = ({ children }) => {
   // States
-  const [loading, setLoading] = useState<boolean>(true);
+  const loadingRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState<Context["user"]>(null);
   const [userData, setUserData] = useState<Context["userData"]>(null);
 
@@ -32,20 +38,20 @@ export const AuthProvider: React.FC = ({ children }) => {
   const signUp = (email: string, password: string, username: string) => {
     const createUser = auth.createUserWithEmailAndPassword(email, password);
 
-    return createUser
-      .then((cred: any) => {
-        const id = cred?.user?.uid;
+    return createUser.then((cred: any) => {
+      const id = cred?.user?.uid;
 
-        ref.doc(id).set({
-          layout: "qwerty",
-          username: username,
-          id: id,
-          email: email,
-        });
-      })
-      .then(() => {
-        window.location.reload();
+      ref.doc(id).set({
+        layout: "qwerty",
+        username: username,
+        id: id,
+        email: email,
+        theme: "serika dark",
       });
+    });
+    // .then(() => {
+    //   window.location.reload();
+    // });
   };
 
   // log in
@@ -70,7 +76,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       .then((res) => {
         const data = res.data()!;
 
-        return setUserData({
+        setUserData({
           layout: data.layout,
           username: data.username,
           id: data.id,
@@ -79,22 +85,18 @@ export const AuthProvider: React.FC = ({ children }) => {
         });
       });
   };
-  useEffect(() => {
-    if (!userData) return;
-  }, [userData]);
 
   // get current user
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (!user) return setLoading(false);
-
+      if (!user) return loadingRef.current?.classList.add("hidden");
       try {
         setUser(user);
         await getUserData(user);
       } catch {
         console.log("something went wrong");
       }
-      setLoading(false);
+      loadingRef.current?.classList.add("fadeOut");
     });
 
     return unsubscribe;
@@ -111,7 +113,29 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      <Loading ref={loadingRef} />
+      {children}
     </AuthContext.Provider>
   );
 };
+
+const Loading = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #323437;
+  z-index: 100;
+  opacity: 1;
+  transition: 100ms ease;
+  pointer-events: none;
+
+  &.fadeOut {
+    opacity: 0;
+  }
+
+  &.hidden {
+    display: none;
+  }
+`;

@@ -15,9 +15,7 @@ const TypingGame: React.FC<Props> = () => {
   // context
   const {
     words,
-    time,
     setPlaying,
-    isPlaying,
     setShowing,
     setResults,
     characters,
@@ -41,8 +39,10 @@ const TypingGame: React.FC<Props> = () => {
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (disabled) return;
     setCurrentKey(e.key);
     if (e.key === "Backspace") return backspaceHandler();
     if (e.key === " ") return spaceHandler();
@@ -114,9 +114,12 @@ const TypingGame: React.FC<Props> = () => {
         words.length === current + 1 &&
         words[current].length === input.length + 1
       ) {
-        setShowing(false);
-        setResults(true);
         setPlaying(false);
+        setDisabled(true);
+        setTimeout(() => {
+          setShowing(false);
+          setResults(true);
+        }, 100);
       }
       return;
     }
@@ -298,14 +301,14 @@ const Words = styled.div`
 const Word = styled.div`
   display: inline-block;
   border-bottom: 2px solid transparent;
-  color: ${(props) => props.theme.sub};
+  color: ${({ theme }) => theme.sub};
   margin: 6px;
   user-select: none;
   line-height: 24px;
   font-size: 24px;
 
   &.error {
-    border-bottom: 2px solid ${(props) => props.theme.error};
+    border-bottom: 2px solid ${({ theme }) => theme.error};
   }
 
   span {
@@ -319,15 +322,15 @@ const Letter = styled.span`
   transition: 50ms;
 
   &.correct {
-    color: ${(props) => props.theme.main};
+    color: ${({ theme }) => theme.main};
   }
   &.incorrect {
-    color: ${(props) => props.theme.error};
+    color: ${({ theme }) => theme.error};
   }
 `;
 
 const FocusAlert = styled.div`
-  color: ${(props) => props.theme.text};
+  color: ${({ theme }) => theme.text};
   position: absolute;
   left: 50%;
   top: 50%;
