@@ -161,9 +161,6 @@ export const DataProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     currentTheme();
-    const theme = JSON.parse(localStorage.getItem("theme")!);
-    console.log(theme.background);
-    // console.log(theme);
   }, [userData?.theme]);
 
   // change theme

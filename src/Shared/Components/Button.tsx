@@ -29,58 +29,50 @@ const Button: React.FC<Props> = ({
   const { logOut } = useAuth();
   const { theme } = useData();
 
-  if (type === "test")
-    return (
-      <Test tabIndex={tabIndex} onClickCapture={onClickCapture}>
-        {children}
-      </Test>
-    );
-
-  if (type === "icon") {
-    return <IconButton>{children}</IconButton>;
-  }
-
-  if (type === "login") {
-    return (
-      <Link to="/login">
-        <AccoutButton className={reversed ? "reversed" : ""}>
-          Log In
+  switch (type) {
+    case "test":
+      return (
+        <Test tabIndex={tabIndex} onClickCapture={onClickCapture}>
+          {children}
+        </Test>
+      );
+    case "icon":
+      return <IconButton>{children}</IconButton>;
+    case "login":
+      return (
+        <Link to="/login">
+          <AccoutButton className={reversed ? "reversed" : ""}>
+            Log In
+          </AccoutButton>
+        </Link>
+      );
+    case "signup":
+      return (
+        <Link to="/register">
+          <AccoutButton className={reversed ? "reversed" : ""}>
+            Sign Up
+          </AccoutButton>
+        </Link>
+      );
+    case "logout":
+      return (
+        <AccoutButton className={reversed ? "reversed" : ""} onClick={logOut}>
+          Sign Out
         </AccoutButton>
-      </Link>
-    );
+      );
+    case "submit":
+      return (
+        <SubmitButton disabled={disabled}>
+          {disabled ? (
+            <Loader type="ThreeDots" color={theme.text} height={8} />
+          ) : (
+            children
+          )}
+        </SubmitButton>
+      );
+    default:
+      return null;
   }
-
-  if (type === "signup") {
-    return (
-      <Link to="/register">
-        <AccoutButton className={reversed ? "reversed" : ""}>
-          Sign Up
-        </AccoutButton>
-      </Link>
-    );
-  }
-
-  if (type === "logout") {
-    return (
-      <AccoutButton className={reversed ? "reversed" : ""} onClick={logOut}>
-        Sign Out
-      </AccoutButton>
-    );
-  }
-
-  if (type === "submit") {
-    return (
-      <SubmitButton disabled={disabled}>
-        {disabled ? (
-          <Loader type="ThreeDots" color={theme.text} height={8} />
-        ) : (
-          children
-        )}
-      </SubmitButton>
-    );
-  }
-
-  return null;
 };
 
 export default Button;
@@ -90,7 +82,7 @@ export default Button;
 const IconButton = styled.div`
   display: flex;
   transition: 250ms;
-  color: ${(props) => props.theme.sub};
+  color: ${({ theme }) => theme.sub};
   cursor: pointer;
   padding: 8px;
   font-size: 12px;

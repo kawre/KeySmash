@@ -19,7 +19,9 @@ const ThemeIndex: React.FC<Props> = () => {
       >
         theme
       </SettingsTitle>
-      <ThemeSwitcher />
+      <Collapse className={collapsed ? "collapsed" : ""}>
+        <ThemeSwitcher />
+      </Collapse>
     </Wrapper>
   );
 };
@@ -29,3 +31,13 @@ export default ThemeIndex;
 // Styled ------------------------------------------------------------------------
 
 const Wrapper = styled.div``;
+
+const Collapse = styled.div`
+  transform: scaleY(1);
+  transform-origin: top;
+  transition: transform 250ms ease;
+
+  &.collapsed {
+    transform: scaleY(0);
+  }
+`;
