@@ -24,10 +24,9 @@ import { UserDataTypes } from "../Shared/Types/AuthTypes";
 
 interface Context {
   logOut: () => Promise<void>;
-  user: firebase.default.User | null;
   userData: UserDataTypes | null;
   //
-  user2: MeQuery["me"] | undefined;
+  user: MeQuery["me"] | undefined;
   logIn: (variables: LoginMutationVariables) => Promise<any>;
   register: (variables: RegisterMutationVariables) => Promise<any>;
 }
@@ -43,7 +42,7 @@ export function useAuth() {
 export const AuthProvider: React.FC = ({ children }) => {
   // States
   const loadingRef = useRef<HTMLDivElement>(null);
-  const [user, setUser] = useState<Context["user"]>(null);
+  // const [user, setUser] = useState<Context["user"]>(null);
   const [userData, setUserData] = useState<Context["userData"]>(null);
 
   // reference
@@ -51,7 +50,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   // me
   const [{ data }] = useMeQuery();
-  const user2 = data?.me;
+  const user = data?.me;
 
   // login
   const [, logIn] = useLoginMutation();
@@ -109,7 +108,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       if (!user) return loadingRef.current?.classList.add("hidden");
 
       try {
-        setUser(user);
+        // setUser(user);
         getUserData(user);
       } catch {
         console.log("something went wrong");
@@ -124,9 +123,8 @@ export const AuthProvider: React.FC = ({ children }) => {
   const value = {
     userData,
     logOut,
-    user,
     //
-    user2,
+    user,
     logIn,
     register,
   };

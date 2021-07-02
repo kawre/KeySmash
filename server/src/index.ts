@@ -8,11 +8,28 @@ import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import session from "express-session";
 import { COOKIE_NAME, PORT } from "./utils/constants";
+import { Theme } from "./entities/Theme";
 
 const main = async () => {
   await createConnection();
 
+  // await Theme.delete({});
+
   const app = express();
+
+  const themes = await Theme.find();
+  console.log(themes);
+
+  // await Theme.insert({
+  //   background: "#2d394d",
+  //   caret: "#ff7a90",
+  //   error: "#ee2a3a",
+  //   errorExtra: "#f04040",
+  //   main: "#ff7a90",
+  //   name: "bento",
+  //   sub: "#4a768d",
+  //   text: "#fffaf8",
+  // });
 
   const RedisStore = connectRedis(session);
   const redis = new Redis();

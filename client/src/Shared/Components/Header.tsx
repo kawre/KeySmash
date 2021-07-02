@@ -13,7 +13,7 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const Header: React.FC<Props> = () => {
-  const { userData } = useAuth();
+  const { user } = useAuth();
   return (
     <Wrapper>
       <Left>
@@ -36,10 +36,10 @@ const Header: React.FC<Props> = () => {
           </Link>
           <Link to="">
             <Button type="icon">
-              {userData ? (
+              {user ? (
                 <>
                   <FaUser style={{ padding: "1px" }} />
-                  <p>{userData?.username}</p>
+                  <p>{user?.username}</p>
                 </>
               ) : (
                 <FaRegUser style={{ padding: "1px" }} />
@@ -49,7 +49,7 @@ const Header: React.FC<Props> = () => {
         </Navigation>
       </Left>
       <Menu>
-        {userData ? (
+        {user ? (
           <>
             <Button reversed={true} type="logout" />
           </>

@@ -44,7 +44,7 @@ interface Context {
   ) => any;
   addQuote: (quote: string) => any;
   addTheme: (color: Theme) => Promise<any>;
-  changeTheme: (theme: string) => Promise<void>;
+  // changeTheme: (theme: string) => Promise<void>;
   quote: string;
   themes: Colors[];
   theme: ColorsNonNull;
@@ -141,6 +141,14 @@ export const DataProvider: React.FC = ({ children }) => {
     });
   };
 
+  useEffect(() => {
+    const elo = async () => {
+      const res = await firestore.collection("themes").doc("bento").get();
+      console.log(res.data());
+    };
+    elo();
+  }, []);
+
   // curret theme
   const currentTheme = async () => {
     if (!userData) return;
@@ -164,13 +172,13 @@ export const DataProvider: React.FC = ({ children }) => {
   }, [userData?.theme]);
 
   // change theme
-  const changeTheme = (theme: string) => {
-    const ref = firestore.collection("users").doc(user?.uid);
+  // const changeTheme = (theme: string) => {
+  //   const ref = firestore.collection("users").doc(user?.id);
 
-    return ref.update({
-      theme: theme,
-    });
-  };
+  //   return ref.update({
+  //     theme: theme,
+  //   });
+  // };
 
   useEffect(() => {
     const dataHandler = async () => {
@@ -188,7 +196,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   const value = {
     sendFinalResults,
-    changeTheme,
+    // changeTheme,
     getThemes,
     addQuote,
     addTheme,

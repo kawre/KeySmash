@@ -9,14 +9,14 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const ThemeSwitcher: React.FC<Props> = () => {
-  const { userData } = useAuth();
-  const { changeTheme, themes } = useData();
+  const { user } = useAuth();
+  const { themes } = useData();
   const localName = JSON.parse(localStorage.getItem("theme")!).name;
 
-  const themeHandler = (name: string) => {
-    if (!userData) return;
-    changeTheme(name!);
-  };
+  // const themeHandler = (name: string) => {
+  //   if (!user) return;
+  // changeTheme(name!);
+  // };
 
   return (
     <Wrapper>
@@ -32,7 +32,7 @@ const ThemeSwitcher: React.FC<Props> = () => {
             <Theme
               key={name}
               style={{ background: background, color: main }}
-              onClick={() => themeHandler(name!)}
+              // onClick={() => themeHandler(name!)}
               className={active ? "active" : undefined}
             >
               <Active style={{ background: main }} />
