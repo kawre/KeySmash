@@ -31,7 +31,13 @@ const GraphqlTypes_1 = require("../utils/GraphqlTypes");
 const argon2_1 = __importDefault(require("argon2"));
 const validateRegister_1 = require("src/utils/validateRegister");
 const fieldError_1 = require("src/utils/fieldError");
+const constants_1 = require("src/utils/constants");
 let UserResolver = class UserResolver {
+    me({ req }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return User_1.User.findOne(req.session.userId);
+        });
+    }
     register(input, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             const { username, email } = input;
@@ -64,7 +70,25 @@ let UserResolver = class UserResolver {
             return { user };
         });
     }
+    logout({ req, res }) {
+        return new Promise((resolve) => {
+            req.session.destroy((err) => {
+                res.clearCookie(constants_1.COOKIE_NAME);
+                if (err)
+                    resolve(false);
+                else
+                    resolve(true);
+            });
+        });
+    }
 };
+__decorate([
+    type_graphql_1.Query(() => User_1.User),
+    __param(0, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "me", null);
 __decorate([
     type_graphql_1.Mutation(() => GraphqlTypes_1.UserResponse),
     __param(0, type_graphql_1.Arg("input")),
@@ -81,6 +105,13 @@ __decorate([
     __metadata("design:paramtypes", [GraphqlTypes_1.LoginInput, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "login", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UserResolver.prototype, "logout", null);
 UserResolver = __decorate([
     type_graphql_1.Resolver(User_1.User)
 ], UserResolver);
