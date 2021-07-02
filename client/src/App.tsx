@@ -9,9 +9,12 @@ import { useEffect, useState } from "react";
 import Settings from "./Settings/Settings";
 import AddTheme from "./AddQuote/AddTheme";
 import { useData } from "./Contexts/DataContext";
+import { useAuth } from "./Contexts/AuthContext";
 
 const App = () => {
   const { theme } = useData();
+  const { user } = useAuth();
+  console.log(user);
 
   const [localTheme, setLocalTheme] = useState(
     JSON.parse(localStorage.getItem("theme")!)

@@ -3,14 +3,14 @@ import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { LoginInput, RegisterInput, UserResponse } from "../utils/GraphqlTypes";
 import { MyContext } from "src/types";
 import argon2 from "argon2";
-import { validateRegister } from "src/utils/validateRegister";
-import { fieldError } from "src/utils/fieldError";
-import { COOKIE_NAME } from "src/utils/constants";
+import { validateRegister } from "../utils/validateRegister";
+import { fieldError } from "../utils/fieldError";
+import { COOKIE_NAME } from "../utils/constants";
 
 @Resolver(User)
 export class UserResolver {
   // get user
-  @Query(() => User)
+  @Query(() => User, { nullable: true })
   async me(@Ctx() { req }: MyContext) {
     return User.findOne(req.session.userId);
   }

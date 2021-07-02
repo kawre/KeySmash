@@ -56,6 +56,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         }),
     });
     apolloServer.applyMiddleware({ app, cors: false });
+    app.listen(constants_1.PORT, () => console.log(`server up and running on http://localhost:${constants_1.PORT}/graphql`));
 });
 main().catch((err) => console.log(err));
 //# sourceMappingURL=index.js.map

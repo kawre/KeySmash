@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResponse = exports.FieldError = exports.LoginInput = exports.RegisterInput = void 0;
-const User_1 = require("src/entities/User");
+const User_1 = require("../entities/User");
 const type_graphql_1 = require("type-graphql");
 let RegisterInput = class RegisterInput {
 };

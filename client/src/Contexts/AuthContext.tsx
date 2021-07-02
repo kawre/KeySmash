@@ -1,3 +1,4 @@
+import { OperationContext } from "@urql/core";
 import React, {
   createContext,
   useContext,
@@ -7,14 +8,28 @@ import React, {
 } from "react";
 import styled from "styled-components";
 import { auth, firestore } from "../firebase";
+import {
+  Exact,
+  LoginInput,
+  LoginMutation,
+  LoginMutationVariables,
+  MeQuery,
+  MutationLoginArgs,
+  RegisterMutationVariables,
+  useLoginMutation,
+  useMeQuery,
+  useRegisterMutation,
+} from "../generated/graphql";
 import { UserDataTypes } from "../Shared/Types/AuthTypes";
 
 interface Context {
-  signUp: (email: string, password: string, username: string) => Promise<void>;
-  logIn: (email: string, password: string) => Promise<void>;
   logOut: () => Promise<void>;
   user: firebase.default.User | null;
   userData: UserDataTypes | null;
+  //
+  user2: MeQuery["me"] | undefined;
+  logIn: (variables: LoginMutationVariables) => Promise<any>;
+  register: (variables: RegisterMutationVariables) => Promise<any>;
 }
 
 const AuthContext = createContext<Context>(undefined!);
@@ -33,6 +48,16 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   // reference
   const ref = firestore.collection("users");
+
+  // me
+  const [{ data }] = useMeQuery();
+  const user2 = data?.me;
+
+  // login
+  const [, logIn] = useLoginMutation();
+
+  // signup
+  const [, register] = useRegisterMutation();
 
   // register user
   const signUp = (email: string, password: string, username: string) => {
@@ -53,13 +78,6 @@ export const AuthProvider: React.FC = ({ children }) => {
       .then(() => {
         window.location.reload();
       });
-  };
-
-  // log in
-  const logIn = (email: string, password: string) => {
-    return auth.signInWithEmailAndPassword(email, password).then(() => {
-      window.location.reload();
-    });
   };
 
   // log Out
@@ -105,10 +123,12 @@ export const AuthProvider: React.FC = ({ children }) => {
   // global values
   const value = {
     userData,
-    signUp,
     logOut,
-    logIn,
     user,
+    //
+    user2,
+    logIn,
+    register,
   };
 
   return (

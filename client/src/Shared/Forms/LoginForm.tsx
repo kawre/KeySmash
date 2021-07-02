@@ -16,20 +16,12 @@ const LoginForm: React.FC = () => {
     <Wrapper>
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={(data, { setSubmitting }) => {
-          const loginHandler = async () => {
-            setSubmitting(true);
-
-            try {
-              await logIn(data.email, data.password);
-            } catch {
-              console.log("Invalid data");
-            }
-
-            setSubmitting(false);
-          };
-
-          loginHandler();
+        onSubmit={async (input) => {
+          try {
+            await logIn({ input });
+          } catch {
+            console.log("Invalid data");
+          }
         }}
       >
         {({ isSubmitting }) => (

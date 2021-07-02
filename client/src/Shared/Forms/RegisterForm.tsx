@@ -7,27 +7,19 @@ import TextField from "./TextField";
 
 // Component ---------------------------------------------------------------------
 const RegisterForm: React.FC = () => {
-  const { user, signUp } = useAuth();
+  const { user, register } = useAuth();
 
   if (user !== null) return <Redirect to="/" />;
   return (
     <Wrapper>
       <Formik
         initialValues={{ username: "", email: "", password: "" }}
-        onSubmit={(data, { setSubmitting }) => {
-          const createUser = async () => {
-            setSubmitting(true);
-
-            try {
-              await signUp(data.email, data.password, data.username);
-            } catch {
-              console.log("error");
-            }
-
-            setSubmitting(false);
-          };
-
-          createUser();
+        onSubmit={async (input) => {
+          try {
+            await register({ input });
+          } catch {
+            console.log("error");
+          }
         }}
       >
         {({ isSubmitting }) => (

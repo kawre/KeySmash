@@ -29,9 +29,9 @@ const User_1 = require("../entities/User");
 const type_graphql_1 = require("type-graphql");
 const GraphqlTypes_1 = require("../utils/GraphqlTypes");
 const argon2_1 = __importDefault(require("argon2"));
-const validateRegister_1 = require("src/utils/validateRegister");
-const fieldError_1 = require("src/utils/fieldError");
-const constants_1 = require("src/utils/constants");
+const validateRegister_1 = require("../utils/validateRegister");
+const fieldError_1 = require("../utils/fieldError");
+const constants_1 = require("../utils/constants");
 let UserResolver = class UserResolver {
     me({ req }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -83,7 +83,7 @@ let UserResolver = class UserResolver {
     }
 };
 __decorate([
-    type_graphql_1.Query(() => User_1.User),
+    type_graphql_1.Query(() => User_1.User, { nullable: true }),
     __param(0, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

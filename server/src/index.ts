@@ -7,7 +7,7 @@ import { UserResolver } from "./resolvers/user";
 import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import session from "express-session";
-import { COOKIE_NAME } from "./utils/constants";
+import { COOKIE_NAME, PORT } from "./utils/constants";
 
 const main = async () => {
   await createConnection();
@@ -51,6 +51,10 @@ const main = async () => {
   });
 
   apolloServer.applyMiddleware({ app, cors: false });
+
+  app.listen(PORT, () =>
+    console.log(`server up and running on http://localhost:${PORT}/graphql`)
+  );
 };
 
 main().catch((err) => console.log(err));
