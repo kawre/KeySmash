@@ -33,7 +33,7 @@ const ThemeSwitcher: React.FC<Props> = () => {
               key={name}
               style={{ background: background, color: main }}
               onClick={() => themeHandler(name!)}
-              className={active ? "active" : ""}
+              className={active ? "active" : undefined}
             >
               <Active style={{ background: main }} />
               <p>{name}</p>
