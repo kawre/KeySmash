@@ -13,7 +13,7 @@ import { useData } from "./Contexts/DataContext";
 const App = () => {
   const { theme } = useData();
 
-  const [localTheme, setLocalTheme] = useState<object[]>(
+  const [localTheme, setLocalTheme] = useState(
     JSON.parse(localStorage.getItem("theme")!)
   );
 
