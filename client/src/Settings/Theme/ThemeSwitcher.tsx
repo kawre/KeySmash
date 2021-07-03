@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { useData } from "../../Contexts/DataContext";
+import {
+  useChangeThemeMutation,
+  useThemesQuery,
+} from "../../generated/graphql";
 import SettingsTitle from "../SettingsTitle";
 // Types -------------------------------------------------------------------------
 
@@ -8,24 +12,25 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const ThemeSwitcher: React.FC<Props> = () => {
-  const { changeTheme, themes, theme: tme } = useData();
-  const localName = JSON.parse(localStorage.getItem("theme")!).name;
+  const { theme } = useData();
+  const { data } = useThemesQuery();
+  const [changeTheme] = useChangeThemeMutation();
 
   return (
     <Wrapper>
       <SettingsTitle type="small">theme</SettingsTitle>
       <Themes>
-        {themes?.map((theme) => {
-          const { name, background, main } = theme;
+        {data?.themes.map((t) => {
+          const { name, background, main } = t;
 
           let active = false;
-          if (tme.name === name) active = true;
+          if (theme.name === name) active = true;
 
           return (
             <Theme
               key={name}
               style={{ background: background, color: main }}
-              onClick={() => changeTheme({ name })}
+              onClick={() => changeTheme({ variables: { name } })}
               className={active ? "active" : undefined}
             >
               <Active style={{ background: main }} />

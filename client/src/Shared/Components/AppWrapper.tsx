@@ -1,3 +1,4 @@
+import { ApolloProvider } from "@apollo/client";
 import React from "react";
 import { Provider } from "urql";
 import { AuthProvider } from "../../Contexts/AuthContext";
@@ -12,14 +13,14 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const AppWrapper: React.FC<Props> = ({ children }) => (
   <React.StrictMode>
-    <Provider value={client}>
+    <ApolloProvider client={client}>
       <AuthProvider>
         <DataProvider>
           <GlobalStyle />
           {children}
         </DataProvider>
       </AuthProvider>
-    </Provider>
+    </ApolloProvider>
   </React.StrictMode>
 );
 

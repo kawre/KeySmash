@@ -8,7 +8,7 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const AddQuote: React.FC<Props> = () => {
-  const { addQuote, theme } = useData();
+  // const { addQuote, theme } = useData();
   const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -20,7 +20,7 @@ const AddQuote: React.FC<Props> = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await addQuote(input);
+      // await addQuote(input);
       setInput("");
     } catch {
       console.log("Failed to append a quote");
@@ -41,11 +41,11 @@ const AddQuote: React.FC<Props> = () => {
           required
         />
         <Button disabled={loading} type="submit">
-          {loading ? (
+          {/* {loading ? (
             <Loader type="ThreeDots" color={theme.text} height={5} />
           ) : (
             "Submit"
-          )}
+          )} */}
         </Button>
       </form>
     </Wrapper>

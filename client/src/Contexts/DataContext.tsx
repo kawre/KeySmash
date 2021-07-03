@@ -1,19 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { firestore } from "../firebase";
-import {
-  Theme,
-  ThemesQuery,
-  useChangeThemeMutation,
-  useRandomQuoteQuery,
-  useThemesQuery,
-} from "../generated/graphql";
+import { Theme } from "../generated/graphql";
 
 interface Context {
-  addQuote: (quote: string) => any;
-  changeTheme: (variables: { name: string }) => Promise<any>;
-  quote: string;
-  themes: ThemesQuery["themes"] | undefined;
-  theme: Omit<Theme, "__typename">;
+  theme: Theme;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -31,32 +20,9 @@ export const DataProvider: React.FC = ({ children }) => {
     setTheme(JSON.parse(localStorage.getItem("theme") as string));
   }, [localStorage.getItem("theme")]);
 
-  // append a quote to the data base
-  const addQuote = (quote: string) => {
-    const ref = firestore
-      .collection("game-data")
-      .doc("typing-game")
-      .collection("quotes");
-
-    return ref.add({
-      quote: quote,
-    });
-  };
-
-  // themes
-  const [{ data }] = useThemesQuery();
-
-  // random quote
-  const [{ data: quoteData }] = useRandomQuoteQuery();
-
   // change theme
-  const [, changeTheme] = useChangeThemeMutation();
 
   const value = {
-    changeTheme,
-    addQuote,
-    themes: data?.themes,
-    quote: quoteData?.randomQuote.quote!,
     theme,
   };
 

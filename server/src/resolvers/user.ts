@@ -12,6 +12,7 @@ export class UserResolver {
   // get user
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req }: MyContext) {
+    console.log(req.session.userId);
     return User.findOne(req.session.userId);
   }
 
@@ -63,6 +64,7 @@ export class UserResolver {
   // logout
   @Mutation(() => Boolean)
   logout(@Ctx() { req, res }: MyContext) {
+    console.log(req.session.userId);
     return new Promise((resolve) => {
       req.session.destroy((err) => {
         res.clearCookie(COOKIE_NAME);

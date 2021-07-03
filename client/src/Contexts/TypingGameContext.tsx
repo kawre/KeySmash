@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { firestore } from "../firebase";
+import { useRandomQuoteQuery } from "../generated/graphql";
 import PostTestStats from "../TypingGame/PostTestResults";
 import TypingGame from "../TypingGame/TypingGame";
 // Types -------------------------------------------------------------------------
@@ -30,7 +30,6 @@ interface Context {
   focus: boolean;
   setFocus: React.Dispatch<React.SetStateAction<boolean>>;
   // functions
-  getRandomQuote: () => Promise<void>;
   repeatTest: () => void;
 }
 
@@ -55,23 +54,9 @@ const TypingContext: React.FC = () => {
   const [characters, setCharacters] = useState<Context["characters"]>(0);
   const [errors, setErrors] = useState<Context["errors"]>(0);
 
-  const getRandomQuote = () => {
-    const ref = firestore
-      .collection("game-data")
-      .doc("typing-game")
-      .collection("quotes");
-
-    return ref.get().then((quotes) => {
-      const randomQuote =
-        quotes.docs[Math.floor(Math.random() * quotes.docs.length)].data()
-          .quote;
-
-      setWords(randomQuote.split(" "));
-    });
-  };
+  const { data, loading } = useRandomQuoteQuery();
 
   const repeatTest = () => {
-    getRandomQuote();
     defaultStates();
     setTimeout(() => setShowing(true), 150);
   };
@@ -91,17 +76,10 @@ const TypingContext: React.FC = () => {
   };
 
   useEffect(() => {
-    const getQuote = async () => {
-      try {
-        await getRandomQuote();
-      } catch {
-        console.log("get random quote failed");
-      }
-
-      setShowing(true);
-    };
-    getQuote();
-  }, []);
+    if (loading) return;
+    setWords(data?.randomQuote.quote.split(" ")!);
+    setShowing(true);
+  }, [loading]);
 
   // timer
   useEffect(() => {
@@ -111,7 +89,6 @@ const TypingContext: React.FC = () => {
   }, [isPlaying, time]);
 
   const value = {
-    getRandomQuote,
     setShowing,
     isShowing,
     words,

@@ -28,7 +28,7 @@ const TypingChart: React.FC<Props> = () => {
 
   defaults.font.family = font;
   defaults.font.size = 14;
-  defaults.color = theme.sub;
+  // defaults.color = theme?.sub;
 
   const data = {
     labels: labels,
@@ -36,7 +36,7 @@ const TypingChart: React.FC<Props> = () => {
       {
         label: "wpm",
         data: wpms,
-        borderColor: theme.main,
+        // borderColor: theme.main,
         borderWidth: 2,
         yAxisID: "wpm",
         order: 2,
@@ -46,7 +46,7 @@ const TypingChart: React.FC<Props> = () => {
       {
         label: "raw",
         data: raws,
-        borderColor: theme.sub,
+        // borderColor: theme.sub,
         borderWidth: 2,
         yAxisID: "raw",
         order: 3,
@@ -55,8 +55,8 @@ const TypingChart: React.FC<Props> = () => {
       {
         label: "errors",
         data: err,
-        borderColor: theme.error,
-        pointBackgroundColor: theme.error,
+        // borderColor: theme.error,
+        // pointBackgroundColor: theme.error,
         borderWidth: 2,
         order: 1,
         yAxisID: "error",

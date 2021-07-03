@@ -1,19 +1,17 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import AddQuote from "./AddQuote/AddQuote";
-import TypingGameContext from "./Contexts/TypingGameContext";
 import styled, { ThemeProvider } from "styled-components";
+import AddQuote from "./AddQuote/AddQuote";
+import AddTheme from "./AddQuote/AddTheme";
+import { useData } from "./Contexts/DataContext";
+import TypingGameContext from "./Contexts/TypingGameContext";
+import Settings from "./Settings/Settings";
 import Header from "./Shared/Components/Header";
 import LoginForm from "./Shared/Forms/LoginForm";
 import RegisterForm from "./Shared/Forms/RegisterForm";
-import { useEffect, useState } from "react";
-import Settings from "./Settings/Settings";
-import AddTheme from "./AddQuote/AddTheme";
-import { useData } from "./Contexts/DataContext";
-import { useAuth } from "./Contexts/AuthContext";
 
 const App = () => {
   const { theme } = useData();
-  const { user } = useAuth();
 
   const [localTheme, setLocalTheme] = useState(
     JSON.parse(localStorage.getItem("theme")!)

@@ -1,9 +1,10 @@
+import { useApolloClient } from "@apollo/client";
 import React from "react";
+import Loader from "react-loader-spinner";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useAuth } from "../../Contexts/AuthContext";
-import Loader from "react-loader-spinner";
 import { useData } from "../../Contexts/DataContext";
+import { useLogoutMutation } from "../../generated/graphql";
 // Types -------------------------------------------------------------------------
 
 interface Props {
@@ -26,8 +27,9 @@ const Button: React.FC<Props> = ({
   tabIndex,
   children,
 }) => {
-  const { logout } = useAuth();
   const { theme } = useData();
+  const [logout] = useLogoutMutation();
+  const apollo = useApolloClient();
 
   switch (type) {
     case "test":
@@ -56,7 +58,13 @@ const Button: React.FC<Props> = ({
       );
     case "logout":
       return (
-        <AccoutButton className={reversed ? "reversed" : ""} onClick={logout}>
+        <AccoutButton
+          className={reversed ? "reversed" : undefined}
+          onClick={async () => {
+            await logout();
+            await apollo.resetStore();
+          }}
+        >
           Sign Out
         </AccoutButton>
       );
@@ -64,7 +72,7 @@ const Button: React.FC<Props> = ({
       return (
         <SubmitButton disabled={disabled}>
           {disabled ? (
-            <Loader type="ThreeDots" color={theme.text} height={8} />
+            <Loader type="ThreeDots" color={theme?.text} height={8} />
           ) : (
             children
           )}

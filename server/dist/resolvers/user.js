@@ -35,6 +35,7 @@ const constants_1 = require("../utils/constants");
 let UserResolver = class UserResolver {
     me({ req }) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(req.session.userId);
             return User_1.User.findOne(req.session.userId);
         });
     }
@@ -71,6 +72,7 @@ let UserResolver = class UserResolver {
         });
     }
     logout({ req, res }) {
+        console.log(req.session.userId);
         return new Promise((resolve) => {
             req.session.destroy((err) => {
                 res.clearCookie(constants_1.COOKIE_NAME);

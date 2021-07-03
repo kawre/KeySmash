@@ -1,21 +1,9 @@
-import React, { createContext, useContext, useRef } from "react";
+import React, { createContext, useContext, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { auth, firestore } from "../firebase";
-import {
-  LoginMutationVariables,
-  MeQuery,
-  RegisterMutationVariables,
-  useLoginMutation,
-  useLogoutMutation,
-  useMeQuery,
-  useRegisterMutation,
-} from "../generated/graphql";
+import { MeQuery, useMeQuery } from "../generated/graphql";
 
 interface Context {
   user: MeQuery["me"] | undefined;
-  logout: () => any;
-  login: (variables: LoginMutationVariables) => Promise<any>;
-  register: (variables: RegisterMutationVariables) => Promise<any>;
 }
 
 const AuthContext = createContext<Context>(undefined!);
@@ -30,28 +18,23 @@ export const AuthProvider: React.FC = ({ children }) => {
   const loadingRef = useRef<HTMLDivElement>(null);
 
   // me
-  const [{ data }] = useMeQuery();
+  const { data, loading } = useMeQuery();
+  console.log(data?.me);
 
-  // login
-  const [, login] = useLoginMutation();
-
-  // signup
-  const [, register] = useRegisterMutation();
-
-  // log Out
-  const [, logout] = useLogoutMutation();
+  // loading handler
+  useEffect(() => {
+    if (loading || !loadingRef.current) return;
+    loadingRef.current.classList.add("hidden");
+  }, [loading, loadingRef]);
 
   // global values
   const value = {
     user: data?.me,
-    logout,
-    login,
-    register,
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {/* <Loading ref={loadingRef} /> */}
+      <Loading ref={loadingRef} />
       {children}
     </AuthContext.Provider>
   );

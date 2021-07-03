@@ -2,27 +2,22 @@ import { Field, Form, Formik } from "formik";
 import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
-import { useData } from "../../Contexts/DataContext";
+import { useLoginMutation } from "../../generated/graphql";
 import Button from "../Components/Button";
 import TextField from "./TextField";
 // Types -------------------------------------------------------------------------
 
 // Component ---------------------------------------------------------------------
 const LoginForm: React.FC = () => {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
+  const [login] = useLoginMutation();
 
   if (user !== null) return <Redirect to="/" />;
   return (
     <Wrapper>
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={async (input) => {
-          try {
-            await login({ input });
-          } catch {
-            console.log("Invalid data");
-          }
-        }}
+        onSubmit={async (input) => await login({ variables: { input } })}
       >
         {({ isSubmitting }) => (
           <Form>
