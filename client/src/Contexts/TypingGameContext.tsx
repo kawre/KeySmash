@@ -61,6 +61,10 @@ const TypingContext: React.FC = () => {
     setTimeout(() => setShowing(true), 150);
   };
 
+  useEffect(() => {
+    console.log(isPlaying);
+  }, [isPlaying]);
+
   const defaultStates = () => {
     setPlaying(false);
     setShowing(false);

@@ -9,60 +9,59 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Result = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const Result_1 = require("./Result");
-const Stats_1 = require("./Stats");
-let User = class User extends typeorm_1.BaseEntity {
+const User_1 = require("./User");
+let Result = class Result extends typeorm_1.BaseEntity {
 };
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
-], User.prototype, "id", void 0);
-__decorate([
-    type_graphql_1.Field(),
-    typeorm_1.Column({ unique: true }),
-    __metadata("design:type", String)
-], User.prototype, "username", void 0);
+], Result.prototype, "id", void 0);
 __decorate([
     typeorm_1.Column(),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
+    __metadata("design:type", Number)
+], Result.prototype, "userId", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "text", default: "serika dark" }),
-    __metadata("design:type", String)
-], User.prototype, "theme", void 0);
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Result.prototype, "wpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ unique: true }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Result.prototype, "accuracy", void 0);
 __decorate([
-    type_graphql_1.Field(() => [Result_1.Result]),
-    typeorm_1.OneToMany(() => Result_1.Result, (result) => result.user),
-    __metadata("design:type", Array)
-], User.prototype, "results", void 0);
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Result.prototype, "cpm", void 0);
 __decorate([
-    type_graphql_1.Field(() => Stats_1.Stats),
-    typeorm_1.OneToOne(() => Stats_1.Stats, (stats) => stats.user),
-    __metadata("design:type", Stats_1.Stats)
-], User.prototype, "stats", void 0);
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Result.prototype, "raw", void 0);
+__decorate([
+    type_graphql_1.Field(() => User_1.User),
+    typeorm_1.ManyToOne(() => User_1.User, (user) => user.results, { onDelete: "CASCADE" }),
+    __metadata("design:type", User_1.User)
+], Result.prototype, "user", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Result.prototype, "time", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)
-], User.prototype, "createdAt", void 0);
-__decorate([
-    type_graphql_1.Field(() => String),
-    typeorm_1.UpdateDateColumn(),
-    __metadata("design:type", Date)
-], User.prototype, "updatedAt", void 0);
-User = __decorate([
+], Result.prototype, "createdAt", void 0);
+Result = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity()
-], User);
-exports.User = User;
-//# sourceMappingURL=User.js.map
+], Result);
+exports.Result = Result;
+//# sourceMappingURL=Result.js.map

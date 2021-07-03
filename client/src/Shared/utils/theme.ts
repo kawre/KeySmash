@@ -9,5 +9,4 @@ export const defaultTheme = {
   text: "#d1d0c5",
   error: "#ca4754",
   errorExtra: "#7e2a33",
-  __typename: "Theme",
 } as Theme;

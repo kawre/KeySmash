@@ -4,4 +4,10 @@ fragment RegularUser on User {
   email
   theme
   createdAt
+  results {
+    wpm
+    accuracy
+    cpm
+    time
+  }
 }

@@ -2,7 +2,7 @@ import { Field, Form, Formik } from "formik";
 import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
-import { useRegisterMutation } from "../../generated/graphql";
+import { MeDocument, useRegisterMutation } from "../../generated/graphql";
 import Button from "../Components/Button";
 import TextField from "./TextField";
 
@@ -11,17 +11,23 @@ const RegisterForm: React.FC = () => {
   const { user } = useAuth();
   const [register] = useRegisterMutation();
 
-  if (user !== null) return <Redirect to="/" />;
+  if (user) return <Redirect to="/" />;
   return (
     <Wrapper>
       <Formik
         initialValues={{ username: "", email: "", password: "" }}
         onSubmit={async (input) => {
-          try {
-            await register({ variables: { input } });
-          } catch {
-            console.log("error");
-          }
+          await register({
+            variables: { input },
+            update: (cache, { data }) =>
+              cache.writeQuery({
+                query: MeDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.register.user,
+                },
+              }),
+          });
         }}
       >
         {({ isSubmitting }) => (

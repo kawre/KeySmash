@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
+import Account from "./Accout/Accout";
 import AddQuote from "./AddQuote/AddQuote";
 import AddTheme from "./AddQuote/AddTheme";
 import { useData } from "./Contexts/DataContext";
@@ -22,6 +23,7 @@ const App = () => (
           <Route exact path="/" component={TypingGameContext} />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/add-theme" component={AddTheme} />
+          <Route exact path="/account" component={Account} />
         </Switch>
       </Router>
     </Wrapper>

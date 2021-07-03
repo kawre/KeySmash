@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import React from "react";
 import Loader from "react-loader-spinner";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { useData } from "../../Contexts/DataContext";
 import { useLogoutMutation } from "../../generated/graphql";
@@ -30,6 +30,7 @@ const Button: React.FC<Props> = ({
   const { theme } = useData();
   const [logout] = useLogoutMutation();
   const apollo = useApolloClient();
+  const history = useHistory();
 
   switch (type) {
     case "test":
@@ -62,7 +63,10 @@ const Button: React.FC<Props> = ({
           className={reversed ? "reversed" : undefined}
           onClick={async () => {
             await logout();
-            await apollo.resetStore();
+            history.go(0);
+            // location.reload();
+
+            // await apollo.resetStore();
           }}
         >
           Sign Out

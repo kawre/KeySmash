@@ -6,6 +6,8 @@ import { keyValidation } from "./KeyValidation";
 import RepeatTest from "./RepeatTest";
 import TypingStats from "./TypingStats";
 import { useTypingData } from "../Contexts/TypingGameContext";
+import { useSubmitResultMutation } from "../generated/graphql";
+import Layout from "../Shared/Components/Layout";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -14,6 +16,11 @@ interface Props {}
 const TypingGame: React.FC<Props> = () => {
   // context
   const {
+    wpm,
+    acc,
+    raw,
+    cpm,
+    time,
     words,
     setPlaying,
     setShowing,
@@ -40,6 +47,9 @@ const TypingGame: React.FC<Props> = () => {
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
+
+  // graphql
+  const [submitResult] = useSubmitResultMutation();
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (disabled) return;
@@ -106,7 +116,7 @@ const TypingGame: React.FC<Props> = () => {
     word.appendChild(letter);
   };
 
-  const letterValidation = (key: string, eventKey: string) => {
+  const letterValidation = async (key: string, eventKey: string) => {
     if (eventKey === " " || eventKey === "Backspace" || !letter) return;
     if (letter.innerHTML === key) {
       letter.classList.add("correct");
@@ -114,12 +124,20 @@ const TypingGame: React.FC<Props> = () => {
         words.length === current + 1 &&
         words[current].length === input.length + 1
       ) {
+        const options = {
+          wpm,
+          accuracy: acc,
+          raw,
+          cpm,
+          time,
+        };
         setDisabled(true);
-        setTimeout(() => {
-          setPlaying(false);
-          setShowing(false);
-          setResults(true);
-        }, 100);
+        await submitResult({ variables: { options } });
+        // setTimeout(() => {
+        setPlaying(false);
+        setShowing(false);
+        setResults(true);
+        // }, 100);
       }
       return;
     }
@@ -202,7 +220,7 @@ const TypingGame: React.FC<Props> = () => {
   }, [focus]);
 
   return (
-    <Wrapper>
+    <Layout center>
       <Game>
         <TypingStats />
         <GameContainer>
@@ -241,7 +259,7 @@ const TypingGame: React.FC<Props> = () => {
         </GameContainer>
         <RepeatTest />
       </Game>
-    </Wrapper>
+    </Layout>
   );
 };
 

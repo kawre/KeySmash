@@ -4,9 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Result } from "./Result";
+import { Stats } from "./Stats";
 
 @ObjectType()
 @Entity()
@@ -29,6 +33,14 @@ export class User extends BaseEntity {
   @Field()
   @Column({ unique: true })
   email: string;
+
+  @Field(() => [Result])
+  @OneToMany(() => Result, (result) => result.user)
+  results: Result[];
+
+  @Field(() => Stats)
+  @OneToOne(() => Stats, (stats) => stats.user)
+  stats: Stats;
 
   @Field(() => String)
   @CreateDateColumn()

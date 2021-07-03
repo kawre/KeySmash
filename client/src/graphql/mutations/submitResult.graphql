@@ -1,0 +1,9 @@
+mutation SubmitResult($options: ScoreInput!) {
+  submitResult(options: $options) {
+    wpm
+    accuracy
+    cpm
+    raw
+    time
+  }
+}

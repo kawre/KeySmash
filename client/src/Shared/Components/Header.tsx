@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
 import { FaKeyboard } from "react-icons/fa";
@@ -14,6 +14,7 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const Header: React.FC<Props> = () => {
   const { user } = useAuth();
+  const history = useHistory();
   return (
     <Wrapper>
       <Left>
@@ -34,18 +35,18 @@ const Header: React.FC<Props> = () => {
               <RiSettings3Fill />
             </Button>
           </Link>
-          <Link to="">
+          {user ? (
+            <Link to="/account">
+              <Button type="icon">
+                <FaUser style={{ padding: "1px" }} />
+                <p>{user?.username}</p>
+              </Button>
+            </Link>
+          ) : (
             <Button type="icon">
-              {user ? (
-                <>
-                  <FaUser style={{ padding: "1px" }} />
-                  <p>{user?.username}</p>
-                </>
-              ) : (
-                <FaRegUser style={{ padding: "1px" }} />
-              )}
+              <FaRegUser style={{ padding: "1px" }} />
             </Button>
-          </Link>
+          )}
         </Navigation>
       </Left>
       <Menu>

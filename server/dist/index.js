@@ -21,6 +21,8 @@ const ioredis_1 = __importDefault(require("ioredis"));
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const quote_1 = require("./resolvers/quote");
+const result_1 = require("./resolvers/result");
+const stats_1 = require("./resolvers/stats");
 const theme_1 = require("./resolvers/theme");
 const user_1 = require("./resolvers/user");
 const constants_1 = require("./utils/constants");
@@ -48,7 +50,13 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({
-            resolvers: [user_1.UserResolver, theme_1.ThemeResolver, quote_1.QuoteResolver],
+            resolvers: [
+                user_1.UserResolver,
+                theme_1.ThemeResolver,
+                quote_1.QuoteResolver,
+                result_1.ResultResolver,
+                stats_1.StatsResolver,
+            ],
             validate: false,
         }),
         context: ({ req, res }) => ({

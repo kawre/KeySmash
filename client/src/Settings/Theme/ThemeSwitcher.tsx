@@ -23,7 +23,7 @@ const ThemeSwitcher: React.FC<Props> = () => {
     <Wrapper>
       <SettingsTitle type="small">theme</SettingsTitle>
       <Themes>
-        {data?.themes.map((t) => {
+        {data?.themes.map(({ __typename, ...t }) => {
           const { name, background, main } = t;
 
           let active = false;

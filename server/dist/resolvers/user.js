@@ -32,7 +32,15 @@ const argon2_1 = __importDefault(require("argon2"));
 const validateRegister_1 = require("../utils/validateRegister");
 const fieldError_1 = require("../utils/fieldError");
 const constants_1 = require("../utils/constants");
+const Result_1 = require("../entities/Result");
+const Stats_1 = require("../entities/Stats");
 let UserResolver = class UserResolver {
+    stats(user) {
+        return Stats_1.Stats.findOne({ userId: user.id });
+    }
+    results(user) {
+        return Result_1.Result.find({ userId: user.id });
+    }
     me({ req }) {
         const { userId } = req.session;
         if (!userId)
@@ -49,6 +57,7 @@ let UserResolver = class UserResolver {
             let user;
             try {
                 user = yield User_1.User.create({ username, email, password }).save();
+                yield Stats_1.Stats.create({ userId: user.id }).save();
                 req.session.userId = user.id;
             }
             catch (err) {
@@ -84,6 +93,20 @@ let UserResolver = class UserResolver {
         });
     }
 };
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User]),
+    __metadata("design:returntype", void 0)
+], UserResolver.prototype, "stats", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User]),
+    __metadata("design:returntype", void 0)
+], UserResolver.prototype, "results", null);
 __decorate([
     type_graphql_1.Query(() => User_1.User, { nullable: true }),
     __param(0, type_graphql_1.Ctx()),

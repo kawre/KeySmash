@@ -27,10 +27,16 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  submitResult: Result;
   changeTheme?: Maybe<Theme>;
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+};
+
+
+export type MutationSubmitResultArgs = {
+  options: ScoreInput;
 };
 
 
@@ -51,6 +57,7 @@ export type MutationLoginArgs = {
 export type Query = {
   __typename?: 'Query';
   randomQuote: Quote;
+  topResults: Array<Result>;
   themes: Array<Theme>;
   me?: Maybe<User>;
 };
@@ -64,6 +71,26 @@ export type RegisterInput = {
   username: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Result = {
+  __typename?: 'Result';
+  id: Scalars['Float'];
+  wpm: Scalars['Float'];
+  accuracy: Scalars['Float'];
+  cpm: Scalars['Float'];
+  raw: Scalars['Float'];
+  user: User;
+  time: Scalars['Float'];
+  createdAt: Scalars['String'];
+};
+
+export type ScoreInput = {
+  wpm: Scalars['Float'];
+  accuracy: Scalars['Float'];
+  cpm: Scalars['Float'];
+  raw: Scalars['Float'];
+  time: Scalars['Float'];
 };
 
 export type Theme = {
@@ -84,6 +111,7 @@ export type User = {
   username: Scalars['String'];
   theme: Scalars['String'];
   email: Scalars['String'];
+  results: Array<Result>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -107,6 +135,10 @@ export type RegularThemeFragment = (
 export type RegularUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username' | 'email' | 'theme' | 'createdAt'>
+  & { results: Array<(
+    { __typename?: 'Result' }
+    & Pick<Result, 'wpm' | 'accuracy' | 'cpm' | 'time'>
+  )> }
 );
 
 export type RegularUserResponseFragment = (
@@ -164,6 +196,19 @@ export type RegisterMutation = (
   & { register: (
     { __typename?: 'UserResponse' }
     & RegularUserResponseFragment
+  ) }
+);
+
+export type SubmitResultMutationVariables = Exact<{
+  options: ScoreInput;
+}>;
+
+
+export type SubmitResultMutation = (
+  { __typename?: 'Mutation' }
+  & { submitResult: (
+    { __typename?: 'Result' }
+    & Pick<Result, 'wpm' | 'accuracy' | 'cpm' | 'raw' | 'time'>
   ) }
 );
 
@@ -225,6 +270,12 @@ export const RegularUserFragmentDoc = gql`
   email
   theme
   createdAt
+  results {
+    wpm
+    accuracy
+    cpm
+    time
+  }
 }
     `;
 export const RegularUserResponseFragmentDoc = gql`
@@ -367,6 +418,43 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const SubmitResultDocument = gql`
+    mutation SubmitResult($options: ScoreInput!) {
+  submitResult(options: $options) {
+    wpm
+    accuracy
+    cpm
+    raw
+    time
+  }
+}
+    `;
+export type SubmitResultMutationFn = Apollo.MutationFunction<SubmitResultMutation, SubmitResultMutationVariables>;
+
+/**
+ * __useSubmitResultMutation__
+ *
+ * To run a mutation, you first call `useSubmitResultMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitResultMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitResultMutation, { data, loading, error }] = useSubmitResultMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useSubmitResultMutation(baseOptions?: Apollo.MutationHookOptions<SubmitResultMutation, SubmitResultMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SubmitResultMutation, SubmitResultMutationVariables>(SubmitResultDocument, options);
+      }
+export type SubmitResultMutationHookResult = ReturnType<typeof useSubmitResultMutation>;
+export type SubmitResultMutationResult = Apollo.MutationResult<SubmitResultMutation>;
+export type SubmitResultMutationOptions = Apollo.BaseMutationOptions<SubmitResultMutation, SubmitResultMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

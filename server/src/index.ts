@@ -6,13 +6,18 @@ import session from "express-session";
 import Redis from "ioredis";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
+import { User } from "./entities/User";
 import { QuoteResolver } from "./resolvers/quote";
+import { ResultResolver } from "./resolvers/result";
+import { StatsResolver } from "./resolvers/stats";
 import { ThemeResolver } from "./resolvers/theme";
 import { UserResolver } from "./resolvers/user";
 import { COOKIE_NAME, PORT } from "./utils/constants";
 
 const main = async () => {
   await (await createConnection()).runMigrations();
+
+  // await User.delete({});
 
   const app = express();
 
@@ -42,7 +47,13 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, ThemeResolver, QuoteResolver],
+      resolvers: [
+        UserResolver,
+        ThemeResolver,
+        QuoteResolver,
+        ResultResolver,
+        StatsResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }) => ({

@@ -1,14 +1,34 @@
 import { User } from "../entities/User";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
 import { LoginInput, RegisterInput, UserResponse } from "../utils/GraphqlTypes";
 import { MyContext } from "src/types";
 import argon2 from "argon2";
 import { validateRegister } from "../utils/validateRegister";
 import { fieldError } from "../utils/fieldError";
 import { COOKIE_NAME } from "../utils/constants";
+import { Result } from "../entities/Result";
+import { Stats } from "../entities/Stats";
 
 @Resolver(User)
 export class UserResolver {
+  @FieldResolver()
+  stats(@Root() user: User) {
+    return Stats.findOne({ userId: user.id });
+  }
+
+  @FieldResolver()
+  results(@Root() user: User) {
+    return Result.find({ userId: user.id });
+  }
+
   // get user
   @Query(() => User, { nullable: true })
   me(@Ctx() { req }: MyContext) {
@@ -38,6 +58,7 @@ export class UserResolver {
     let user;
     try {
       user = await User.create({ username, email, password }).save();
+      await Stats.create({ userId: user.id }).save();
       req.session.userId = user.id;
     } catch (err) {
       if (err.code === "23505")
