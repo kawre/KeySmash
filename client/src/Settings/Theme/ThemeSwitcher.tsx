@@ -1,7 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { useAuth } from "../../Contexts/AuthContext";
 import { useData } from "../../Contexts/DataContext";
 import {
+  Theme,
   useChangeThemeMutation,
   useThemesQuery,
 } from "../../generated/graphql";
@@ -12,7 +14,8 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const ThemeSwitcher: React.FC<Props> = () => {
-  const { theme } = useData();
+  const { setTheme, theme } = useData();
+  const { user } = useAuth();
   const { data } = useThemesQuery();
   const [changeTheme] = useChangeThemeMutation();
 
@@ -27,15 +30,23 @@ const ThemeSwitcher: React.FC<Props> = () => {
           if (theme.name === name) active = true;
 
           return (
-            <Theme
+            <ThemeCont
               key={name}
               style={{ background: background, color: main }}
-              onClick={() => changeTheme({ variables: { name } })}
+              onClick={() => {
+                if (user) {
+                  changeTheme({
+                    variables: { name },
+                    update: (_, { data }) =>
+                      setTheme(data?.changeTheme as Theme),
+                  });
+                } else setTheme(t);
+              }}
               className={active ? "active" : undefined}
             >
               <Active style={{ background: main }} />
               <p>{name}</p>
-            </Theme>
+            </ThemeCont>
           );
         })}
       </Themes>
@@ -58,7 +69,7 @@ const Themes = styled.div`
   gap: 10px;
 `;
 
-const Theme = styled.div`
+const ThemeCont = styled.div`
   position: relative;
   padding: 5px;
   text-align: center;

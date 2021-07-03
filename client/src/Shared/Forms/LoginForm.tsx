@@ -1,8 +1,8 @@
 import { Field, Form, Formik } from "formik";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
-import { useLoginMutation } from "../../generated/graphql";
+import { MeDocument, useLoginMutation } from "../../generated/graphql";
 import Button from "../Components/Button";
 import TextField from "./TextField";
 // Types -------------------------------------------------------------------------
@@ -12,12 +12,24 @@ const LoginForm: React.FC = () => {
   const { user } = useAuth();
   const [login] = useLoginMutation();
 
-  if (user !== null) return <Redirect to="/" />;
+  if (user) return <Redirect to="/" />;
   return (
     <Wrapper>
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={async (input) => await login({ variables: { input } })}
+        onSubmit={async (input) =>
+          await login({
+            variables: { input },
+            update: (cache, { data }) =>
+              cache.writeQuery({
+                query: MeDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.login.user,
+                },
+              }),
+          })
+        }
       >
         {({ isSubmitting }) => (
           <Form>

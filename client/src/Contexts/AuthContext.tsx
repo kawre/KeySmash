@@ -19,7 +19,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   // me
   const { data, loading } = useMeQuery();
-  console.log(data?.me);
 
   // loading handler
   useEffect(() => {

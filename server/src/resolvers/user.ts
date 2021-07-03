@@ -11,9 +11,12 @@ import { COOKIE_NAME } from "../utils/constants";
 export class UserResolver {
   // get user
   @Query(() => User, { nullable: true })
-  async me(@Ctx() { req }: MyContext) {
-    console.log(req.session.userId);
-    return User.findOne(req.session.userId);
+  me(@Ctx() { req }: MyContext) {
+    const { userId } = req.session;
+
+    if (!userId) return null;
+
+    return User.findOne(userId);
   }
 
   // register

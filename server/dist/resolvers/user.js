@@ -34,10 +34,10 @@ const fieldError_1 = require("../utils/fieldError");
 const constants_1 = require("../utils/constants");
 let UserResolver = class UserResolver {
     me({ req }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.session.userId);
-            return User_1.User.findOne(req.session.userId);
-        });
+        const { userId } = req.session;
+        if (!userId)
+            return null;
+        return User_1.User.findOne(userId);
     }
     register(input, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -89,7 +89,7 @@ __decorate([
     __param(0, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "me", null);
 __decorate([
     type_graphql_1.Mutation(() => GraphqlTypes_1.UserResponse),

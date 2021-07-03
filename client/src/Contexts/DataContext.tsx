@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Theme } from "../generated/graphql";
+import { defaultTheme } from "../Shared/utils/theme";
 
 interface Context {
   theme: Theme;
+  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
 }
 
 const DataContext = createContext<Context>(undefined!);
@@ -17,13 +19,13 @@ export const DataProvider: React.FC = ({ children }) => {
   );
 
   useEffect(() => {
-    setTheme(JSON.parse(localStorage.getItem("theme") as string));
-  }, [localStorage.getItem("theme")]);
-
-  // change theme
+    if (!theme) return setTheme(defaultTheme);
+    localStorage.setItem("theme", JSON.stringify(theme));
+  }, [theme]);
 
   const value = {
     theme,
+    setTheme,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
