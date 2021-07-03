@@ -41,17 +41,17 @@ __decorate([
 ], Stats.prototype, "highestWpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({ type: "int", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "averageWpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({ type: "int", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "last10AverageWpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({ type: "int", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "last10AverageAcc", void 0);
 __decorate([

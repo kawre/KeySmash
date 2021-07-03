@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useAuth } from "../Contexts/AuthContext";
 import Layout from "../Shared/Components/Layout";
@@ -9,19 +9,26 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const Account: React.FC<Props> = () => {
   const { user } = useAuth();
-  const [timePlayed, setTimePlayed] = useState<number>(0);
+  const stats = user?.stats;
 
   return (
     <Layout>
-      <StatsHeader>
-        <div>
-          <Text>tests completed</Text>
-        </div>
-        <div>
-          <Text>time playing</Text>
-          <BigText>{timePlayed}</BigText>
-        </div>
-      </StatsHeader>
+      <Wrapper>
+        <StatsHeader>
+          <div>
+            <Text>tests completed</Text>
+            <BigText>{stats?.testsCompleted}</BigText>
+          </div>
+          <div>
+            <Text>average wpm</Text>
+            <BigText>{stats?.averageWpm}</BigText>
+          </div>
+          <div>
+            <Text>time playing</Text>
+            <BigText>{stats?.timePlayed}</BigText>
+          </div>
+        </StatsHeader>
+      </Wrapper>
     </Layout>
   );
 };
@@ -30,15 +37,22 @@ export default Account;
 
 // Styled ------------------------------------------------------------------------
 
+const Wrapper = styled.div`
+  color: ${(props) => props.theme.text};
+`;
+
 const StatsHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  padding-right: 150px;
 `;
 
 const Text = styled.p`
   font-size: 16px;
+  color: ${(props) => props.theme.sub};
 `;
 
 const BigText = styled.p`
-  font-size: 22px;
+  line-height: 50px;
+  font-size: 48px;
 `;

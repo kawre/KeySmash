@@ -93,6 +93,18 @@ export type ScoreInput = {
   time: Scalars['Float'];
 };
 
+export type Stats = {
+  __typename?: 'Stats';
+  id: Scalars['Float'];
+  timePlayed: Scalars['Float'];
+  testsCompleted: Scalars['Float'];
+  highestWpm: Scalars['Float'];
+  averageWpm: Scalars['Float'];
+  last10AverageWpm: Scalars['Float'];
+  last10AverageAcc: Scalars['Float'];
+  user: User;
+};
+
 export type Theme = {
   __typename?: 'Theme';
   name: Scalars['String'];
@@ -112,6 +124,7 @@ export type User = {
   theme: Scalars['String'];
   email: Scalars['String'];
   results: Array<Result>;
+  stats: Stats;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -135,10 +148,10 @@ export type RegularThemeFragment = (
 export type RegularUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username' | 'email' | 'theme' | 'createdAt'>
-  & { results: Array<(
-    { __typename?: 'Result' }
-    & Pick<Result, 'wpm' | 'accuracy' | 'cpm' | 'time'>
-  )> }
+  & { stats: (
+    { __typename?: 'Stats' }
+    & Pick<Stats, 'timePlayed' | 'testsCompleted' | 'highestWpm' | 'averageWpm'>
+  ) }
 );
 
 export type RegularUserResponseFragment = (
@@ -270,11 +283,11 @@ export const RegularUserFragmentDoc = gql`
   email
   theme
   createdAt
-  results {
-    wpm
-    accuracy
-    cpm
-    time
+  stats {
+    timePlayed
+    testsCompleted
+    highestWpm
+    averageWpm
   }
 }
     `;

@@ -20,12 +20,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StatsResolver = void 0;
 const Stats_1 = require("../entities/Stats");
 const type_graphql_1 = require("type-graphql");
 const Result_1 = require("../entities/Result");
 const User_1 = require("../entities/User");
+const typeorm_1 = require("typeorm");
+const moment_1 = __importDefault(require("moment"));
 let StatsResolver = class StatsResolver {
     user(stats) {
         return User_1.User.findOne(stats.userId);
@@ -33,12 +38,44 @@ let StatsResolver = class StatsResolver {
     timePlayed(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const results = yield Result_1.Result.find({ userId: stats.userId });
+            if (results.length === 0)
+                return 0;
             let sum = 0;
             results.forEach((r) => {
                 sum = sum + r.time;
             });
-            console.log(sum);
+            const elo = moment_1.default(sum);
+            console.log(elo);
             return sum;
+        });
+    }
+    testsCompleted(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const results = yield Result_1.Result.find({ userId: stats.userId });
+            return results.length;
+        });
+    }
+    highestWpm(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield typeorm_1.getConnection().query(`
+			select * from result
+			where "userId" = $1 and
+			wpm = (select max(wpm) from result)
+			limit 1
+			`, [stats.userId]);
+            return res ? res.pop().wpm : 0;
+        });
+    }
+    averageWpm(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const results = yield Result_1.Result.find({ userId: stats.userId });
+            const avr = [];
+            let sum = 0;
+            results.forEach((r) => {
+                avr.push(r.wpm);
+                sum = sum + r.wpm;
+            });
+            return Math.floor(sum / avr.length);
         });
     }
 };
@@ -56,6 +93,27 @@ __decorate([
     __metadata("design:paramtypes", [Stats_1.Stats]),
     __metadata("design:returntype", Promise)
 ], StatsResolver.prototype, "timePlayed", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", Promise)
+], StatsResolver.prototype, "testsCompleted", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", Promise)
+], StatsResolver.prototype, "highestWpm", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", Promise)
+], StatsResolver.prototype, "averageWpm", null);
 StatsResolver = __decorate([
     type_graphql_1.Resolver(Stats_1.Stats)
 ], StatsResolver);

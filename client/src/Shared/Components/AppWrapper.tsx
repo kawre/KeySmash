@@ -1,6 +1,5 @@
 import { ApolloProvider } from "@apollo/client";
 import React from "react";
-import { Provider } from "urql";
 import { AuthProvider } from "../../Contexts/AuthContext";
 import { DataProvider } from "../../Contexts/DataContext";
 import GlobalStyle from "../Global/GlobalStyle";

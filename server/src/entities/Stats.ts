@@ -31,15 +31,15 @@ export class Stats extends BaseEntity {
   highestWpm: number;
 
   @Field()
-  @Column()
+  @Column({ type: "int", default: 0 })
   averageWpm: number;
 
   @Field()
-  @Column()
+  @Column({ type: "int", default: 0 })
   last10AverageWpm: number;
 
   @Field()
-  @Column()
+  @Column({ type: "int", default: 0 })
   last10AverageAcc: number;
 
   @Field(() => User)
