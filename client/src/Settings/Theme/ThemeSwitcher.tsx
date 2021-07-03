@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useAuth } from "../../Contexts/AuthContext";
 import { useData } from "../../Contexts/DataContext";
 import SettingsTitle from "../SettingsTitle";
 // Types -------------------------------------------------------------------------
@@ -9,30 +8,24 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const ThemeSwitcher: React.FC<Props> = () => {
-  const { user } = useAuth();
-  const { themes } = useData();
+  const { changeTheme, themes, theme: tme } = useData();
   const localName = JSON.parse(localStorage.getItem("theme")!).name;
-
-  // const themeHandler = (name: string) => {
-  //   if (!user) return;
-  // changeTheme(name!);
-  // };
 
   return (
     <Wrapper>
       <SettingsTitle type="small">theme</SettingsTitle>
       <Themes>
-        {themes.map((theme) => {
+        {themes?.map((theme) => {
           const { name, background, main } = theme;
 
           let active = false;
-          if (localName === name) active = true;
+          if (tme.name === name) active = true;
 
           return (
             <Theme
               key={name}
               style={{ background: background, color: main }}
-              // onClick={() => themeHandler(name!)}
+              onClick={() => changeTheme({ name })}
               className={active ? "active" : undefined}
             >
               <Active style={{ background: main }} />

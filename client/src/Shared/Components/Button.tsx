@@ -26,7 +26,7 @@ const Button: React.FC<Props> = ({
   tabIndex,
   children,
 }) => {
-  const { logOut } = useAuth();
+  const { logout } = useAuth();
   const { theme } = useData();
 
   switch (type) {
@@ -56,7 +56,7 @@ const Button: React.FC<Props> = ({
       );
     case "logout":
       return (
-        <AccoutButton className={reversed ? "reversed" : ""} onClick={logOut}>
+        <AccoutButton className={reversed ? "reversed" : ""} onClick={logout}>
           Sign Out
         </AccoutButton>
       );

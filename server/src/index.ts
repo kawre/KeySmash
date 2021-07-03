@@ -1,35 +1,20 @@
-import { createConnection } from "typeorm";
-import express from "express";
-import cors from "cors";
 import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import { UserResolver } from "./resolvers/user";
 import connectRedis from "connect-redis";
-import Redis from "ioredis";
+import cors from "cors";
+import express from "express";
 import session from "express-session";
+import Redis from "ioredis";
+import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
+import { QuoteResolver } from "./resolvers/quote";
+import { ThemeResolver } from "./resolvers/theme";
+import { UserResolver } from "./resolvers/user";
 import { COOKIE_NAME, PORT } from "./utils/constants";
-import { Theme } from "./entities/Theme";
 
 const main = async () => {
-  await createConnection();
-
-  // await Theme.delete({});
+  await (await createConnection()).runMigrations();
 
   const app = express();
-
-  const themes = await Theme.find();
-  console.log(themes);
-
-  // await Theme.insert({
-  //   background: "#2d394d",
-  //   caret: "#ff7a90",
-  //   error: "#ee2a3a",
-  //   errorExtra: "#f04040",
-  //   main: "#ff7a90",
-  //   name: "bento",
-  //   sub: "#4a768d",
-  //   text: "#fffaf8",
-  // });
 
   const RedisStore = connectRedis(session);
   const redis = new Redis();
@@ -57,7 +42,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, ThemeResolver, QuoteResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

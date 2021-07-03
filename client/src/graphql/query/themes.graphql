@@ -1,0 +1,5 @@
+query Themes {
+  themes {
+    ...RegularTheme
+  }
+}

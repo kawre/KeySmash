@@ -9,7 +9,7 @@ import TextField from "./TextField";
 
 // Component ---------------------------------------------------------------------
 const LoginForm: React.FC = () => {
-  const { user, logIn } = useAuth();
+  const { user, login } = useAuth();
 
   if (user !== null) return <Redirect to="/" />;
   return (
@@ -18,7 +18,7 @@ const LoginForm: React.FC = () => {
         initialValues={{ email: "", password: "" }}
         onSubmit={async (input) => {
           try {
-            await logIn({ input });
+            await login({ input });
           } catch {
             console.log("Invalid data");
           }

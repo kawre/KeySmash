@@ -27,9 +27,15 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changeTheme?: Maybe<Theme>;
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+};
+
+
+export type MutationChangeThemeArgs = {
+  name: Scalars['String'];
 };
 
 
@@ -44,13 +50,32 @@ export type MutationLoginArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  me: User;
+  randomQuote: Quote;
+  themes: Array<Theme>;
+  me?: Maybe<User>;
+};
+
+export type Quote = {
+  __typename?: 'Quote';
+  quote: Scalars['String'];
 };
 
 export type RegisterInput = {
   username: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Theme = {
+  __typename?: 'Theme';
+  name: Scalars['String'];
+  background: Scalars['String'];
+  caret: Scalars['String'];
+  main: Scalars['String'];
+  sub: Scalars['String'];
+  text: Scalars['String'];
+  error: Scalars['String'];
+  errorExtra: Scalars['String'];
 };
 
 export type User = {
@@ -74,6 +99,11 @@ export type RegularErrorFragment = (
   & Pick<FieldError, 'field' | 'message'>
 );
 
+export type RegularThemeFragment = (
+  { __typename?: 'Theme' }
+  & Pick<Theme, 'name' | 'background' | 'caret' | 'main' | 'sub' | 'text' | 'error' | 'errorExtra'>
+);
+
 export type RegularUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username' | 'email' | 'theme' | 'createdAt'>
@@ -90,6 +120,19 @@ export type RegularUserResponseFragment = (
   )> }
 );
 
+export type ChangeThemeMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+
+export type ChangeThemeMutation = (
+  { __typename?: 'Mutation' }
+  & { changeTheme?: Maybe<(
+    { __typename?: 'Theme' }
+    & RegularThemeFragment
+  )> }
+);
+
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
@@ -101,6 +144,14 @@ export type LoginMutation = (
     { __typename?: 'UserResponse' }
     & RegularUserResponseFragment
   ) }
+);
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
 );
 
 export type RegisterMutationVariables = Exact<{
@@ -121,12 +172,46 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = (
   { __typename?: 'Query' }
-  & { me: (
+  & { me?: Maybe<(
     { __typename?: 'User' }
     & RegularUserFragment
+  )> }
+);
+
+export type RandomQuoteQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RandomQuoteQuery = (
+  { __typename?: 'Query' }
+  & { randomQuote: (
+    { __typename?: 'Quote' }
+    & Pick<Quote, 'quote'>
   ) }
 );
 
+export type ThemesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ThemesQuery = (
+  { __typename?: 'Query' }
+  & { themes: Array<(
+    { __typename?: 'Theme' }
+    & RegularThemeFragment
+  )> }
+);
+
+export const RegularThemeFragmentDoc = gql`
+    fragment RegularTheme on Theme {
+  name
+  background
+  caret
+  main
+  sub
+  text
+  error
+  errorExtra
+}
+    `;
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   field
@@ -153,6 +238,17 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const ChangeThemeDocument = gql`
+    mutation ChangeTheme($name: String!) {
+  changeTheme(name: $name) {
+    ...RegularTheme
+  }
+}
+    ${RegularThemeFragmentDoc}`;
+
+export function useChangeThemeMutation() {
+  return Urql.useMutation<ChangeThemeMutation, ChangeThemeMutationVariables>(ChangeThemeDocument);
+};
 export const LoginDocument = gql`
     mutation Login($input: LoginInput!) {
   login(input: $input) {
@@ -163,6 +259,15 @@ export const LoginDocument = gql`
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
+};
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+
+export function useLogoutMutation() {
+  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const RegisterDocument = gql`
     mutation Register($input: RegisterInput!) {
@@ -185,4 +290,26 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const RandomQuoteDocument = gql`
+    query RandomQuote {
+  randomQuote {
+    quote
+  }
+}
+    `;
+
+export function useRandomQuoteQuery(options: Omit<Urql.UseQueryArgs<RandomQuoteQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<RandomQuoteQuery>({ query: RandomQuoteDocument, ...options });
+};
+export const ThemesDocument = gql`
+    query Themes {
+  themes {
+    ...RegularTheme
+  }
+}
+    ${RegularThemeFragmentDoc}`;
+
+export function useThemesQuery(options: Omit<Urql.UseQueryArgs<ThemesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ThemesQuery>({ query: ThemesDocument, ...options });
 };

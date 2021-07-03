@@ -1,0 +1,5 @@
+query RandomQuote {
+  randomQuote {
+    quote
+  }
+}

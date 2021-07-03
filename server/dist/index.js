@@ -12,22 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const typeorm_1 = require("typeorm");
-const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const apollo_server_express_1 = require("apollo-server-express");
-const type_graphql_1 = require("type-graphql");
-const user_1 = require("./resolvers/user");
 const connect_redis_1 = __importDefault(require("connect-redis"));
-const ioredis_1 = __importDefault(require("ioredis"));
+const cors_1 = __importDefault(require("cors"));
+const express_1 = __importDefault(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
+const ioredis_1 = __importDefault(require("ioredis"));
+const type_graphql_1 = require("type-graphql");
+const typeorm_1 = require("typeorm");
+const quote_1 = require("./resolvers/quote");
+const theme_1 = require("./resolvers/theme");
+const user_1 = require("./resolvers/user");
 const constants_1 = require("./utils/constants");
-const Theme_1 = require("./entities/Theme");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield typeorm_1.createConnection();
+    yield (yield typeorm_1.createConnection()).runMigrations();
     const app = express_1.default();
-    const themes = yield Theme_1.Theme.find();
-    console.log(themes);
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default();
     app.use(cors_1.default({ origin: "http://localhost:3000", credentials: true }));
@@ -49,7 +48,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({
-            resolvers: [user_1.UserResolver],
+            resolvers: [user_1.UserResolver, theme_1.ThemeResolver, quote_1.QuoteResolver],
             validate: false,
         }),
         context: ({ req, res }) => ({

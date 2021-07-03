@@ -1,0 +1,10 @@
+fragment RegularTheme on Theme {
+  name
+  background
+  caret
+  main
+  sub
+  text
+  error
+  errorExtra
+}

@@ -10,7 +10,7 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const AddTheme: React.FC<Props> = () => {
-  const { addTheme } = useData();
+  // const { addTheme } = useData();
   return (
     <Wrapper>
       <Formik
@@ -26,7 +26,7 @@ const AddTheme: React.FC<Props> = () => {
         }}
         onSubmit={async (data, { setSubmitting }) => {
           setSubmitting(true);
-          await addTheme(data);
+          // await addTheme(data);
           setSubmitting(false);
         }}
       >

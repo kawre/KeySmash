@@ -1,12 +1,12 @@
+import { cacheExchange } from "@urql/exchange-graphcache";
 import {
-  cacheExchange,
   CombinedError,
   createClient,
   dedupExchange,
   errorExchange,
   fetchExchange,
   Operation,
-} from "@urql/core";
+} from "urql";
 
 const error = errorExchange({
   onError: (error: CombinedError, operation: Operation) => {
@@ -15,12 +15,21 @@ const error = errorExchange({
   },
 });
 
-// const cache = cacheExchange({});
+const cache = cacheExchange({
+  updates: {
+    Mutation: {
+      changeTheme: (result, _args, _cache, _info) => {
+        const theme = result.changeTheme;
+        localStorage.setItem("theme", JSON.stringify(theme));
+      },
+    },
+  },
+});
 
 export const client = createClient({
   url: "http://localhost:5000/graphql",
   fetchOptions: {
     credentials: "include",
   },
-  exchanges: [dedupExchange, error, fetchExchange],
+  exchanges: [dedupExchange, cache, error, fetchExchange],
 });

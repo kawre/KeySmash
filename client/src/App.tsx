@@ -14,7 +14,6 @@ import { useAuth } from "./Contexts/AuthContext";
 const App = () => {
   const { theme } = useData();
   const { user } = useAuth();
-  console.log(user);
 
   const [localTheme, setLocalTheme] = useState(
     JSON.parse(localStorage.getItem("theme")!)
