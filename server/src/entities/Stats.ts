@@ -19,15 +19,15 @@ export class Stats extends BaseEntity {
   userId: number;
 
   @Field()
-  @Column()
-  timePlayed: number;
+  @Column({ type: "text", default: "00:00:00" })
+  timePlayed: string;
 
   @Field()
-  @Column()
+  @Column({ type: "int", default: 0 })
   testsCompleted: number;
 
   @Field()
-  @Column()
+  @Column({ type: "int", default: 0 })
   highestWpm: number;
 
   @Field()

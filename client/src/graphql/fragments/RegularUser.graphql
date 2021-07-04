@@ -9,5 +9,6 @@ fragment RegularUser on User {
     testsCompleted
     highestWpm
     averageWpm
+    last10AverageWpm
   }
 }

@@ -96,7 +96,7 @@ export type ScoreInput = {
 export type Stats = {
   __typename?: 'Stats';
   id: Scalars['Float'];
-  timePlayed: Scalars['Float'];
+  timePlayed: Scalars['String'];
   testsCompleted: Scalars['Float'];
   highestWpm: Scalars['Float'];
   averageWpm: Scalars['Float'];
@@ -150,7 +150,7 @@ export type RegularUserFragment = (
   & Pick<User, 'id' | 'username' | 'email' | 'theme' | 'createdAt'>
   & { stats: (
     { __typename?: 'Stats' }
-    & Pick<Stats, 'timePlayed' | 'testsCompleted' | 'highestWpm' | 'averageWpm'>
+    & Pick<Stats, 'timePlayed' | 'testsCompleted' | 'highestWpm' | 'averageWpm' | 'last10AverageWpm'>
   ) }
 );
 
@@ -288,6 +288,7 @@ export const RegularUserFragmentDoc = gql`
     testsCompleted
     highestWpm
     averageWpm
+    last10AverageWpm
   }
 }
     `;

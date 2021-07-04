@@ -20,62 +20,70 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StatsResolver = void 0;
-const Stats_1 = require("../entities/Stats");
 const type_graphql_1 = require("type-graphql");
-const Result_1 = require("../entities/Result");
-const User_1 = require("../entities/User");
 const typeorm_1 = require("typeorm");
-const moment_1 = __importDefault(require("moment"));
+const Stats_1 = require("../entities/Stats");
+const User_1 = require("../entities/User");
 let StatsResolver = class StatsResolver {
     user(stats) {
         return User_1.User.findOne(stats.userId);
     }
     timePlayed(stats) {
         return __awaiter(this, void 0, void 0, function* () {
-            const results = yield Result_1.Result.find({ userId: stats.userId });
-            if (results.length === 0)
-                return 0;
-            let sum = 0;
-            results.forEach((r) => {
-                sum = sum + r.time;
-            });
-            const elo = moment_1.default(sum);
-            console.log(elo);
-            return sum;
+            const res = yield typeorm_1.getConnection().query(`
+      select SUM(time) from result
+      where "userId" = $1
+      `, [stats.userId]);
+            const sum = res.pop().sum;
+            return sum ? new Date(sum * 1000).toISOString().substr(11, 8) : "00:00:00";
         });
     }
     testsCompleted(stats) {
         return __awaiter(this, void 0, void 0, function* () {
-            const results = yield Result_1.Result.find({ userId: stats.userId });
-            return results.length;
+            const res = yield typeorm_1.getConnection().query(`
+      select count(*) from result
+      where "userId" = $1
+      `, [stats.userId]);
+            const count = res.pop().count;
+            return count ? count : 0;
         });
     }
     highestWpm(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-			select * from result
-			where "userId" = $1 and
-			wpm = (select max(wpm) from result)
-			limit 1
-			`, [stats.userId]);
-            return res ? res.pop().wpm : 0;
+    	select max(wpm) from result
+    	where "userId" = $1
+    	limit 1
+    	`, [stats.userId]);
+            const max = res.pop().max;
+            return max ? max : 0;
         });
     }
     averageWpm(stats) {
         return __awaiter(this, void 0, void 0, function* () {
-            const results = yield Result_1.Result.find({ userId: stats.userId });
-            const avr = [];
-            let sum = 0;
-            results.forEach((r) => {
-                avr.push(r.wpm);
-                sum = sum + r.wpm;
-            });
-            return Math.floor(sum / avr.length);
+            const res = yield typeorm_1.getConnection().query(`
+      select AVG(wpm) from result
+      where "userId" = $1
+      `, [stats.userId]);
+            const avg = res.pop().avg;
+            return avg ? avg : 0;
+        });
+    }
+    last10AverageWpm(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield typeorm_1.getConnection().query(`
+      select AVG(wpm)
+      from (
+        select wpm from result 
+        where "userId" = $1
+        order by "createdAt" DESC
+        limit $2
+      ) x
+      `, [stats.userId, 10]);
+            const avg = res.pop().avg;
+            return avg ? avg : 0;
         });
     }
 };
@@ -114,6 +122,13 @@ __decorate([
     __metadata("design:paramtypes", [Stats_1.Stats]),
     __metadata("design:returntype", Promise)
 ], StatsResolver.prototype, "averageWpm", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", Promise)
+], StatsResolver.prototype, "last10AverageWpm", null);
 StatsResolver = __decorate([
     type_graphql_1.Resolver(Stats_1.Stats)
 ], StatsResolver);

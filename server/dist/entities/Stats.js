@@ -26,17 +26,17 @@ __decorate([
 ], Stats.prototype, "userId", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
-    __metadata("design:type", Number)
+    typeorm_1.Column({ type: "text", default: "00:00:00" }),
+    __metadata("design:type", String)
 ], Stats.prototype, "timePlayed", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({ type: "int", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "testsCompleted", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({ type: "int", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "highestWpm", void 0);
 __decorate([

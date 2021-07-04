@@ -1,9 +1,7 @@
-import { Stats } from "../entities/Stats";
 import { FieldResolver, Resolver, Root } from "type-graphql";
-import { Result } from "../entities/Result";
-import { User } from "../entities/User";
 import { getConnection } from "typeorm";
-import moment from "moment";
+import { Stats } from "../entities/Stats";
+import { User } from "../entities/User";
 
 @Resolver(Stats)
 export class StatsResolver {
@@ -14,52 +12,77 @@ export class StatsResolver {
 
   @FieldResolver()
   async timePlayed(@Root() stats: Stats) {
-    const results = await Result.find({ userId: stats.userId });
-    if (results.length === 0) return 0;
+    const res = await getConnection().query(
+      `
+      select SUM(time) from result
+      where "userId" = $1
+      `,
+      [stats.userId]
+    );
 
-    let sum = 0;
-    results.forEach((r) => {
-      sum = sum + r.time;
-    });
-
-    const elo = moment(sum);
-    console.log(elo);
-
-    return sum;
+    const sum = res.pop().sum;
+    return sum ? new Date(sum * 1000).toISOString().substr(11, 8) : "00:00:00";
   }
 
   @FieldResolver()
   async testsCompleted(@Root() stats: Stats) {
-    const results = await Result.find({ userId: stats.userId });
-    return results.length;
+    const res = await getConnection().query(
+      `
+      select count(*) from result
+      where "userId" = $1
+      `,
+      [stats.userId]
+    );
+
+    const count = res.pop().count;
+    return count ? count : 0;
   }
 
   @FieldResolver()
   async highestWpm(@Root() stats: Stats) {
-    const res: any[] = await getConnection().query(
+    const res = await getConnection().query(
       `
-			select * from result
-			where "userId" = $1 and
-			wpm = (select max(wpm) from result)
-			limit 1
-			`,
+    	select max(wpm) from result
+    	where "userId" = $1
+    	limit 1
+    	`,
       [stats.userId]
     );
 
-    return res ? res.pop().wpm : 0;
+    const max = res.pop().max;
+    return max ? max : 0;
   }
 
   @FieldResolver()
   async averageWpm(@Root() stats: Stats) {
-    const results = await Result.find({ userId: stats.userId });
+    const res = await getConnection().query(
+      `
+      select AVG(wpm) from result
+      where "userId" = $1
+      `,
+      [stats.userId]
+    );
 
-    const avr: number[] = [];
-    let sum = 0;
-    results.forEach((r) => {
-      avr.push(r.wpm);
-      sum = sum + r.wpm;
-    });
+    const avg = res.pop().avg;
+    return avg ? avg : 0;
+  }
 
-    return Math.floor(sum / avr.length);
+  @FieldResolver()
+  async last10AverageWpm(@Root() stats: Stats) {
+    const res = await getConnection().query(
+      `
+      select AVG(wpm)
+      from (
+        select wpm from result 
+        where "userId" = $1
+        order by "createdAt" DESC
+        limit $2
+      ) x
+      `,
+      [stats.userId, 10]
+    );
+
+    const avg = res.pop().avg;
+    return avg ? avg : 0;
   }
 }
