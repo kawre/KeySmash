@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useRandomQuoteQuery } from "../generated/graphql";
+import { RandomQuoteQuery, useRandomQuoteQuery } from "../generated/graphql";
+import { client } from "../Shared/utils/client";
 import PostTestStats from "../TypingGame/PostTestResults";
 import TypingGame from "../TypingGame/TypingGame";
 // Types -------------------------------------------------------------------------
@@ -54,10 +55,24 @@ const TypingContext: React.FC = () => {
   const [characters, setCharacters] = useState<Context["characters"]>(0);
   const [errors, setErrors] = useState<Context["errors"]>(0);
 
-  const { data, loading } = useRandomQuoteQuery();
+  const { data, loading, fetchMore } = useRandomQuoteQuery();
+
+  useEffect(() => {}, []);
 
   const repeatTest = () => {
+    fetchMore({
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        client.cache.evict({ id: `Quote:${prev.randomQuote.id}` });
+
+        return {
+          __typename: "Query",
+          randomQuote: (fetchMoreResult as RandomQuoteQuery).randomQuote,
+        };
+      },
+    });
     defaultStates();
+
     setTimeout(() => setShowing(true), 150);
   };
 
@@ -83,7 +98,7 @@ const TypingContext: React.FC = () => {
     if (loading) return;
     setWords(data?.randomQuote.quote.split(" ")!);
     setShowing(true);
-  }, [loading]);
+  }, [loading, data]);
 
   // timer
   useEffect(() => {

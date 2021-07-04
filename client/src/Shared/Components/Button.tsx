@@ -14,13 +14,13 @@ interface Props {
   disabled?: boolean;
   type: "logout" | "icon" | "login" | "signup" | "submit" | "test";
   reversed?: boolean;
-  onClickCapture?: any;
+  onClick?: any;
   tabIndex?: number;
 }
 
 // Component ---------------------------------------------------------------------
 const Button: React.FC<Props> = ({
-  onClickCapture,
+  onClick,
   reversed,
   disabled,
   type,
@@ -35,7 +35,7 @@ const Button: React.FC<Props> = ({
   switch (type) {
     case "test":
       return (
-        <Test tabIndex={tabIndex} onClickCapture={onClickCapture}>
+        <Test tabIndex={tabIndex} onClickCapture={onClick}>
           {children}
         </Test>
       );
@@ -74,7 +74,7 @@ const Button: React.FC<Props> = ({
       );
     case "submit":
       return (
-        <SubmitButton disabled={disabled}>
+        <SubmitButton disabled={disabled} onClickCapture={onClick}>
           {disabled ? (
             <Loader type="ThreeDots" color={theme?.text} height={8} />
           ) : (

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Stats = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
+const Result_1 = require("./Result");
 const User_1 = require("./User");
 let Stats = class Stats extends typeorm_1.BaseEntity {
 };
@@ -74,6 +75,11 @@ __decorate([
     typeorm_1.Column({ type: "int", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "last10AverageAcc", void 0);
+__decorate([
+    type_graphql_1.Field(() => [Result_1.Result]),
+    typeorm_1.Column("int", { array: true, default: [] }),
+    __metadata("design:type", Array)
+], Stats.prototype, "personalBests", void 0);
 __decorate([
     type_graphql_1.Field(() => User_1.User),
     typeorm_1.OneToOne(() => User_1.User, (user) => user.stats, { onDelete: "CASCADE" }),

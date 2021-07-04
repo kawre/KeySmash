@@ -67,7 +67,7 @@ let StatsResolver = class StatsResolver {
     averageWpm(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-      select AVG(wpm) from result
+      select avg(wpm) from result
       where "userId" = $1
       `, [stats.userId]);
             return fix_1.fix(res.pop().avg);
@@ -142,6 +142,14 @@ let StatsResolver = class StatsResolver {
       `, [stats.userId]);
             return fix_1.fix(res.pop().avg);
         });
+    }
+    personalBests(stats) {
+        return typeorm_1.getConnection().query(`
+    select * from result
+    where "userId" = $1
+    order by wpm DESC
+    limit 5
+    `, [stats.userId]);
     }
 };
 __decorate([
@@ -228,6 +236,13 @@ __decorate([
     __metadata("design:paramtypes", [Stats_1.Stats]),
     __metadata("design:returntype", Promise)
 ], StatsResolver.prototype, "last10AverageAcc", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", void 0)
+], StatsResolver.prototype, "personalBests", null);
 StatsResolver = __decorate([
     type_graphql_1.Resolver(Stats_1.Stats)
 ], StatsResolver);

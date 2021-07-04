@@ -5,6 +5,7 @@ import {
   Field,
   FieldResolver,
   InputType,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -62,17 +63,21 @@ export class ResultResolver {
   }
 
   @Query(() => [Result])
-  async testHistory(@Ctx() { req }: MyContext) {
-    const res = await getConnection().query(
+  testHistory(
+    @Arg("cursor", { nullable: true }) cursor: string,
+    @Ctx() { req }: MyContext
+  ) {
+    const params: any[] = [req.session.userId];
+    if (cursor) params.push(new Date(parseInt(cursor)));
+    return getConnection().query(
       `
     select * from result
     where "userId" = $1
+    ${cursor ? `and "createdAt" < $2` : ``}
     order by "createdAt" DESC
     limit 10
     `,
-      [req.session.userId]
+      params
     );
-
-    return res;
   }
 }

@@ -1,6 +1,6 @@
 import { MyContext } from "../types";
 import { fix } from "../utils/fix";
-import { Ctx, FieldResolver, Query, Resolver, Root } from "type-graphql";
+import { Ctx, Field, FieldResolver, Query, Resolver, Root } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Stats } from "../entities/Stats";
 import { User } from "../entities/User";
@@ -63,7 +63,7 @@ export class StatsResolver {
   async averageWpm(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-      select AVG(wpm) from result
+      select avg(wpm) from result
       where "userId" = $1
       `,
       [stats.userId]
@@ -168,5 +168,18 @@ export class StatsResolver {
     );
 
     return fix(res.pop().avg);
+  }
+
+  @FieldResolver()
+  personalBests(@Root() stats: Stats) {
+    return getConnection().query(
+      `
+    select * from result
+    where "userId" = $1
+    order by wpm DESC
+    limit 5
+    `,
+      [stats.userId]
+    );
   }
 }

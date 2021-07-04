@@ -4,6 +4,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @ObjectType()
 @Entity()
 export class Quote extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn()
   id: number;
 

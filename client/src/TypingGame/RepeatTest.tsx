@@ -13,8 +13,7 @@ const RepeatTest: React.FC<Props> = () => {
 
   return (
     <Wrapper>
-      {/* <Icon onClickCapture={repeatTest} tabIndex={2}></Icon> */}
-      <Button tabIndex={2} type="test" onClickCapture={repeatTest}>
+      <Button tabIndex={2} type="test" onClick={repeatTest}>
         <FaRedoAlt />
       </Button>
     </Wrapper>

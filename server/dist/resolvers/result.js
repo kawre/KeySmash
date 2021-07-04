@@ -70,16 +70,17 @@ let ResultResolver = class ResultResolver {
             return Result_1.Result.create(Object.assign(Object.assign({}, options), { userId })).save();
         });
     }
-    testHistory({ req }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const res = yield typeorm_1.getConnection().query(`
+    testHistory(cursor, { req }) {
+        const params = [req.session.userId];
+        if (cursor)
+            params.push(new Date(parseInt(cursor)));
+        return typeorm_1.getConnection().query(`
     select * from result
     where "userId" = $1
+    ${cursor ? `and "createdAt" < $2` : ``}
     order by "createdAt" DESC
     limit 10
-    `, [req.session.userId]);
-            return res;
-        });
+    `, params);
     }
 };
 __decorate([
@@ -105,10 +106,11 @@ __decorate([
 ], ResultResolver.prototype, "submitResult", null);
 __decorate([
     type_graphql_1.Query(() => [Result_1.Result]),
-    __param(0, type_graphql_1.Ctx()),
+    __param(0, type_graphql_1.Arg("cursor", { nullable: true })),
+    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
 ], ResultResolver.prototype, "testHistory", null);
 ResultResolver = __decorate([
     type_graphql_1.Resolver(Result_1.Result)

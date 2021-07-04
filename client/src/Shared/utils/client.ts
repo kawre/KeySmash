@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { TestHistoryQuery } from "../../generated/graphql";
 
 // const error = errorExchange({
 //   onError: (error: CombinedError, operation: Operation) => {
@@ -33,5 +34,18 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 export const client = new ApolloClient({
   uri: "http://localhost:5000/graphql",
   credentials: "include",
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          testHistory: {
+            keyArgs: ["limit"],
+            merge(existing, incoming) {
+              return [...(existing || []), ...incoming];
+            },
+          },
+        },
+      },
+    },
+  }),
 });

@@ -64,8 +64,14 @@ export type Query = {
   me?: Maybe<User>;
 };
 
+
+export type QueryTestHistoryArgs = {
+  cursor?: Maybe<Scalars['String']>;
+};
+
 export type Quote = {
   __typename?: 'Quote';
+  id: Scalars['Float'];
   quote: Scalars['String'];
 };
 
@@ -108,6 +114,7 @@ export type Stats = {
   last10AverageRaw: Scalars['Float'];
   averageAcc: Scalars['Float'];
   last10AverageAcc: Scalars['Float'];
+  personalBests: Array<Result>;
   user: User;
 };
 
@@ -245,7 +252,7 @@ export type RandomQuoteQuery = (
   { __typename?: 'Query' }
   & { randomQuote: (
     { __typename?: 'Quote' }
-    & Pick<Quote, 'quote'>
+    & Pick<Quote, 'id' | 'quote'>
   ) }
 );
 
@@ -257,10 +264,16 @@ export type StatsQuery = (
   & { stats: (
     { __typename?: 'Stats' }
     & Pick<Stats, 'timePlayed' | 'testsCompleted' | 'highestWpm' | 'averageWpm' | 'last10AverageWpm' | 'highestRaw' | 'averageRaw' | 'last10AverageRaw' | 'averageAcc' | 'last10AverageAcc'>
+    & { personalBests: Array<(
+      { __typename?: 'Result' }
+      & Pick<Result, 'wpm' | 'raw' | 'accuracy' | 'time' | 'cpm' | 'createdAt'>
+    )> }
   ) }
 );
 
-export type TestHistoryQueryVariables = Exact<{ [key: string]: never; }>;
+export type TestHistoryQueryVariables = Exact<{
+  cursor?: Maybe<Scalars['String']>;
+}>;
 
 
 export type TestHistoryQuery = (
@@ -523,6 +536,7 @@ export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const RandomQuoteDocument = gql`
     query RandomQuote {
   randomQuote {
+    id
     quote
   }
 }
@@ -567,6 +581,14 @@ export const StatsDocument = gql`
     last10AverageRaw
     averageAcc
     last10AverageAcc
+    personalBests {
+      wpm
+      raw
+      accuracy
+      time
+      cpm
+      createdAt
+    }
   }
 }
     `;
@@ -598,8 +620,8 @@ export type StatsQueryHookResult = ReturnType<typeof useStatsQuery>;
 export type StatsLazyQueryHookResult = ReturnType<typeof useStatsLazyQuery>;
 export type StatsQueryResult = Apollo.QueryResult<StatsQuery, StatsQueryVariables>;
 export const TestHistoryDocument = gql`
-    query TestHistory {
-  testHistory {
+    query TestHistory($cursor: String) {
+  testHistory(cursor: $cursor) {
     wpm
     raw
     accuracy
@@ -622,6 +644,7 @@ export const TestHistoryDocument = gql`
  * @example
  * const { data, loading, error } = useTestHistoryQuery({
  *   variables: {
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */

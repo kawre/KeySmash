@@ -1,20 +1,33 @@
 import moment from "moment";
 import React from "react";
+import Loader from "react-loader-spinner";
 import styled from "styled-components";
-import { useTestHistoryQuery } from "../generated/graphql";
+import { useData } from "../Contexts/DataContext";
+import { TestHistoryQuery, useTestHistoryQuery } from "../generated/graphql";
+import Button from "../Shared/Components/Button";
+import Layout from "../Shared/Components/Layout";
+import { date } from "../Shared/utils/date";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
 const History: React.FC<Props> = () => {
-  const { data } = useTestHistoryQuery();
+  const { theme } = useData();
+  const { data, loading, error, fetchMore } = useTestHistoryQuery();
   const history = data?.testHistory;
 
-  const date = (s: string) => moment(parseInt(s)).format("DD MMM YYYY[\n]H:mm");
+  if (loading)
+    return (
+      <Layout center>
+        <Loader type="ThreeDots" color={theme.main} height={12} />
+      </Layout>
+    );
+  else if (!history) return <Text>{error?.message}</Text>;
 
   return (
     <Wrapper>
+      <Text style={{ width: "auto" }}>test history</Text>
       <Heading>
         <Stats>
           <Text>wpm</Text>
@@ -25,7 +38,7 @@ const History: React.FC<Props> = () => {
         <Text>time</Text>
         <Text>date</Text>
       </Heading>
-      {history?.map((h, i) => {
+      {history.map((h, i) => {
         return (
           <Result key={h.createdAt + i}>
             <Stats>
@@ -41,6 +54,20 @@ const History: React.FC<Props> = () => {
           </Result>
         );
       })}
+      {history.length % 10 === 0 && (
+        // <div style={{ marginTop: "25px" }}>
+        <Button
+          type="submit"
+          onClick={() => {
+            fetchMore({
+              variables: { cursor: history[history.length - 1].createdAt },
+            });
+          }}
+        >
+          Load More
+        </Button>
+        // </div>
+      )}
     </Wrapper>
   );
 };
@@ -75,7 +102,7 @@ const Result = styled.div`
   padding: 8px 50px;
   border-radius: 2px;
 
-  &:nth-child(even) {
+  &:nth-child(odd) {
     background: #0000001a;
   }
 `;

@@ -15,6 +15,7 @@ const typeorm_1 = require("typeorm");
 let Quote = class Quote extends typeorm_1.BaseEntity {
 };
 __decorate([
+    type_graphql_1.Field(),
     typeorm_1.PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
 ], Quote.prototype, "id", void 0);

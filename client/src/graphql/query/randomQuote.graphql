@@ -1,5 +1,6 @@
 query RandomQuote {
   randomQuote {
+    id
     quote
   }
 }

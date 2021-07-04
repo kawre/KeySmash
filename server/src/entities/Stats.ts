@@ -6,6 +6,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Result } from "./Result";
 import { User } from "./User";
 
 @ObjectType()
@@ -60,6 +61,11 @@ export class Stats extends BaseEntity {
   @Field()
   @Column({ type: "int", default: 0 })
   last10AverageAcc: number;
+
+  // bests
+  @Field(() => [Result])
+  @Column("int", { array: true, default: [] })
+  personalBests: Result[];
 
   // user
   @Field(() => User)

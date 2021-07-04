@@ -13,5 +13,14 @@ query Stats {
     #
     averageAcc
     last10AverageAcc
+    #
+    personalBests {
+      wpm
+      raw
+      accuracy
+      time
+      cpm
+      createdAt
+    }
   }
 }

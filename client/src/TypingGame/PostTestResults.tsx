@@ -73,7 +73,7 @@ const PostTestStats: React.FC<Props> = () => {
         </Time>
       </Bottom>
       <Panel>
-        <Button type="test" tabIndex={0} onClickCapture={repeatHandler}>
+        <Button type="test" tabIndex={0} onClick={repeatHandler}>
           <FaChevronRight />
         </Button>
       </Panel>
