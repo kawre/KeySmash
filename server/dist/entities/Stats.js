@@ -53,6 +53,26 @@ __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column({ type: "int", default: 0 }),
     __metadata("design:type", Number)
+], Stats.prototype, "highestRaw", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column({ type: "int", default: 0 }),
+    __metadata("design:type", Number)
+], Stats.prototype, "averageRaw", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column({ type: "int", default: 0 }),
+    __metadata("design:type", Number)
+], Stats.prototype, "last10AverageRaw", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column({ type: "int", default: 0 }),
+    __metadata("design:type", Number)
+], Stats.prototype, "averageAcc", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column({ type: "int", default: 0 }),
+    __metadata("design:type", Number)
 ], Stats.prototype, "last10AverageAcc", void 0);
 __decorate([
     type_graphql_1.Field(() => User_1.User),

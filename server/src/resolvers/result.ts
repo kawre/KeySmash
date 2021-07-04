@@ -60,4 +60,19 @@ export class ResultResolver {
 
     return Result.create({ ...options, userId }).save();
   }
+
+  @Query(() => [Result])
+  async testHistory(@Ctx() { req }: MyContext) {
+    const res = await getConnection().query(
+      `
+    select * from result
+    where "userId" = $1
+    order by "createdAt" DESC
+    limit 10
+    `,
+      [req.session.userId]
+    );
+
+    return res;
+  }
 }

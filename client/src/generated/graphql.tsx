@@ -58,6 +58,8 @@ export type Query = {
   __typename?: 'Query';
   randomQuote: Quote;
   topResults: Array<Result>;
+  testHistory: Array<Result>;
+  stats: Stats;
   themes: Array<Theme>;
   me?: Maybe<User>;
 };
@@ -101,6 +103,10 @@ export type Stats = {
   highestWpm: Scalars['Float'];
   averageWpm: Scalars['Float'];
   last10AverageWpm: Scalars['Float'];
+  highestRaw: Scalars['Float'];
+  averageRaw: Scalars['Float'];
+  last10AverageRaw: Scalars['Float'];
+  averageAcc: Scalars['Float'];
   last10AverageAcc: Scalars['Float'];
   user: User;
 };
@@ -148,10 +154,6 @@ export type RegularThemeFragment = (
 export type RegularUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username' | 'email' | 'theme' | 'createdAt'>
-  & { stats: (
-    { __typename?: 'Stats' }
-    & Pick<Stats, 'timePlayed' | 'testsCompleted' | 'highestWpm' | 'averageWpm' | 'last10AverageWpm'>
-  ) }
 );
 
 export type RegularUserResponseFragment = (
@@ -247,6 +249,28 @@ export type RandomQuoteQuery = (
   ) }
 );
 
+export type StatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StatsQuery = (
+  { __typename?: 'Query' }
+  & { stats: (
+    { __typename?: 'Stats' }
+    & Pick<Stats, 'timePlayed' | 'testsCompleted' | 'highestWpm' | 'averageWpm' | 'last10AverageWpm' | 'highestRaw' | 'averageRaw' | 'last10AverageRaw' | 'averageAcc' | 'last10AverageAcc'>
+  ) }
+);
+
+export type TestHistoryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TestHistoryQuery = (
+  { __typename?: 'Query' }
+  & { testHistory: Array<(
+    { __typename?: 'Result' }
+    & Pick<Result, 'wpm' | 'raw' | 'accuracy' | 'time' | 'cpm' | 'createdAt'>
+  )> }
+);
+
 export type ThemesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -283,13 +307,6 @@ export const RegularUserFragmentDoc = gql`
   email
   theme
   createdAt
-  stats {
-    timePlayed
-    testsCompleted
-    highestWpm
-    averageWpm
-    last10AverageWpm
-  }
 }
     `;
 export const RegularUserResponseFragmentDoc = gql`
@@ -537,6 +554,88 @@ export function useRandomQuoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type RandomQuoteQueryHookResult = ReturnType<typeof useRandomQuoteQuery>;
 export type RandomQuoteLazyQueryHookResult = ReturnType<typeof useRandomQuoteLazyQuery>;
 export type RandomQuoteQueryResult = Apollo.QueryResult<RandomQuoteQuery, RandomQuoteQueryVariables>;
+export const StatsDocument = gql`
+    query Stats {
+  stats {
+    timePlayed
+    testsCompleted
+    highestWpm
+    averageWpm
+    last10AverageWpm
+    highestRaw
+    averageRaw
+    last10AverageRaw
+    averageAcc
+    last10AverageAcc
+  }
+}
+    `;
+
+/**
+ * __useStatsQuery__
+ *
+ * To run a query within a React component, call `useStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStatsQuery(baseOptions?: Apollo.QueryHookOptions<StatsQuery, StatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+      }
+export function useStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StatsQuery, StatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+        }
+export type StatsQueryHookResult = ReturnType<typeof useStatsQuery>;
+export type StatsLazyQueryHookResult = ReturnType<typeof useStatsLazyQuery>;
+export type StatsQueryResult = Apollo.QueryResult<StatsQuery, StatsQueryVariables>;
+export const TestHistoryDocument = gql`
+    query TestHistory {
+  testHistory {
+    wpm
+    raw
+    accuracy
+    time
+    cpm
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useTestHistoryQuery__
+ *
+ * To run a query within a React component, call `useTestHistoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTestHistoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTestHistoryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTestHistoryQuery(baseOptions?: Apollo.QueryHookOptions<TestHistoryQuery, TestHistoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TestHistoryQuery, TestHistoryQueryVariables>(TestHistoryDocument, options);
+      }
+export function useTestHistoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TestHistoryQuery, TestHistoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TestHistoryQuery, TestHistoryQueryVariables>(TestHistoryDocument, options);
+        }
+export type TestHistoryQueryHookResult = ReturnType<typeof useTestHistoryQuery>;
+export type TestHistoryLazyQueryHookResult = ReturnType<typeof useTestHistoryLazyQuery>;
+export type TestHistoryQueryResult = Apollo.QueryResult<TestHistoryQuery, TestHistoryQueryVariables>;
 export const ThemesDocument = gql`
     query Themes {
   themes {

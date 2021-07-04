@@ -4,7 +4,9 @@ import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../Contexts/AuthContext";
 import { useData } from "../Contexts/DataContext";
+import { useStatsQuery } from "../generated/graphql";
 import Layout from "../Shared/Components/Layout";
+import History from "./History";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -12,27 +14,17 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const Account: React.FC<Props> = () => {
   const { user } = useAuth();
+  const { data, loading, error } = useStatsQuery();
   const { theme } = useData();
 
-  console.log(user);
-  if (user === undefined)
+  if (user === null) return <Redirect to="/" />;
+  else if (loading || !data)
     return (
       <Layout center>
         <Loader type="ThreeDots" color={theme.main} height={12} />
       </Layout>
     );
-  else if (user === null) return <Redirect to="/" />;
-
-  const { stats } = user;
-
-  const number = (n: number) => {
-    const number = n.toString();
-    console.log(number.length);
-    if (number.length > 4) return number.slice(0, 4);
-    return number;
-  };
-
-  console.log(number(54.23));
+  const { stats } = data;
 
   return (
     <Layout>
@@ -40,11 +32,11 @@ const Account: React.FC<Props> = () => {
         <StatsHeader>
           <div>
             <Text>tests completed</Text>
-            <BigText>{number(stats.testsCompleted)}</BigText>
+            <BigText>{stats.testsCompleted}</BigText>
           </div>
           <div>
             <Text>average wpm</Text>
-            <BigText>{number(stats.averageWpm)}</BigText>
+            <BigText>{stats.averageWpm}</BigText>
           </div>
           <div>
             <Text>time playing</Text>
@@ -52,13 +44,14 @@ const Account: React.FC<Props> = () => {
           </div>
         </StatsHeader>
         <OtherStats>
+          {/* wpm */}
           <div>
             <Text>highest wpm</Text>
-            <BigText>{number(stats.highestWpm)}</BigText>
+            <BigText>{stats.highestWpm}</BigText>
           </div>
           <div>
             <Text>average wpm</Text>
-            <BigText>{number(stats.averageWpm)}</BigText>
+            <BigText>{stats.averageWpm}</BigText>
           </div>
           <div>
             <Text>
@@ -66,17 +59,44 @@ const Account: React.FC<Props> = () => {
               <br />
               (last 10 tests)
             </Text>
-            <BigText>{number(stats.last10AverageWpm)}</BigText>
+            <BigText>{stats.last10AverageWpm}</BigText>
+          </div>
+          {/* raw */}
+          <div>
+            <Text>highest raw wpm</Text>
+            <BigText>{stats.highestRaw}</BigText>
           </div>
           <div>
-            <Text>average wpm</Text>
-            <BigText>{number(stats.averageWpm)}</BigText>
+            <Text>average raw wpm</Text>
+            <BigText>{stats.averageRaw}</BigText>
           </div>
+          <div>
+            <Text>
+              average raw wpm
+              <br />
+              (last 10 tests)
+            </Text>
+            <BigText>{stats.last10AverageRaw}</BigText>
+          </div>
+          {/* accuracy */}
           <div>
             <Text>time playing</Text>
             <BigText>{stats.timePlayed}</BigText>
           </div>
+          <div>
+            <Text>average accuracy</Text>
+            <BigText>{stats.averageAcc}%</BigText>
+          </div>
+          <div>
+            <Text>
+              average accuracy
+              <br />
+              (last 10 tests)
+            </Text>
+            <BigText>{stats.last10AverageAcc}%</BigText>
+          </div>
         </OtherStats>
+        <History />
       </Wrapper>
     </Layout>
   );

@@ -4,11 +4,4 @@ fragment RegularUser on User {
   email
   theme
   createdAt
-  stats {
-    timePlayed
-    testsCompleted
-    highestWpm
-    averageWpm
-    last10AverageWpm
-  }
 }

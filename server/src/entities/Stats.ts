@@ -26,6 +26,7 @@ export class Stats extends BaseEntity {
   @Column({ type: "int", default: 0 })
   testsCompleted: number;
 
+  // wpm
   @Field()
   @Column({ type: "int", default: 0 })
   highestWpm: number;
@@ -38,10 +39,29 @@ export class Stats extends BaseEntity {
   @Column({ type: "int", default: 0 })
   last10AverageWpm: number;
 
+  // raw
+  @Field()
+  @Column({ type: "int", default: 0 })
+  highestRaw: number;
+
+  @Field()
+  @Column({ type: "int", default: 0 })
+  averageRaw: number;
+
+  @Field()
+  @Column({ type: "int", default: 0 })
+  last10AverageRaw: number;
+
+  // acc
+  @Field()
+  @Column({ type: "int", default: 0 })
+  averageAcc: number;
+
   @Field()
   @Column({ type: "int", default: 0 })
   last10AverageAcc: number;
 
+  // user
   @Field(() => User)
   @OneToOne(() => User, (user) => user.stats, { onDelete: "CASCADE" })
   user: User;

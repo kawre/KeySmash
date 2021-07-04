@@ -1,0 +1,10 @@
+query TestHistory {
+  testHistory {
+    wpm
+    raw
+    accuracy
+    time
+    cpm
+    createdAt
+  }
+}

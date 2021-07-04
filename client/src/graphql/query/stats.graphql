@@ -1,0 +1,17 @@
+query Stats {
+  stats {
+    timePlayed
+    testsCompleted
+    #
+    highestWpm
+    averageWpm
+    last10AverageWpm
+    #
+    highestRaw
+    averageRaw
+    last10AverageRaw
+    #
+    averageAcc
+    last10AverageAcc
+  }
+}

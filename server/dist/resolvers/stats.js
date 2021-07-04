@@ -22,11 +22,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StatsResolver = void 0;
+const fix_1 = require("../utils/fix");
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Stats_1 = require("../entities/Stats");
 const User_1 = require("../entities/User");
 let StatsResolver = class StatsResolver {
+    stats({ req }) {
+        const { userId } = req.session;
+        return Stats_1.Stats.findOne({ userId });
+    }
     user(stats) {
         return User_1.User.findOne(stats.userId);
     }
@@ -46,8 +51,7 @@ let StatsResolver = class StatsResolver {
       select count(*) from result
       where "userId" = $1
       `, [stats.userId]);
-            const count = res.pop().count;
-            return count ? count : 0;
+            return fix_1.fix(res.pop().count);
         });
     }
     highestWpm(stats) {
@@ -57,8 +61,7 @@ let StatsResolver = class StatsResolver {
     	where "userId" = $1
     	limit 1
     	`, [stats.userId]);
-            const max = res.pop().max;
-            return max ? max : 0;
+            return fix_1.fix(res.pop().max);
         });
     }
     averageWpm(stats) {
@@ -67,26 +70,87 @@ let StatsResolver = class StatsResolver {
       select AVG(wpm) from result
       where "userId" = $1
       `, [stats.userId]);
-            const avg = res.pop().avg;
-            return avg ? avg : 0;
+            return fix_1.fix(res.pop().avg);
         });
     }
     last10AverageWpm(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-      select AVG(wpm)
+      select avg(wpm)
       from (
         select wpm from result 
         where "userId" = $1
         order by "createdAt" DESC
-        limit $2
+        limit 10
       ) x
-      `, [stats.userId, 10]);
-            const avg = res.pop().avg;
-            return avg ? avg : 0;
+      `, [stats.userId]);
+            return fix_1.fix(res.pop().avg);
+        });
+    }
+    highestRaw(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield typeorm_1.getConnection().query(`
+    	select max(raw) from result
+    	where "userId" = $1
+    	limit 1
+    	`, [stats.userId]);
+            return fix_1.fix(res.pop().max);
+        });
+    }
+    averageRaw(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield typeorm_1.getConnection().query(`
+    	select avg(raw) from result
+    	where "userId" = $1
+    	`, [stats.userId]);
+            return fix_1.fix(res.pop().avg);
+        });
+    }
+    last10AverageRaw(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield typeorm_1.getConnection().query(`
+      select avg(raw)
+      from (
+        select raw from result 
+        where "userId" = $1
+        order by "createdAt" DESC
+        limit 10
+      ) x
+      `, [stats.userId]);
+            return fix_1.fix(res.pop().avg);
+        });
+    }
+    averageAcc(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield typeorm_1.getConnection().query(`
+    	select avg(accuracy) from result
+    	where "userId" = $1
+    	`, [stats.userId]);
+            return fix_1.fix(res.pop().avg);
+        });
+    }
+    last10AverageAcc(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield typeorm_1.getConnection().query(`
+      select avg(accuracy)
+      from (
+        select accuracy from result 
+        where "userId" = $1
+        order by "createdAt" DESC
+        limit 10
+      ) x
+      `, [stats.userId]);
+            return fix_1.fix(res.pop().avg);
         });
     }
 };
+__decorate([
+    type_graphql_1.Query(() => Stats_1.Stats),
+    __param(0, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], StatsResolver.prototype, "stats", null);
 __decorate([
     type_graphql_1.FieldResolver(),
     __param(0, type_graphql_1.Root()),
@@ -129,6 +193,41 @@ __decorate([
     __metadata("design:paramtypes", [Stats_1.Stats]),
     __metadata("design:returntype", Promise)
 ], StatsResolver.prototype, "last10AverageWpm", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", Promise)
+], StatsResolver.prototype, "highestRaw", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", Promise)
+], StatsResolver.prototype, "averageRaw", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", Promise)
+], StatsResolver.prototype, "last10AverageRaw", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", Promise)
+], StatsResolver.prototype, "averageAcc", null);
+__decorate([
+    type_graphql_1.FieldResolver(),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Stats_1.Stats]),
+    __metadata("design:returntype", Promise)
+], StatsResolver.prototype, "last10AverageAcc", null);
 StatsResolver = __decorate([
     type_graphql_1.Resolver(Stats_1.Stats)
 ], StatsResolver);

@@ -24,6 +24,10 @@ font-family: 'Titillium Web', sans-serif; */
    font-variant-ligatures: none;
 }
 
+::-webkit-scrollbar {
+   display: none;
+}
+
 a {
    text-decoration: none;
 }
