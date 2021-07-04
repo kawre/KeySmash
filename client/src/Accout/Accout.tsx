@@ -19,12 +19,14 @@ const Account: React.FC<Props> = () => {
   const { theme } = useData();
 
   if (user === null) return <Redirect to="/" />;
-  else if (loading || !data)
+
+  if (loading)
     return (
       <Layout center>
         <Loader type="ThreeDots" color={theme.main} height={12} />
       </Layout>
     );
+  else if (!data) throw new Error(error?.message);
   const { stats } = data;
 
   return (

@@ -55,18 +55,18 @@ const History: React.FC<Props> = () => {
         );
       })}
       {history.length % 10 === 0 && (
-        // <div style={{ marginTop: "25px" }}>
-        <Button
-          type="submit"
-          onClick={() => {
-            fetchMore({
-              variables: { cursor: history[history.length - 1].createdAt },
-            });
-          }}
-        >
-          Load More
-        </Button>
-        // </div>
+        <div style={{ marginTop: "10px" }}>
+          <Button
+            type="submit"
+            onClick={() => {
+              fetchMore({
+                variables: { cursor: history[history.length - 1].createdAt },
+              });
+            }}
+          >
+            Load More
+          </Button>
+        </div>
       )}
     </Wrapper>
   );
