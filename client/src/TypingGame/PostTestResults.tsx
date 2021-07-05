@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { FaChevronRight } from "react-icons/fa";
 import styled from "styled-components";
 import { useStats } from "../Contexts/StatsContext";
@@ -26,6 +26,8 @@ const PostTestStats: React.FC<Props> = () => {
   } = useStats();
 
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => console.log(correct), [correct]);
 
   const repeatHandler = () => {
     if (!resultsRef.current) return;

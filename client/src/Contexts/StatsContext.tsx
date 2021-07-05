@@ -105,31 +105,6 @@ const StatsProvider: React.FC = ({ children }) => {
     }
   };
 
-  const submitTest = async () => {
-    setDisabled(true);
-    user &&
-      (await submit({
-        variables: {
-          options: {
-            wpm,
-            accuracy: acc,
-            cpm,
-            raw,
-            correct,
-            incorrect,
-            errors,
-            time: Math.floor(time),
-            characters,
-            extra,
-            missed,
-          },
-        },
-      }));
-    setPlaying(false);
-    setShowing(false);
-    setResults(true);
-  };
-
   useEffect(() => {
     if (time === 0 || disabled) return;
 
@@ -138,9 +113,9 @@ const StatsProvider: React.FC = ({ children }) => {
     const minute = 60 / time;
 
     setAcc(((realDiff / characters) * 100).toFixed(2));
-    setCpm((diff / minute).toFixed(2));
+    setCpm((diff * minute).toFixed(2));
     setWpm((diff * (minute / 5)).toFixed(2));
-    setRaw((correct / minute / 5).toFixed(2));
+    setRaw((characters * (minute / 5)).toFixed(2));
   }, [time, disabled]);
 
   useEffect(() => {
@@ -153,6 +128,34 @@ const StatsProvider: React.FC = ({ children }) => {
     if (disabled) return clearInterval(x);
     return () => clearInterval(x);
   }, [isPlaying, time, disabled]);
+
+  useEffect(() => console.log(correct), [correct]);
+
+  const submitTest = async () => {
+    setDisabled(true);
+    console.log("submit:", correct);
+    user &&
+      (await submit({
+        variables: {
+          options: {
+            wpm,
+            accuracy: acc,
+            cpm,
+            raw,
+            correct,
+            incorrect,
+            errors,
+            time: Math.round(time),
+            characters,
+            extra,
+            missed,
+          },
+        },
+      }));
+    setPlaying(false);
+    setShowing(false);
+    setResults(true);
+  };
 
   const value = {
     wpm,

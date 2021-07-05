@@ -14,6 +14,8 @@ const TypingStats: React.FC<Props> = () => {
   const [wpm, setWpm] = useState("0");
   const [time, setTime] = useState(0);
 
+  // useEffect(() => console.log(w), [w]);
+
   useEffect(() => {
     if (t % 1 !== 0) return;
     setTime(t);
