@@ -32,47 +32,47 @@ __decorate([
 ], Stats.prototype, "timePlayed", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "int", default: 0 }),
+    typeorm_1.Column({ type: "real", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "testsCompleted", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "int", default: 0 }),
+    typeorm_1.Column({ type: "real", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "highestWpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "int", default: 0 }),
+    typeorm_1.Column({ type: "real", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "averageWpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "int", default: 0 }),
+    typeorm_1.Column({ type: "real", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "last10AverageWpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "int", default: 0 }),
+    typeorm_1.Column({ type: "real", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "highestRaw", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "int", default: 0 }),
+    typeorm_1.Column({ type: "real", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "averageRaw", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "int", default: 0 }),
+    typeorm_1.Column({ type: "real", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "last10AverageRaw", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "int", default: 0 }),
+    typeorm_1.Column({ type: "real", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "averageAcc", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "int", default: 0 }),
+    typeorm_1.Column({ type: "real", default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "last10AverageAcc", void 0);
 __decorate([

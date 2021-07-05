@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useTypingData } from "../Contexts/TypingGameContext";
+import { useTyping } from "../Contexts/TypingGameContext";
 // Types -------------------------------------------------------------------------
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 
 // Component ---------------------------------------------------------------------
 const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
-  const { isPlaying, words, focus } = useTypingData();
+  const { isPlaying, words, focus } = useTyping();
   const caretRef = useRef<HTMLDivElement>(null);
   const [caretFlash, setCaretFlash] = useState<boolean>(true);
   const [caretHeight, setCaretHeight] = useState<number>(0);

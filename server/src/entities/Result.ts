@@ -20,7 +20,7 @@ export class Result extends BaseEntity {
   userId: number;
 
   @Field()
-  @Column()
+  @Column("real")
   wpm: number;
 
   @Field()
@@ -28,11 +28,11 @@ export class Result extends BaseEntity {
   accuracy: number;
 
   @Field()
-  @Column()
+  @Column("real")
   cpm: number;
 
   @Field()
-  @Column()
+  @Column("real")
   raw: number;
 
   @Field(() => User)

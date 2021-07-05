@@ -5,7 +5,6 @@ import {
   Field,
   FieldResolver,
   InputType,
-  Int,
   Mutation,
   Query,
   Resolver,
@@ -58,6 +57,7 @@ export class ResultResolver {
     @Ctx() { req }: MyContext
   ) {
     const { userId } = req.session;
+    console.log(options);
 
     return Result.create({ ...options, userId }).save();
   }

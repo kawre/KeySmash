@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Line, defaults } from "react-chartjs-2";
 import styled from "styled-components";
 import { useData } from "../Contexts/DataContext";
-import { useTypingData } from "../Contexts/TypingGameContext";
+import { useStats } from "../Contexts/StatsContext";
+import { useTyping } from "../Contexts/TypingGameContext";
 import { font } from "../Shared/Global/Font";
 // Types -------------------------------------------------------------------------
 
@@ -11,7 +12,7 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const TypingChart: React.FC<Props> = () => {
   const { theme } = useData();
-  const { time, results, wpm, raw, errors } = useTypingData();
+  const { time, results, wpm, raw, errors } = useStats();
   const [labels, setLabels] = useState<number[]>([]);
   const [wpms, setWPMS] = useState<number[]>([]);
   const [raws, setRaws] = useState<number[]>([]);

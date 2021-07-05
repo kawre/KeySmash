@@ -10,6 +10,7 @@ import Header from "./Shared/Components/Header";
 import LoginForm from "./Shared/Forms/LoginForm";
 import RegisterForm from "./Shared/Forms/RegisterForm";
 import { defaultTheme } from "./Shared/utils/theme";
+import TypingWrapper from "./TypingGame/TypingWrapper";
 
 const App = () => (
   <ThemeProvider theme={useData().theme || defaultTheme}>
@@ -20,7 +21,7 @@ const App = () => (
           <Route exact path="/login" component={LoginForm} />
           <Route exact path="/register" component={RegisterForm} />
           <Route exact path="/add-quote" component={AddQuote} />
-          <Route exact path="/" component={TypingGameContext} />
+          <Route exact path="/" component={TypingWrapper} />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/add-theme" component={AddTheme} />
           <Route exact path="/account" component={Account} />

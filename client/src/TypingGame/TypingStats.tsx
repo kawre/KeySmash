@@ -1,44 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useTypingData } from "../Contexts/TypingGameContext";
+import { useStats } from "../Contexts/StatsContext";
+import { useTyping } from "../Contexts/TypingGameContext";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
 const TypingStats: React.FC<Props> = () => {
-  const {
-    isPlaying,
-    time,
-    characters,
-    errors,
-    wpm,
-    setWPM,
-    cpm,
-    setCPM,
-    raw,
-    setRaw,
-    acc,
-    setAcc,
-  } = useTypingData();
-
-  useEffect(() => {
-    if (time === 0) return;
-    const diff = characters - errors;
-    const minute = time / 60;
-
-    setAcc(Math.floor((diff / characters) * 100));
-    setCPM(Math.floor(diff / minute));
-    setWPM(Math.floor(diff / minute / 5));
-    setRaw(Math.floor(characters / minute / 5));
-  }, [time]);
+  const { isPlaying } = useTyping();
+  const { timeps, wps } = useStats();
 
   return (
     <Wrapper>
       {isPlaying && (
         <>
-          <Timer>{time}</Timer>
-          <WPM>{wpm}</WPM>
+          <Timer>{timeps}</Timer>
+          <WPM>{Math.round(wps)}</WPM>
         </>
       )}
     </Wrapper>

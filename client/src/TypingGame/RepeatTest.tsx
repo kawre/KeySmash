@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaRedoAlt } from "react-icons/fa";
-import { useTypingData } from "../Contexts/TypingGameContext";
+import { useTyping } from "../Contexts/TypingGameContext";
 import Button from "../Shared/Components/Button";
 // Types -------------------------------------------------------------------------
 
@@ -9,7 +9,7 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const RepeatTest: React.FC<Props> = () => {
-  const { repeatTest } = useTypingData();
+  const { repeatTest } = useTyping();
 
   return (
     <Wrapper>

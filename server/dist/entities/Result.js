@@ -26,7 +26,7 @@ __decorate([
 ], Result.prototype, "userId", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column("real"),
     __metadata("design:type", Number)
 ], Result.prototype, "wpm", void 0);
 __decorate([
@@ -36,12 +36,12 @@ __decorate([
 ], Result.prototype, "accuracy", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column("real"),
     __metadata("design:type", Number)
 ], Result.prototype, "cpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column("real"),
     __metadata("design:type", Number)
 ], Result.prototype, "raw", void 0);
 __decorate([

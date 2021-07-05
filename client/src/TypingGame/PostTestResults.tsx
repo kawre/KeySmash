@@ -1,27 +1,19 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
-import { useTypingData } from "../Contexts/TypingGameContext";
+import { useTyping } from "../Contexts/TypingGameContext";
 import Button from "../Shared/Components/Button";
 import { FaChevronRight } from "react-icons/fa";
 import TypingChart from "./TypingChart";
+import { useStats } from "../Contexts/StatsContext";
+import { useEffect } from "react";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
 const PostTestStats: React.FC<Props> = () => {
-  const {
-    results,
-    setResults,
-    wpm,
-    cpm,
-    acc,
-    raw,
-    characters,
-    errors,
-    time,
-    repeatTest,
-  } = useTypingData();
+  const { results, wpm, cpm, acc, raw, characters, errors, time } = useStats();
+  const { repeatTest } = useTyping();
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +33,7 @@ const PostTestStats: React.FC<Props> = () => {
         <TopLeft>
           <WPM>
             <p>wpm</p>
-            {wpm}
+            {Math.round(wpm)}
           </WPM>
           <Acc>
             <p>acc</p>
@@ -53,11 +45,11 @@ const PostTestStats: React.FC<Props> = () => {
       <Bottom>
         <Raw>
           <p>raw</p>
-          {raw}
+          {Math.round(raw)}
         </Raw>
         <Cpm>
           <p>cpm</p>
-          {cpm}
+          {Math.round(cpm)}
         </Cpm>
         <Characters>
           <p>characters</p>

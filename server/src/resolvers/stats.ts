@@ -4,6 +4,7 @@ import { Ctx, Field, FieldResolver, Query, Resolver, Root } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Stats } from "../entities/Stats";
 import { User } from "../entities/User";
+import { Result } from "../entities/Result";
 
 @Resolver(Stats)
 export class StatsResolver {

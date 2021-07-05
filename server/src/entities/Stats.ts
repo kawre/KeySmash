@@ -24,42 +24,42 @@ export class Stats extends BaseEntity {
   timePlayed: string;
 
   @Field()
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "real", default: 0 })
   testsCompleted: number;
 
   // wpm
   @Field()
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "real", default: 0 })
   highestWpm: number;
 
   @Field()
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "real", default: 0 })
   averageWpm: number;
 
   @Field()
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "real", default: 0 })
   last10AverageWpm: number;
 
   // raw
   @Field()
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "real", default: 0 })
   highestRaw: number;
 
   @Field()
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "real", default: 0 })
   averageRaw: number;
 
   @Field()
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "real", default: 0 })
   last10AverageRaw: number;
 
   // acc
   @Field()
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "real", default: 0 })
   averageAcc: number;
 
   @Field()
-  @Column({ type: "int", default: 0 })
+  @Column({ type: "real", default: 0 })
   last10AverageAcc: number;
 
   // bests
