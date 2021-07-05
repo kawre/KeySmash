@@ -46,6 +46,7 @@ const TypingGame: React.FC<Props> = () => {
     setCurrentKey(e.key);
     if (e.key === "Backspace") return backspaceHandler();
     if (e.key === " ") return spaceHandler();
+    if (word!.childElementCount > words[current].length + 15) return;
 
     const key = keyValidation(e.key);
     if (key === "") return;

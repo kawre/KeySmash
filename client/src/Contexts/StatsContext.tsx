@@ -7,12 +7,10 @@ import { useTyping } from "./TypingGameContext";
 
 interface Context {
   wpm: string;
-  wps: string;
   cpm: string;
   raw: string;
   acc: string;
   time: number;
-  timeps: number;
   results: boolean;
   correct: number;
   incorrect: number;
@@ -49,12 +47,10 @@ const StatsProvider: React.FC = ({ children }) => {
   const { user } = useAuth();
 
   const [wpm, setWpm] = useState("0");
-  const [wps, setWps] = useState("0");
   const [cpm, setCpm] = useState("0");
   const [raw, setRaw] = useState("0");
   const [acc, setAcc] = useState("0");
   const [time, setTime] = useState(0);
-  const [timeps, setTimeps] = useState(0);
   const [results, setResults] = useState(false);
   //
   const [correct, setCorrect] = useState(0);
@@ -74,7 +70,6 @@ const StatsProvider: React.FC = ({ children }) => {
 
   const reset = () => {
     setTime(0);
-    setTimeps(0);
     //
     setCorrect(0);
     setIncorrect(0);
@@ -85,7 +80,6 @@ const StatsProvider: React.FC = ({ children }) => {
     setCharacters(0);
     //
     setWpm("0");
-    setWps("0");
     setCpm("0");
     setRaw("0");
     setAcc("0");
@@ -124,7 +118,7 @@ const StatsProvider: React.FC = ({ children }) => {
             correct,
             incorrect,
             errors,
-            time: timeps,
+            time: Math.floor(time),
             characters,
             extra,
             missed,
@@ -141,13 +135,12 @@ const StatsProvider: React.FC = ({ children }) => {
 
     const diff = correct - total;
     const realDiff = characters - errors;
-    const minute = time / 60;
+    const minute = 60 / time;
 
     setAcc(((realDiff / characters) * 100).toFixed(2));
     setCpm((diff / minute).toFixed(2));
-    setWpm((realDiff / minute / 5).toFixed(2));
+    setWpm((diff * (minute / 5)).toFixed(2));
     setRaw((correct / minute / 5).toFixed(2));
-    console.log("wpm:", wpm);
   }, [time, disabled]);
 
   useEffect(() => {
@@ -161,24 +154,12 @@ const StatsProvider: React.FC = ({ children }) => {
     return () => clearInterval(x);
   }, [isPlaying, time, disabled]);
 
-  useEffect(() => {
-    if (time % 1 !== 0) return;
-    setTimeps(time);
-    setWps(wpm);
-  }, [time]);
-
-  useEffect(() => {
-    console.log("-------------- wps:", wps);
-  }, [wps]);
-
   const value = {
     wpm,
-    wps,
     cpm,
     raw,
     acc,
     time,
-    timeps,
     results,
     correct,
     incorrect,

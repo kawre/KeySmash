@@ -10,17 +10,23 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const TypingStats: React.FC<Props> = () => {
   const { isPlaying } = useTyping();
-  const { timeps, wps } = useStats();
+  const { time: t, wpm: w } = useStats();
+  const [wpm, setWpm] = useState("0");
+  const [time, setTime] = useState(0);
 
-  return (
+  useEffect(() => {
+    if (t % 1 !== 0) return;
+    setTime(t);
+    setWpm(w);
+  }, [t]);
+
+  return isPlaying ? (
     <Wrapper>
-      {isPlaying && (
-        <>
-          <Timer>{timeps}</Timer>
-          <WPM>{r(wps)}</WPM>
-        </>
-      )}
+      <Timer>{time}</Timer>
+      <WPM>{r(wpm)}</WPM>
     </Wrapper>
+  ) : (
+    <Wrapper />
   );
 };
 
