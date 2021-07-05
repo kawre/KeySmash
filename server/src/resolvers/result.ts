@@ -17,16 +17,25 @@ import { getConnection } from "typeorm";
 @InputType()
 class ScoreInput {
   @Field()
-  wpm: number;
+  wpm: string;
 
   @Field()
-  accuracy: number;
+  accuracy: string;
 
   @Field()
-  cpm: number;
+  cpm: string;
 
   @Field()
-  raw: number;
+  raw: string;
+
+  @Field()
+  correct: number;
+
+  @Field()
+  incorrect: number;
+
+  @Field()
+  errors: number;
 
   @Field()
   time: number;
@@ -57,7 +66,6 @@ export class ResultResolver {
     @Ctx() { req }: MyContext
   ) {
     const { userId } = req.session;
-    console.log(options);
 
     return Result.create({ ...options, userId }).save();
   }

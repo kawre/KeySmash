@@ -88,7 +88,6 @@ export class UserResolver {
   // logout
   @Mutation(() => Boolean)
   logout(@Ctx() { req, res }: MyContext) {
-    console.log(req.session.userId);
     return new Promise((resolve) => {
       req.session.destroy((err) => {
         res.clearCookie(COOKIE_NAME);

@@ -19,28 +19,44 @@ export class Result extends BaseEntity {
   @Column()
   userId: number;
 
-  @Field()
-  @Column("real")
-  wpm: number;
+  // @Field()
+  // @Column()
+  // words: string;
 
   @Field()
-  @Column()
-  accuracy: number;
+  @Column({ type: "text", default: "0" })
+  wpm: string;
 
   @Field()
-  @Column("real")
-  cpm: number;
+  @Column({ type: "text", default: "0" })
+  accuracy: string;
 
   @Field()
-  @Column("real")
-  raw: number;
+  @Column({ type: "text", default: "0" })
+  cpm: string;
+
+  @Field()
+  @Column({ type: "text", default: "0" })
+  raw: string;
+
+  @Field()
+  @Column("int", { default: 0 })
+  correct: number;
+
+  @Field()
+  @Column("int", { default: 0 })
+  incorrect: number;
+
+  @Field()
+  @Column("int", { default: 0 })
+  errors: number;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.results, { onDelete: "CASCADE" })
   user: User;
 
   @Field()
-  @Column()
+  @Column("int", { default: 0 })
   time: number;
 
   @Field(() => String)

@@ -38,10 +38,11 @@ let StatsResolver = class StatsResolver {
     timePlayed(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-      select SUM(time) from result
+      select sum(time) from result
       where "userId" = $1
       `, [stats.userId]);
             const sum = res.pop().sum;
+            console.log(sum);
             return sum ? new Date(sum * 1000).toISOString().substr(11, 8) : "00:00:00";
         });
     }
@@ -57,7 +58,7 @@ let StatsResolver = class StatsResolver {
     highestWpm(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-    	select max(wpm) from result
+    	select max(wpm::real) from result
     	where "userId" = $1
     	limit 1
     	`, [stats.userId]);
@@ -67,7 +68,7 @@ let StatsResolver = class StatsResolver {
     averageWpm(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-      select avg(wpm) from result
+      select avg(wpm::real) from result
       where "userId" = $1
       `, [stats.userId]);
             return fix_1.fix(res.pop().avg);
@@ -76,7 +77,7 @@ let StatsResolver = class StatsResolver {
     last10AverageWpm(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-      select avg(wpm)
+      select avg(wpm::real)
       from (
         select wpm from result 
         where "userId" = $1
@@ -90,7 +91,7 @@ let StatsResolver = class StatsResolver {
     highestRaw(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-    	select max(raw) from result
+    	select max(raw::real) from result
     	where "userId" = $1
     	limit 1
     	`, [stats.userId]);
@@ -100,7 +101,7 @@ let StatsResolver = class StatsResolver {
     averageRaw(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-    	select avg(raw) from result
+    	select avg(raw::real) from result
     	where "userId" = $1
     	`, [stats.userId]);
             return fix_1.fix(res.pop().avg);
@@ -109,7 +110,7 @@ let StatsResolver = class StatsResolver {
     last10AverageRaw(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-      select avg(raw)
+      select avg(raw::real)
       from (
         select raw from result 
         where "userId" = $1
@@ -123,7 +124,7 @@ let StatsResolver = class StatsResolver {
     averageAcc(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-    	select avg(accuracy) from result
+    	select avg(accuracy::real) from result
     	where "userId" = $1
     	`, [stats.userId]);
             return fix_1.fix(res.pop().avg);
@@ -132,7 +133,7 @@ let StatsResolver = class StatsResolver {
     last10AverageAcc(stats) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield typeorm_1.getConnection().query(`
-      select avg(accuracy)
+      select avg(accuracy::real)
       from (
         select accuracy from result 
         where "userId" = $1

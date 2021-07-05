@@ -23,13 +23,14 @@ export class StatsResolver {
   async timePlayed(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-      select SUM(time) from result
+      select sum(time) from result
       where "userId" = $1
       `,
       [stats.userId]
     );
 
     const sum = res.pop().sum;
+    console.log(sum);
     return sum ? new Date(sum * 1000).toISOString().substr(11, 8) : "00:00:00";
   }
 
@@ -50,7 +51,7 @@ export class StatsResolver {
   async highestWpm(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-    	select max(wpm) from result
+    	select max(wpm::real) from result
     	where "userId" = $1
     	limit 1
     	`,
@@ -64,7 +65,7 @@ export class StatsResolver {
   async averageWpm(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-      select avg(wpm) from result
+      select avg(wpm::real) from result
       where "userId" = $1
       `,
       [stats.userId]
@@ -77,7 +78,7 @@ export class StatsResolver {
   async last10AverageWpm(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-      select avg(wpm)
+      select avg(wpm::real)
       from (
         select wpm from result 
         where "userId" = $1
@@ -96,7 +97,7 @@ export class StatsResolver {
   async highestRaw(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-    	select max(raw) from result
+    	select max(raw::real) from result
     	where "userId" = $1
     	limit 1
     	`,
@@ -110,7 +111,7 @@ export class StatsResolver {
   async averageRaw(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-    	select avg(raw) from result
+    	select avg(raw::real) from result
     	where "userId" = $1
     	`,
       [stats.userId]
@@ -123,7 +124,7 @@ export class StatsResolver {
   async last10AverageRaw(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-      select avg(raw)
+      select avg(raw::real)
       from (
         select raw from result 
         where "userId" = $1
@@ -143,7 +144,7 @@ export class StatsResolver {
   async averageAcc(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-    	select avg(accuracy) from result
+    	select avg(accuracy::real) from result
     	where "userId" = $1
     	`,
       [stats.userId]
@@ -156,7 +157,7 @@ export class StatsResolver {
   async last10AverageAcc(@Root() stats: Stats) {
     const res = await getConnection().query(
       `
-      select avg(accuracy)
+      select avg(accuracy::real)
       from (
         select accuracy from result 
         where "userId" = $1

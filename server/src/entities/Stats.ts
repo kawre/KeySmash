@@ -20,47 +20,47 @@ export class Stats extends BaseEntity {
   userId: number;
 
   @Field()
-  @Column({ type: "text", default: "00:00:00" })
+  @Column("text", { default: "00:00:00" })
   timePlayed: string;
 
   @Field()
-  @Column({ type: "real", default: 0 })
+  @Column("int", { default: 0 })
   testsCompleted: number;
 
   // wpm
   @Field()
-  @Column({ type: "real", default: 0 })
-  highestWpm: number;
+  @Column({ type: "text", default: "0" })
+  highestWpm: string;
 
   @Field()
-  @Column({ type: "real", default: 0 })
-  averageWpm: number;
+  @Column({ type: "text", default: "0" })
+  averageWpm: string;
 
   @Field()
-  @Column({ type: "real", default: 0 })
-  last10AverageWpm: number;
+  @Column({ type: "text", default: "0" })
+  last10AverageWpm: string;
 
   // raw
   @Field()
-  @Column({ type: "real", default: 0 })
-  highestRaw: number;
+  @Column({ type: "text", default: "0" })
+  highestRaw: string;
 
   @Field()
-  @Column({ type: "real", default: 0 })
-  averageRaw: number;
+  @Column({ type: "text", default: "0" })
+  averageRaw: string;
 
   @Field()
-  @Column({ type: "real", default: 0 })
-  last10AverageRaw: number;
+  @Column({ type: "text", default: "0" })
+  last10AverageRaw: string;
 
   // acc
   @Field()
-  @Column({ type: "real", default: 0 })
-  averageAcc: number;
+  @Column({ type: "text", default: "0" })
+  averageAcc: string;
 
   @Field()
-  @Column({ type: "real", default: 0 })
-  last10AverageAcc: number;
+  @Column({ type: "text", default: "0" })
+  last10AverageAcc: string;
 
   // bests
   @Field(() => [Result])

@@ -27,53 +27,53 @@ __decorate([
 ], Stats.prototype, "userId", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "text", default: "00:00:00" }),
+    typeorm_1.Column("text", { default: "00:00:00" }),
     __metadata("design:type", String)
 ], Stats.prototype, "timePlayed", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "real", default: 0 }),
+    typeorm_1.Column("int", { default: 0 }),
     __metadata("design:type", Number)
 ], Stats.prototype, "testsCompleted", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "real", default: 0 }),
-    __metadata("design:type", Number)
+    typeorm_1.Column({ type: "text", default: "0" }),
+    __metadata("design:type", String)
 ], Stats.prototype, "highestWpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "real", default: 0 }),
-    __metadata("design:type", Number)
+    typeorm_1.Column({ type: "text", default: "0" }),
+    __metadata("design:type", String)
 ], Stats.prototype, "averageWpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "real", default: 0 }),
-    __metadata("design:type", Number)
+    typeorm_1.Column({ type: "text", default: "0" }),
+    __metadata("design:type", String)
 ], Stats.prototype, "last10AverageWpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "real", default: 0 }),
-    __metadata("design:type", Number)
+    typeorm_1.Column({ type: "text", default: "0" }),
+    __metadata("design:type", String)
 ], Stats.prototype, "highestRaw", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "real", default: 0 }),
-    __metadata("design:type", Number)
+    typeorm_1.Column({ type: "text", default: "0" }),
+    __metadata("design:type", String)
 ], Stats.prototype, "averageRaw", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "real", default: 0 }),
-    __metadata("design:type", Number)
+    typeorm_1.Column({ type: "text", default: "0" }),
+    __metadata("design:type", String)
 ], Stats.prototype, "last10AverageRaw", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "real", default: 0 }),
-    __metadata("design:type", Number)
+    typeorm_1.Column({ type: "text", default: "0" }),
+    __metadata("design:type", String)
 ], Stats.prototype, "averageAcc", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "real", default: 0 }),
-    __metadata("design:type", Number)
+    typeorm_1.Column({ type: "text", default: "0" }),
+    __metadata("design:type", String)
 ], Stats.prototype, "last10AverageAcc", void 0);
 __decorate([
     type_graphql_1.Field(() => [Result_1.Result]),
