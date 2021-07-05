@@ -7,6 +7,7 @@ import { useData } from "../Contexts/DataContext";
 import { useStatsQuery } from "../generated/graphql";
 import Layout from "../Shared/Components/Layout";
 import { date } from "../Shared/utils/date";
+import { f, r } from "../Shared/utils/number";
 import History from "./History";
 // Types -------------------------------------------------------------------------
 
@@ -39,7 +40,7 @@ const Account: React.FC<Props> = () => {
           </div>
           <div>
             <Text>average wpm</Text>
-            <BigText>{stats.averageWpm}</BigText>
+            <BigText>{r(stats.averageWpm)}</BigText>
           </div>
           <div>
             <Text>time playing</Text>
@@ -79,11 +80,11 @@ const Account: React.FC<Props> = () => {
           {/* wpm */}
           <div>
             <Text>highest wpm</Text>
-            <BigText>{stats.highestWpm}</BigText>
+            <BigText>{f(stats.highestWpm)}</BigText>
           </div>
           <div>
             <Text>average wpm</Text>
-            <BigText>{stats.averageWpm}</BigText>
+            <BigText>{r(stats.averageWpm)}</BigText>
           </div>
           <div>
             <Text>
@@ -91,16 +92,16 @@ const Account: React.FC<Props> = () => {
               <br />
               (last 10 tests)
             </Text>
-            <BigText>{stats.last10AverageWpm}</BigText>
+            <BigText>{r(stats.last10AverageWpm)}</BigText>
           </div>
           {/* raw */}
           <div>
             <Text>highest raw wpm</Text>
-            <BigText>{stats.highestRaw}</BigText>
+            <BigText>{f(stats.highestRaw)}</BigText>
           </div>
           <div>
             <Text>average raw wpm</Text>
-            <BigText>{stats.averageRaw}</BigText>
+            <BigText>{r(stats.averageRaw)}</BigText>
           </div>
           <div>
             <Text>
@@ -108,7 +109,7 @@ const Account: React.FC<Props> = () => {
               <br />
               (last 10 tests)
             </Text>
-            <BigText>{stats.last10AverageRaw}</BigText>
+            <BigText>{r(stats.last10AverageRaw)}</BigText>
           </div>
           {/* accuracy */}
           <div>
@@ -117,7 +118,7 @@ const Account: React.FC<Props> = () => {
           </div>
           <div>
             <Text>average accuracy</Text>
-            <BigText>{stats.averageAcc}%</BigText>
+            <BigText>{r(stats.averageAcc)}%</BigText>
           </div>
           <div>
             <Text>
@@ -125,7 +126,7 @@ const Account: React.FC<Props> = () => {
               <br />
               (last 10 tests)
             </Text>
-            <BigText>{stats.last10AverageAcc}%</BigText>
+            <BigText>{r(stats.last10AverageAcc)}%</BigText>
           </div>
         </OtherStats>
         <History />

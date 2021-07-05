@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useStats } from "../Contexts/StatsContext";
 import { useTyping } from "../Contexts/TypingGameContext";
+import { r } from "../Shared/utils/number";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -16,7 +17,7 @@ const TypingStats: React.FC<Props> = () => {
       {isPlaying && (
         <>
           <Timer>{timeps}</Timer>
-          <WPM>{Math.round(wps)}</WPM>
+          <WPM>{r(wps)}</WPM>
         </>
       )}
     </Wrapper>

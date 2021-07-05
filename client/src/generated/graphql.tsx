@@ -84,20 +84,26 @@ export type RegisterInput = {
 export type Result = {
   __typename?: 'Result';
   id: Scalars['Float'];
-  wpm: Scalars['Float'];
-  accuracy: Scalars['Float'];
-  cpm: Scalars['Float'];
-  raw: Scalars['Float'];
+  wpm: Scalars['String'];
+  accuracy: Scalars['String'];
+  cpm: Scalars['String'];
+  raw: Scalars['String'];
+  correct: Scalars['Float'];
+  incorrect: Scalars['Float'];
+  errors: Scalars['Float'];
   user: User;
   time: Scalars['Float'];
   createdAt: Scalars['String'];
 };
 
 export type ScoreInput = {
-  wpm: Scalars['Float'];
-  accuracy: Scalars['Float'];
-  cpm: Scalars['Float'];
-  raw: Scalars['Float'];
+  wpm: Scalars['String'];
+  accuracy: Scalars['String'];
+  cpm: Scalars['String'];
+  raw: Scalars['String'];
+  correct: Scalars['Float'];
+  incorrect: Scalars['Float'];
+  errors: Scalars['Float'];
   time: Scalars['Float'];
 };
 
@@ -106,14 +112,14 @@ export type Stats = {
   id: Scalars['Float'];
   timePlayed: Scalars['String'];
   testsCompleted: Scalars['Float'];
-  highestWpm: Scalars['Float'];
-  averageWpm: Scalars['Float'];
-  last10AverageWpm: Scalars['Float'];
-  highestRaw: Scalars['Float'];
-  averageRaw: Scalars['Float'];
-  last10AverageRaw: Scalars['Float'];
-  averageAcc: Scalars['Float'];
-  last10AverageAcc: Scalars['Float'];
+  highestWpm: Scalars['String'];
+  averageWpm: Scalars['String'];
+  last10AverageWpm: Scalars['String'];
+  highestRaw: Scalars['String'];
+  averageRaw: Scalars['String'];
+  last10AverageRaw: Scalars['String'];
+  averageAcc: Scalars['String'];
+  last10AverageAcc: Scalars['String'];
   personalBests: Array<Result>;
   user: User;
 };

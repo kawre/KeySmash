@@ -47,6 +47,38 @@ button {
    display: none !important;
    opacity: 0;
 }
+/* aria */
+
+[aria-label] {
+  position: relative;
+}
+
+[aria-label]:after {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  opacity: 0;
+  /* margin-bottom: 10px; */
+  transform: translate(-50%, -50%);
+  z-index: 5000;
+  pointer-events: none;
+  padding: 8px 16px;
+  white-space: nowrap;
+  text-decoration: none;
+  text-indent: 0;
+  overflow: visible;
+  font-size: 16px;
+  font-weight: 500;
+  color: #e4e4e4;
+  background-color: #000000;
+  border-radius: 4px;
+  transition: all 180ms ease-out 0s;
+}
+
+[aria-label]:hover:after, [aria-label]:focus:after {
+  opacity: 1;
+}
 `;
 
 export default GlobalStyle;

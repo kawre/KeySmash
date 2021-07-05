@@ -12,7 +12,7 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const TypingChart: React.FC<Props> = () => {
   const { theme } = useData();
-  const { time, results, wpm, raw, errors } = useStats();
+  const { time, results, wpm, raw, incorrect } = useStats();
   const [labels, setLabels] = useState<number[]>([]);
   const [wpms, setWPMS] = useState<number[]>([]);
   const [raws, setRaws] = useState<number[]>([]);
@@ -21,10 +21,10 @@ const TypingChart: React.FC<Props> = () => {
 
   useEffect(() => {
     if (time === 0) return;
-    setWPMS([...wpms, wpm]);
-    setRaws([...raws, raw]);
-    setLabels([...labels, time]);
-    setErr([...err, errors]);
+    // setWPMS([...wpms, wpm]);
+    // setRaws([...raws, raw]);
+    // setLabels([...labels, time]);
+    // setErr([...err, incorrect]);
   }, [raw]);
 
   defaults.font.family = font;

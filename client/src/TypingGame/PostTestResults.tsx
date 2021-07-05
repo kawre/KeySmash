@@ -5,14 +5,25 @@ import Button from "../Shared/Components/Button";
 import { FaChevronRight } from "react-icons/fa";
 import TypingChart from "./TypingChart";
 import { useStats } from "../Contexts/StatsContext";
-import { useEffect } from "react";
+import { r } from "../Shared/utils/number";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
 const PostTestStats: React.FC<Props> = () => {
-  const { results, wpm, cpm, acc, raw, characters, errors, time } = useStats();
+  const {
+    results,
+    wpm,
+    cpm,
+    acc,
+    raw,
+    correct,
+    incorrect,
+    time,
+    missed,
+    extra,
+  } = useStats();
   const { repeatTest } = useTyping();
 
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -31,32 +42,30 @@ const PostTestStats: React.FC<Props> = () => {
     <Wrapper ref={resultsRef} className={`${!results && "hidden"}`}>
       <Top>
         <TopLeft>
-          <WPM>
+          <WPM aria-label={`${wpm} wpm`}>
             <p>wpm</p>
-            {Math.round(wpm)}
+            {r(wpm)}
           </WPM>
-          <Acc>
+          <Acc aria-label={`${acc}%`}>
             <p>acc</p>
-            {acc}%
+            {r(acc)}%
           </Acc>
         </TopLeft>
         <TypingChart />
       </Top>
       <Bottom>
-        <Raw>
+        <Raw aria-label={`${raw} raw`}>
           <p>raw</p>
-          {Math.round(raw)}
+          {r(raw)}
         </Raw>
-        <Cpm>
+        <Cpm aria-label={`${cpm} cpm`}>
           <p>cpm</p>
-          {Math.round(cpm)}
+          {r(cpm)}
         </Cpm>
-        <Characters>
-          <p>characters</p>
+        <Characters aria-label="corrent, incorrect, extra and missed">
+          <p>correct</p>
           <div>
-            <span className="correct">{characters}</span>
-            <span className="slash">/</span>
-            <span className="error">{errors}</span>
+            {correct}/{incorrect}/{extra}/{missed}
           </div>
         </Characters>
         <Time>

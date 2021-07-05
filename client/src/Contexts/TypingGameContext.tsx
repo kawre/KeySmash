@@ -64,7 +64,7 @@ const TypingContext: React.FC = ({ children }) => {
   //   setAcc(0);
   //   setTime(0);
   //   setResults(false);
-  //   setCharacters(0);
+  //   setCorrect(0);
   //   setErrors(0);
   // };
 

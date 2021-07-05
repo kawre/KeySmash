@@ -16,7 +16,15 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const TypingGame: React.FC<Props> = () => {
   // context
-  const { setCharacters, setErrors, submitTest } = useStats();
+  const {
+    setCorrect,
+    setErrors,
+    setExtra,
+    setMissed,
+    submitTest,
+    setErrs,
+    setChars,
+  } = useStats();
   const { words, setPlaying, focus, setFocus, disabled } = useTyping();
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,9 +41,6 @@ const TypingGame: React.FC<Props> = () => {
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
 
-  // graphql
-  const [submitResult] = useSubmitResultMutation();
-
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (disabled) return;
     setCurrentKey(e.key);
@@ -46,7 +51,7 @@ const TypingGame: React.FC<Props> = () => {
     if (key === "") return;
 
     setPlaying(true);
-    setCharacters((n) => n + 1);
+    setChars();
     if (input.length + 1 > words[current].length) createLetter(key);
     else letterValidation(key, e.key);
     setInput(input + key);
@@ -71,8 +76,11 @@ const TypingGame: React.FC<Props> = () => {
         if (
           !classNames.some((className) => child.classList.contains(className))
         ) {
-          setErrors((n) => n - 1);
-          setCharacters((n) => n - 1);
+          console.log("elo");
+          // tutaj
+          setMissed((n) => n - 1);
+          // setErrors((n) => n - 1);
+          setCorrect((n) => n - 1);
         }
       });
       return;
@@ -84,7 +92,7 @@ const TypingGame: React.FC<Props> = () => {
       setErrors((n) => n - 1);
     }
     minusLetter.classList.remove("incorrect", "correct");
-    setCharacters((n) => n - 1);
+    setCorrect((n) => n - 1);
   };
 
   const spaceHandler = () => {
@@ -96,7 +104,7 @@ const TypingGame: React.FC<Props> = () => {
 
   const createLetter = (key: string) => {
     if (!word) return;
-    setErrors((n) => n + 1);
+    setErrs("extra");
     const letter = document.createElement("span");
     letter.textContent = key;
     letter.classList.add("extra");
@@ -115,7 +123,7 @@ const TypingGame: React.FC<Props> = () => {
       return;
     }
     letter.classList.add("incorrect");
-    setErrors((n) => n + 1);
+    setErrs();
   };
 
   // overflow removal handler
@@ -132,7 +140,8 @@ const TypingGame: React.FC<Props> = () => {
     if (currentWord.childElementCount === input.length + 1) {
       if (!currentWord.lastElementChild) return;
       currentWord.lastElementChild.remove();
-      setErrors((n) => n - 1);
+      // setErrors((n) => n - 1);
+      setExtra((n) => n - 1);
     }
   }, [input]);
 
@@ -165,8 +174,8 @@ const TypingGame: React.FC<Props> = () => {
         !classNames.some((className) => minusChild.contains(className)) &&
         currentKey === " "
       ) {
-        setErrors((n) => n + 1);
-        setCharacters((n) => n + 1);
+        setErrs("missed");
+        setChars();
         return;
       }
     });

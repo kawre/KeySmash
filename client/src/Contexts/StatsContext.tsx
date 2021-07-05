@@ -5,19 +5,27 @@ import { useTyping } from "./TypingGameContext";
 // Types -------------------------------------------------------------------------
 
 interface Context {
-  wpm: number;
-  wps: number;
-  cpm: number;
-  raw: number;
-  acc: number;
+  wpm: string;
+  wps: string;
+  cpm: string;
+  raw: string;
+  acc: string;
   time: number;
   timeps: number;
   results: boolean;
-  characters: number;
-  setCharacters: React.Dispatch<React.SetStateAction<number>>;
-  setErrors: React.Dispatch<React.SetStateAction<number>>;
+  correct: number;
+  incorrect: number;
+  missed: number;
+  extra: number;
   errors: number;
+  characters: number;
+  setCorrect: React.Dispatch<React.SetStateAction<number>>;
+  setErrors: React.Dispatch<React.SetStateAction<number>>;
+  setExtra: React.Dispatch<React.SetStateAction<number>>;
+  setMissed: React.Dispatch<React.SetStateAction<number>>;
   submitTest: () => void;
+  setChars: () => void;
+  setErrs: (s?: "missed" | "extra") => void;
 }
 
 const StatsContext = createContext<Context>(null!);
@@ -31,19 +39,43 @@ const StatsProvider: React.FC = ({ children }) => {
   const { disabled, setDisabled, isPlaying, setPlaying, setShowing } =
     useTyping();
 
-  const [wpm, setWpm] = useState<Context["wpm"]>(0);
-  const [wps, setWps] = useState<Context["wpm"]>(0);
-  const [cpm, setCpm] = useState<Context["cpm"]>(0);
-  const [raw, setRaw] = useState<Context["raw"]>(0);
-  const [acc, setAcc] = useState<Context["acc"]>(0);
-  const [time, setTime] = useState<Context["time"]>(0);
-  const [timeps, setTimeps] = useState<Context["time"]>(0);
-  const [results, setResults] = useState<Context["results"]>(false);
-  const [characters, setCharacters] = useState<Context["characters"]>(0);
-  const [errors, setErrors] = useState<Context["errors"]>(0);
+  const [wpm, setWpm] = useState("0");
+  const [wps, setWps] = useState("0");
+  const [cpm, setCpm] = useState("0");
+  const [raw, setRaw] = useState("0");
+  const [acc, setAcc] = useState("0");
+  const [time, setTime] = useState(0);
+  const [timeps, setTimeps] = useState(0);
+  const [results, setResults] = useState(false);
+  const [correct, setCorrect] = useState(0);
+  const [errors, setRealErrors] = useState(0);
+  const [characters, setCharacters] = useState(0);
+  const [incorrect, setErrors] = useState(0);
+  const [extra, setExtra] = useState(0);
+  const [missed, setMissed] = useState(0);
 
   const [submit] = useSubmitResultMutation();
-  useEffect(() => console.log(wpm), [disabled]);
+  useEffect(() => {
+    console.log(extra);
+    console.log(missed);
+    console.log(incorrect);
+  }, [errors]);
+
+  const setChars = () => {
+    setCorrect((i) => i + 1);
+    setCharacters((i) => i + 1);
+  };
+
+  const setErrs = (s?: "missed" | "extra") => {
+    if (s === "missed") {
+      setMissed((i) => i + 1);
+    } else if (s === "extra") {
+      setExtra((i) => i + 1);
+    } else {
+      setErrors((i) => i + 1);
+    }
+    setRealErrors((i) => i + 1);
+  };
 
   const submitTest = async () => {
     setDisabled(true);
@@ -54,6 +86,9 @@ const StatsProvider: React.FC = ({ children }) => {
           accuracy: acc,
           cpm,
           raw,
+          correct,
+          incorrect,
+          errors,
           time: timeps,
         },
       },
@@ -66,15 +101,15 @@ const StatsProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (time === 0 || disabled) return;
 
-    const diff = characters - errors;
+    const diff = correct - incorrect;
+    const realDiff = characters - errors;
     const minute = time / 60;
 
-    setAcc(Math.round((diff / characters) * 100));
-    setCpm(parseFloat((diff / minute).toFixed(2)));
-    setWpm(parseFloat((diff / minute / 5).toFixed(2)));
-    setRaw(parseFloat((characters / minute / 5).toFixed(2)));
+    setAcc(((realDiff / characters) * 100).toFixed(2));
+    setCpm((diff / minute).toFixed(2));
+    setWpm((diff / minute / 5).toFixed(2));
+    setRaw((correct / minute / 5).toFixed(2));
   }, [time, disabled]);
-  // console.log("wpm:", wpm);
 
   useEffect(() => {
     if (disabled || !isPlaying) return;
@@ -102,11 +137,19 @@ const StatsProvider: React.FC = ({ children }) => {
     time,
     timeps,
     results,
+    correct,
+    incorrect,
+    errors,
     characters,
-    setCharacters,
+    missed,
+    extra,
+    setCorrect,
     setErrors,
     submitTest,
-    errors,
+    setMissed,
+    setExtra,
+    setChars,
+    setErrs,
   };
 
   return (

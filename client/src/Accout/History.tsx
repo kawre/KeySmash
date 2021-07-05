@@ -23,7 +23,7 @@ const History: React.FC<Props> = () => {
         <Loader type="ThreeDots" color={theme.main} height={12} />
       </Layout>
     );
-  else if (!history) return <Text>{error?.message}</Text>;
+  else if (!history || error) throw new Error(error?.message);
 
   return (
     <Wrapper>
