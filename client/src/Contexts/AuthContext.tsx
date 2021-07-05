@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useRef } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { MeQuery, useMeQuery } from "../generated/graphql";
 
@@ -16,15 +17,32 @@ export function useAuth() {
 // Component
 export const AuthProvider: React.FC = ({ children }) => {
   const loadingRef = useRef<HTMLDivElement>(null);
+  const [display, setDisplay] = useState(true);
+
+  // useEffect(() => {
+  //   setTimeout(() => setL(!loading), 1000);
+  // }, []);
 
   // me
   const { data, loading } = useMeQuery();
 
-  // loading handler
   useEffect(() => {
-    if (loading || !loadingRef.current) return;
-    loadingRef.current.classList.add("hidden");
-  }, [loading, loadingRef]);
+    if (loading || !loadingRef.current || !display) return;
+    loadingRef.current.classList.add("fadeOut");
+
+    setTimeout(() => {
+      loadingRef?.current?.classList.add("hidden");
+      setDisplay(false);
+    }, 100);
+  }, [loading]);
+
+  // useEffect(() => {}, [loading]);
+
+  // loading handler
+  // useEffect(() => {
+  //   if (loading || !loadingRef.current) return;
+  //   loadingRef.current.classList.add("hidden");
+  // }, [loading, loadingRef]);
 
   // global values
   const value = {
@@ -33,8 +51,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      <Loading ref={loadingRef} />
-      {children}
+      {display && <Loading ref={loadingRef} />}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
@@ -48,7 +66,7 @@ const Loading = styled.div`
   background: #323437;
   z-index: 100;
   opacity: 1;
-  transition: 100ms ease;
+  transition: 100ms ease-in;
   pointer-events: none;
 
   &.fadeOut {

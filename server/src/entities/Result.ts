@@ -19,45 +19,53 @@ export class Result extends BaseEntity {
   @Column()
   userId: number;
 
-  // @Field()
-  // @Column()
-  // words: string;
-
   @Field()
-  @Column({ type: "text", default: "0" })
+  @Column()
   wpm: string;
 
   @Field()
-  @Column({ type: "text", default: "0" })
+  @Column()
   accuracy: string;
 
   @Field()
-  @Column({ type: "text", default: "0" })
+  @Column()
   cpm: string;
 
   @Field()
-  @Column({ type: "text", default: "0" })
+  @Column()
   raw: string;
 
   @Field()
-  @Column("int", { default: 0 })
+  @Column()
   correct: number;
 
   @Field()
-  @Column("int", { default: 0 })
+  @Column()
   incorrect: number;
 
   @Field()
-  @Column("int", { default: 0 })
+  @Column()
+  extra: number;
+
+  @Field()
+  @Column()
+  missed: number;
+
+  @Field()
+  @Column()
+  characters: number;
+
+  @Field()
+  @Column()
   errors: number;
+
+  @Field()
+  @Column()
+  time: number;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.results, { onDelete: "CASCADE" })
   user: User;
-
-  @Field()
-  @Column("int", { default: 0 })
-  time: number;
 
   @Field(() => String)
   @CreateDateColumn()

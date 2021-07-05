@@ -1,7 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import { FaRedoAlt } from "react-icons/fa";
-import { useTyping } from "../Contexts/TypingGameContext";
+import styled from "styled-components";
+import { useStats } from "../Contexts/StatsContext";
 import Button from "../Shared/Components/Button";
 // Types -------------------------------------------------------------------------
 
@@ -9,11 +9,11 @@ interface Props {}
 
 // Component ---------------------------------------------------------------------
 const RepeatTest: React.FC<Props> = () => {
-  const { repeatTest } = useTyping();
+  const { reset } = useStats();
 
   return (
     <Wrapper>
-      <Button tabIndex={2} type="test" onClick={repeatTest}>
+      <Button tabIndex={2} type="test" onClick={reset}>
         <FaRedoAlt />
       </Button>
     </Wrapper>

@@ -1,11 +1,10 @@
 import React, { useRef } from "react";
-import styled from "styled-components";
-import { useTyping } from "../Contexts/TypingGameContext";
-import Button from "../Shared/Components/Button";
 import { FaChevronRight } from "react-icons/fa";
-import TypingChart from "./TypingChart";
+import styled from "styled-components";
 import { useStats } from "../Contexts/StatsContext";
+import Button from "../Shared/Components/Button";
 import { r } from "../Shared/utils/number";
+import TypingChart from "./TypingChart";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -23,8 +22,8 @@ const PostTestStats: React.FC<Props> = () => {
     time,
     missed,
     extra,
+    reset,
   } = useStats();
-  const { repeatTest } = useTyping();
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +33,7 @@ const PostTestStats: React.FC<Props> = () => {
     ref.add("fade-out");
     setTimeout(() => {
       ref.remove("fade-out");
-      repeatTest();
+      reset();
     }, 150);
   };
 

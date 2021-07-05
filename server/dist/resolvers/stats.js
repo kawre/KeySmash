@@ -42,7 +42,6 @@ let StatsResolver = class StatsResolver {
       where "userId" = $1
       `, [stats.userId]);
             const sum = res.pop().sum;
-            console.log(sum);
             return sum ? new Date(sum * 1000).toISOString().substr(11, 8) : "00:00:00";
         });
     }

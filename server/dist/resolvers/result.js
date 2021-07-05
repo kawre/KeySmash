@@ -55,6 +55,18 @@ __decorate([
 __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", Number)
+], ScoreInput.prototype, "extra", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", Number)
+], ScoreInput.prototype, "missed", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", Number)
+], ScoreInput.prototype, "characters", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", Number)
 ], ScoreInput.prototype, "errors", void 0);
 __decorate([
     type_graphql_1.Field(),
@@ -79,6 +91,7 @@ let ResultResolver = class ResultResolver {
     submitResult(options, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             const { userId } = req.session;
+            console.log(options);
             return Result_1.Result.create(Object.assign(Object.assign({}, options), { userId })).save();
         });
     }

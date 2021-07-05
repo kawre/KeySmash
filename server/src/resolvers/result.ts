@@ -35,6 +35,15 @@ class ScoreInput {
   incorrect: number;
 
   @Field()
+  extra: number;
+
+  @Field()
+  missed: number;
+
+  @Field()
+  characters: number;
+
+  @Field()
   errors: number;
 
   @Field()
@@ -66,6 +75,7 @@ export class ResultResolver {
     @Ctx() { req }: MyContext
   ) {
     const { userId } = req.session;
+    console.log(options);
 
     return Result.create({ ...options, userId }).save();
   }

@@ -1,10 +1,9 @@
 import { MyContext } from "../types";
 import { fix } from "../utils/fix";
-import { Ctx, Field, FieldResolver, Query, Resolver, Root } from "type-graphql";
+import { Ctx, FieldResolver, Query, Resolver, Root } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Stats } from "../entities/Stats";
 import { User } from "../entities/User";
-import { Result } from "../entities/Result";
 
 @Resolver(Stats)
 export class StatsResolver {
@@ -30,7 +29,6 @@ export class StatsResolver {
     );
 
     const sum = res.pop().sum;
-    console.log(sum);
     return sum ? new Date(sum * 1000).toISOString().substr(11, 8) : "00:00:00";
   }
 

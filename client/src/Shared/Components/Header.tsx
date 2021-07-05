@@ -7,18 +7,24 @@ import Button from "./Button";
 import { RiSettings3Fill } from "react-icons/ri";
 import { FaRegUser } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
+import { useData } from "../../Contexts/DataContext";
+import { useTyping } from "../../Contexts/TypingGameContext";
+import { useStats } from "../../Contexts/StatsContext";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
 
 // Component ---------------------------------------------------------------------
+
 const Header: React.FC<Props> = () => {
+  const { reset } = useStats();
+  // const {rep} = useData()
   const { user } = useAuth();
-  const history = useHistory();
+
   return (
     <Wrapper>
       <Left>
-        <Link to="/">
+        <Link to="/" onClick={reset}>
           <Logo>
             <small>monkey see</small>
             <p>monkeyclone</p>

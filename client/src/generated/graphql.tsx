@@ -90,9 +90,12 @@ export type Result = {
   raw: Scalars['String'];
   correct: Scalars['Float'];
   incorrect: Scalars['Float'];
+  extra: Scalars['Float'];
+  missed: Scalars['Float'];
+  characters: Scalars['Float'];
   errors: Scalars['Float'];
-  user: User;
   time: Scalars['Float'];
+  user: User;
   createdAt: Scalars['String'];
 };
 
@@ -103,6 +106,9 @@ export type ScoreInput = {
   raw: Scalars['String'];
   correct: Scalars['Float'];
   incorrect: Scalars['Float'];
+  extra: Scalars['Float'];
+  missed: Scalars['Float'];
+  characters: Scalars['Float'];
   errors: Scalars['Float'];
   time: Scalars['Float'];
 };

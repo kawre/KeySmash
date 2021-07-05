@@ -26,49 +26,64 @@ __decorate([
 ], Result.prototype, "userId", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "text", default: "0" }),
+    typeorm_1.Column(),
     __metadata("design:type", String)
 ], Result.prototype, "wpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "text", default: "0" }),
+    typeorm_1.Column(),
     __metadata("design:type", String)
 ], Result.prototype, "accuracy", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "text", default: "0" }),
+    typeorm_1.Column(),
     __metadata("design:type", String)
 ], Result.prototype, "cpm", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ type: "text", default: "0" }),
+    typeorm_1.Column(),
     __metadata("design:type", String)
 ], Result.prototype, "raw", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column("int", { default: 0 }),
+    typeorm_1.Column(),
     __metadata("design:type", Number)
 ], Result.prototype, "correct", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column("int", { default: 0 }),
+    typeorm_1.Column(),
     __metadata("design:type", Number)
 ], Result.prototype, "incorrect", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column("int", { default: 0 }),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Result.prototype, "extra", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Result.prototype, "missed", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Result.prototype, "characters", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
     __metadata("design:type", Number)
 ], Result.prototype, "errors", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Result.prototype, "time", void 0);
 __decorate([
     type_graphql_1.Field(() => User_1.User),
     typeorm_1.ManyToOne(() => User_1.User, (user) => user.results, { onDelete: "CASCADE" }),
     __metadata("design:type", User_1.User)
 ], Result.prototype, "user", void 0);
-__decorate([
-    type_graphql_1.Field(),
-    typeorm_1.Column("int", { default: 0 }),
-    __metadata("design:type", Number)
-], Result.prototype, "time", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),

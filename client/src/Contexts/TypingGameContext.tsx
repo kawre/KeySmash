@@ -49,24 +49,17 @@ const TypingContext: React.FC = ({ children }) => {
         };
       },
     });
-    // defaultStates();
-
+    defaultStates();
     setTimeout(() => setShowing(true), 150);
   };
 
-  // const defaultStates = () => {
-  //   setPlaying(false);
-  //   setShowing(false);
-  //   setFocus(true);
-  //   setWPM(0);
-  //   setCPM(0);
-  //   setRaw(0);
-  //   setAcc(0);
-  //   setTime(0);
-  //   setResults(false);
-  //   setCorrect(0);
-  //   setErrors(0);
-  // };
+  const defaultStates = () => {
+    setPlaying(false);
+    setShowing(false);
+    setFocus(true);
+    setResults(false);
+    setDisabled(false);
+  };
 
   useEffect(() => {
     if (loading) return;

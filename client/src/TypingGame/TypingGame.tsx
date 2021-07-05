@@ -18,7 +18,7 @@ const TypingGame: React.FC<Props> = () => {
   // context
   const {
     setCorrect,
-    setErrors,
+    setIncorrect,
     setExtra,
     setMissed,
     submitTest,
@@ -76,10 +76,9 @@ const TypingGame: React.FC<Props> = () => {
         if (
           !classNames.some((className) => child.classList.contains(className))
         ) {
-          console.log("elo");
           // tutaj
           setMissed((n) => n - 1);
-          // setErrors((n) => n - 1);
+          // setIncorrect((n) => n - 1);
           setCorrect((n) => n - 1);
         }
       });
@@ -89,7 +88,7 @@ const TypingGame: React.FC<Props> = () => {
     setInput(input.slice(0, -1));
     if (!minusLetter) return;
     if (minusLetter.classList.contains("incorrect")) {
-      setErrors((n) => n - 1);
+      setIncorrect((n) => n - 1);
     }
     minusLetter.classList.remove("incorrect", "correct");
     setCorrect((n) => n - 1);
@@ -140,7 +139,7 @@ const TypingGame: React.FC<Props> = () => {
     if (currentWord.childElementCount === input.length + 1) {
       if (!currentWord.lastElementChild) return;
       currentWord.lastElementChild.remove();
-      // setErrors((n) => n - 1);
+      // setIncorrect((n) => n - 1);
       setExtra((n) => n - 1);
     }
   }, [input]);
@@ -249,12 +248,11 @@ export default TypingGame;
 
 // Styled ------------------------------------------------------------------------
 
-const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: grid;
-  place-items: center;
-  animation: fadeIn 150ms forwards;
+const Game = styled.div`
+  position: relative;
+  width: 950px;
+  opacity: 0;
+  animation: fadeIn 300ms forwards;
 
   @keyframes fadeIn {
     0% {
@@ -264,11 +262,6 @@ const Wrapper = styled.div`
       opacity: 1;
     }
   }
-`;
-
-const Game = styled.div`
-  position: relative;
-  width: 950px;
 `;
 
 const GameContainer = styled.div`
