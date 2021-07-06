@@ -144,12 +144,16 @@ let StatsResolver = class StatsResolver {
         });
     }
     personalBests(stats) {
-        return typeorm_1.getConnection().query(`
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield typeorm_1.getConnection().query(`
     select * from result
     where "userId" = $1
     order by wpm DESC
     limit 5
     `, [stats.userId]);
+            console.log(res);
+            return res;
+        });
     }
 };
 __decorate([
@@ -241,7 +245,7 @@ __decorate([
     __param(0, type_graphql_1.Root()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Stats_1.Stats]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], StatsResolver.prototype, "personalBests", null);
 StatsResolver = __decorate([
     type_graphql_1.Resolver(Stats_1.Stats)

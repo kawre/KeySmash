@@ -8,6 +8,7 @@ import { useStatsQuery } from "../generated/graphql";
 import Layout from "../Shared/Components/Layout";
 import { date } from "../Shared/utils/date";
 import { f, r } from "../Shared/utils/number";
+import ResultTable from "../TypingGame/ResultTable";
 import History from "./History";
 // Types -------------------------------------------------------------------------
 
@@ -47,35 +48,9 @@ const Account: React.FC<Props> = () => {
             <BigText>{stats.timePlayed}</BigText>
           </div>
         </StatsHeader>
-        <Bests>
-          <Text style={{ width: "auto" }}>personal bests</Text>
-          <Heading>
-            <Stats>
-              <Text>wpm</Text>
-              <Text>raw</Text>
-              <Text>cpm</Text>
-              <Text>accuracy</Text>
-            </Stats>
-            <Text>time</Text>
-            <Text>date</Text>
-          </Heading>
-          {stats.personalBests.map((h, i) => {
-            return (
-              <Result key={h.createdAt + i}>
-                <Stats>
-                  <Text>{h.wpm}</Text>
-                  <Text>{h.raw}</Text>
-                  <Text>{h.cpm}</Text>
-                  <Text>{h.accuracy}%</Text>
-                </Stats>
-                <Text>{h.time}s</Text>
-                <Text style={{ whiteSpace: "pre", lineHeight: "22px" }}>
-                  {date(h.createdAt)}
-                </Text>
-              </Result>
-            );
-          })}
-        </Bests>
+        {/* table */}
+        <ResultTable data={stats.personalBests} title="personal bests" />
+        {/*  */}
         <OtherStats>
           {/* wpm */}
           <div>
@@ -149,28 +124,6 @@ const StatsHeader = styled.div`
   padding-right: 75px;
 `;
 
-const Result = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 8px 50px;
-  border-radius: 2px;
-
-  &:nth-child(odd) {
-    background: #0000001a;
-  }
-`;
-
-const Bests = styled.div`
-  padding: 75px 0;
-
-  p {
-    color: ${({ theme }) => theme.text};
-    width: 106px;
-  }
-`;
-
 const OtherStats = styled.div`
   display: grid;
   grid-template-columns: repeat(3, auto);
@@ -187,23 +140,4 @@ const Text = styled.p`
 const BigText = styled.p`
   line-height: 50px;
   font-size: 48px;
-`;
-
-const Stats = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Heading = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 12px 50px;
-
-  p {
-    font-size: 14px;
-    opacity: 0.8;
-    color: ${({ theme }) => theme.sub};
-  }
 `;

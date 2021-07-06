@@ -85,6 +85,7 @@ let ResultResolver = class ResultResolver {
       select * from result 
       order by wpm DESC
     `);
+            console.log(results);
             return results;
         });
     }

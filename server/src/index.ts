@@ -6,7 +6,9 @@ import session from "express-session";
 import Redis from "ioredis";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { Theme } from "./entities/Theme";
+import { Result } from "./entities/Result";
+import { Stats } from "./entities/Stats";
+import { User } from "./entities/User";
 import { QuoteResolver } from "./resolvers/quote";
 import { ResultResolver } from "./resolvers/result";
 import { StatsResolver } from "./resolvers/stats";
@@ -18,6 +20,10 @@ const main = async () => {
   await (await createConnection()).runMigrations();
 
   const app = express();
+
+  // await Stats.delete({});
+  // await Result.delete({});
+  // await User.delete({});
 
   // await Theme.create({
   //   name: "strawberry",

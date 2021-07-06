@@ -1,0 +1,14 @@
+fragment RegularResult on Result {
+  wpm
+  raw
+  accuracy
+  time
+  cpm
+  correct
+  incorrect
+  extra
+  missed
+  characters
+  errors
+  createdAt
+}

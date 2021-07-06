@@ -1,10 +1,5 @@
 query TestHistory($cursor: String) {
   testHistory(cursor: $cursor) {
-    wpm
-    raw
-    accuracy
-    time
-    cpm
-    createdAt
+    ...RegularResult
   }
 }

@@ -27,8 +27,6 @@ const PostTestStats: React.FC<Props> = () => {
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => console.log(correct), [correct]);
-
   const repeatHandler = () => {
     if (!resultsRef.current) return;
     const ref = resultsRef.current.classList;

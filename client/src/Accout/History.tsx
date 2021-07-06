@@ -3,10 +3,10 @@ import React from "react";
 import Loader from "react-loader-spinner";
 import styled from "styled-components";
 import { useData } from "../Contexts/DataContext";
-import { TestHistoryQuery, useTestHistoryQuery } from "../generated/graphql";
+import { useTestHistoryQuery } from "../generated/graphql";
 import Button from "../Shared/Components/Button";
 import Layout from "../Shared/Components/Layout";
-import { date } from "../Shared/utils/date";
+import ResultTable from "../TypingGame/ResultTable";
 // Types -------------------------------------------------------------------------
 
 interface Props {}
@@ -27,33 +27,7 @@ const History: React.FC<Props> = () => {
 
   return (
     <Wrapper>
-      <Text style={{ width: "auto" }}>test history</Text>
-      <Heading>
-        <Stats>
-          <Text>wpm</Text>
-          <Text>raw</Text>
-          <Text>cpm</Text>
-          <Text>accuracy</Text>
-        </Stats>
-        <Text>time</Text>
-        <Text>date</Text>
-      </Heading>
-      {history.map((h, i) => {
-        return (
-          <Result key={h.createdAt + i}>
-            <Stats>
-              <Text>{h.wpm}</Text>
-              <Text>{h.raw}</Text>
-              <Text>{h.cpm}</Text>
-              <Text>{h.accuracy}%</Text>
-            </Stats>
-            <Text>{h.time}s</Text>
-            <Text style={{ whiteSpace: "pre", lineHeight: "22px" }}>
-              {date(h.createdAt)}
-            </Text>
-          </Result>
-        );
-      })}
+      <ResultTable data={history} title="test history" />
       {history.length % 10 === 0 && (
         <div style={{ marginTop: "10px" }}>
           <Button
@@ -76,9 +50,11 @@ export default History;
 
 // Styled ------------------------------------------------------------------------
 
-const Wrapper = styled.div`
-  padding: 50px 0;
-`;
+// const Wrapper = styled.div`
+//   padding: 50px 0;
+// `;
+
+const Wrapper = styled.div``;
 
 const Heading = styled.div`
   display: flex;
@@ -91,19 +67,6 @@ const Heading = styled.div`
     font-size: 14px;
     opacity: 0.8;
     color: ${({ theme }) => theme.sub};
-  }
-`;
-
-const Result = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 8px 50px;
-  border-radius: 2px;
-
-  &:nth-child(odd) {
-    background: #0000001a;
   }
 `;
 

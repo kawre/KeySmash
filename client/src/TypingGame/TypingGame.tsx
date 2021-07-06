@@ -16,16 +16,10 @@ interface Props {}
 // Component ---------------------------------------------------------------------
 const TypingGame: React.FC<Props> = () => {
   // context
-  const {
-    setCorrect,
-    setIncorrect,
-    setExtra,
-    setMissed,
-    submitTest,
-    setErrs,
-    setChars,
-  } = useStats();
-  const { words, setPlaying, focus, setFocus, disabled } = useTyping();
+  const { setCorrect, setIncorrect, setExtra, setMissed, setErrs, setChars } =
+    useStats();
+  const { words, setPlaying, focus, setFocus, disabled, setDisabled } =
+    useTyping();
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
   const wordsRef = useRef<HTMLDivElement>(null);
@@ -40,10 +34,15 @@ const TypingGame: React.FC<Props> = () => {
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
+  const [toRemove, setToRemove] = useState(0);
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (disabled) return;
+
     setCurrentKey(e.key);
+
+    if (e.key === "Backspace" && e.ctrlKey && input.length >= 1)
+      return ctrlBackspace();
     if (e.key === "Backspace") return backspaceHandler();
     if (e.key === " ") return spaceHandler();
     if (word!.childElementCount > words[current].length + 15) return;
@@ -95,6 +94,10 @@ const TypingGame: React.FC<Props> = () => {
     setCorrect((n) => n - 1);
   };
 
+  useEffect(() => {
+    // console.log(letter);
+  }, [input]);
+
   const spaceHandler = () => {
     if (current + 1 >= words.length || input === "") return;
     setInputHistory([...inputHistory, input]);
@@ -119,12 +122,39 @@ const TypingGame: React.FC<Props> = () => {
         words.length === current + 1 &&
         words[current].length === input.length + 1
       )
-        submitTest();
+        setDisabled(true);
       return;
     }
     letter.classList.add("incorrect");
     setErrs();
   };
+
+  const ctrlBackspace = () => {
+    if (!word) return;
+    setInput("");
+
+    word.childNodes.forEach((ll, i) => {
+      const l = ll as Element;
+      const lc = (ll as Element).classList;
+
+      if (lc.contains("correct")) {
+        lc.remove("correct");
+        setCorrect((i) => i - 1);
+      } else if (lc.contains("incorrect")) {
+        lc.remove("incorrect");
+        setIncorrect((i) => i - 1);
+      } else if (lc.contains("extra")) {
+        setToRemove(i);
+        setExtra((i) => i - 1);
+      }
+    });
+  };
+
+  useEffect(() => {
+    console.log(toRemove);
+    if (toRemove === 0 || !word) return;
+    console.log(word.children[toRemove].remove());
+  }, [toRemove]);
 
   // overflow removal handler
   useEffect(() => {

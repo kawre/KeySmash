@@ -22,7 +22,6 @@ interface Context {
   setIncorrect: React.Dispatch<React.SetStateAction<number>>;
   setExtra: React.Dispatch<React.SetStateAction<number>>;
   setMissed: React.Dispatch<React.SetStateAction<number>>;
-  submitTest: () => void;
   setChars: () => void;
   setErrs: (s?: "missed" | "extra") => void;
   reset: () => void;
@@ -65,6 +64,12 @@ const StatsProvider: React.FC = ({ children }) => {
   useEffect(() => {
     setTotal(incorrect + extra + missed);
   }, [incorrect, extra, missed]);
+
+  // useEffect(() => {
+  //   console.log(total);
+  // }, [total]);
+
+  // useEffect(() => console.log(wpm), [wpm]);
 
   const [submit] = useSubmitResultMutation();
 
@@ -129,11 +134,7 @@ const StatsProvider: React.FC = ({ children }) => {
     return () => clearInterval(x);
   }, [isPlaying, time, disabled]);
 
-  useEffect(() => console.log(correct), [correct]);
-
   const submitTest = async () => {
-    setDisabled(true);
-    console.log("submit:", correct);
     user &&
       (await submit({
         variables: {
@@ -157,6 +158,11 @@ const StatsProvider: React.FC = ({ children }) => {
     setResults(true);
   };
 
+  // submitTest
+  useEffect(() => {
+    if (disabled) submitTest();
+  }, [disabled]);
+
   const value = {
     wpm,
     cpm,
@@ -172,7 +178,6 @@ const StatsProvider: React.FC = ({ children }) => {
     extra,
     setCorrect,
     setIncorrect,
-    submitTest,
     setMissed,
     setExtra,
     setChars,

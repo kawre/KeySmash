@@ -171,8 +171,8 @@ export class StatsResolver {
   }
 
   @FieldResolver()
-  personalBests(@Root() stats: Stats) {
-    return getConnection().query(
+  async personalBests(@Root() stats: Stats) {
+    const res = await getConnection().query(
       `
     select * from result
     where "userId" = $1
@@ -181,5 +181,7 @@ export class StatsResolver {
     `,
       [stats.userId]
     );
+    console.log(res);
+    return res;
   }
 }

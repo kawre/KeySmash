@@ -64,6 +64,7 @@ export class ResultResolver {
       select * from result 
       order by wpm DESC
     `);
+    console.log(results);
 
     return results;
   }
@@ -87,6 +88,7 @@ export class ResultResolver {
   ) {
     const params: any[] = [req.session.userId];
     if (cursor) params.push(new Date(parseInt(cursor)));
+
     return getConnection().query(
       `
     select * from result

@@ -165,6 +165,11 @@ export type RegularErrorFragment = (
   & Pick<FieldError, 'field' | 'message'>
 );
 
+export type RegularResultFragment = (
+  { __typename?: 'Result' }
+  & Pick<Result, 'wpm' | 'raw' | 'accuracy' | 'time' | 'cpm' | 'correct' | 'incorrect' | 'extra' | 'missed' | 'characters' | 'errors' | 'createdAt'>
+);
+
 export type RegularThemeFragment = (
   { __typename?: 'Theme' }
   & Pick<Theme, 'name' | 'background' | 'caret' | 'main' | 'sub' | 'text' | 'error' | 'errorExtra'>
@@ -278,7 +283,7 @@ export type StatsQuery = (
     & Pick<Stats, 'timePlayed' | 'testsCompleted' | 'highestWpm' | 'averageWpm' | 'last10AverageWpm' | 'highestRaw' | 'averageRaw' | 'last10AverageRaw' | 'averageAcc' | 'last10AverageAcc'>
     & { personalBests: Array<(
       { __typename?: 'Result' }
-      & Pick<Result, 'wpm' | 'raw' | 'accuracy' | 'time' | 'cpm' | 'createdAt'>
+      & RegularResultFragment
     )> }
   ) }
 );
@@ -292,7 +297,7 @@ export type TestHistoryQuery = (
   { __typename?: 'Query' }
   & { testHistory: Array<(
     { __typename?: 'Result' }
-    & Pick<Result, 'wpm' | 'raw' | 'accuracy' | 'time' | 'cpm' | 'createdAt'>
+    & RegularResultFragment
   )> }
 );
 
@@ -307,6 +312,22 @@ export type ThemesQuery = (
   )> }
 );
 
+export const RegularResultFragmentDoc = gql`
+    fragment RegularResult on Result {
+  wpm
+  raw
+  accuracy
+  time
+  cpm
+  correct
+  incorrect
+  extra
+  missed
+  characters
+  errors
+  createdAt
+}
+    `;
 export const RegularThemeFragmentDoc = gql`
     fragment RegularTheme on Theme {
   name
@@ -594,16 +615,11 @@ export const StatsDocument = gql`
     averageAcc
     last10AverageAcc
     personalBests {
-      wpm
-      raw
-      accuracy
-      time
-      cpm
-      createdAt
+      ...RegularResult
     }
   }
 }
-    `;
+    ${RegularResultFragmentDoc}`;
 
 /**
  * __useStatsQuery__
@@ -634,15 +650,10 @@ export type StatsQueryResult = Apollo.QueryResult<StatsQuery, StatsQueryVariable
 export const TestHistoryDocument = gql`
     query TestHistory($cursor: String) {
   testHistory(cursor: $cursor) {
-    wpm
-    raw
-    accuracy
-    time
-    cpm
-    createdAt
+    ...RegularResult
   }
 }
-    `;
+    ${RegularResultFragmentDoc}`;
 
 /**
  * __useTestHistoryQuery__

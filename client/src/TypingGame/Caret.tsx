@@ -19,6 +19,7 @@ const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
 
   // caret position
   useEffect(() => {
+    // console.log(minusLetter);
     if (input.length < words[current].length) caretCurrentLetter();
     else caretOverflow();
   }, [letter, minusLetter]);
