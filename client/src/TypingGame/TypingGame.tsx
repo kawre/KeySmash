@@ -34,7 +34,6 @@ const TypingGame: React.FC<Props> = () => {
   const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [blur, setBlur] = useState<boolean>(false);
-  const [toRemove, setToRemove] = useState(0);
 
   const inputHandler = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (disabled) return;
@@ -51,7 +50,6 @@ const TypingGame: React.FC<Props> = () => {
     if (key === "") return;
 
     setPlaying(true);
-    setChars();
     if (input.length + 1 > words[current].length) createLetter(key);
     else letterValidation(key, e.key);
     setInput(input + key);
@@ -59,6 +57,7 @@ const TypingGame: React.FC<Props> = () => {
 
   const backspaceHandler = () => {
     if (current === 0 && input.length === 0) return;
+
     if (canGoBack && input.length === 0) {
       if (!minusWord) return;
       let newCurrent = current - 1;
@@ -68,18 +67,12 @@ const TypingGame: React.FC<Props> = () => {
       setInput(inputHistory[newCurrent]);
       setInputHistory(inputHistory.slice(0, -1));
 
-      if (!minusWord) return;
       const classNames = ["incorrect", "correct", "extra"];
       minusWord.childNodes.forEach((x, index) => {
         const child = minusWord.children[index];
 
-        if (
-          !classNames.some((className) => child.classList.contains(className))
-        ) {
-          // tutaj
-          setMissed((n) => n - 1);
-          // setIncorrect((n) => n - 1);
-          setCorrect((n) => n - 1);
+        if (!classNames.some((c) => child.classList.contains(c))) {
+          setMissed((i) => i - 1);
         }
       });
       return;
@@ -87,16 +80,15 @@ const TypingGame: React.FC<Props> = () => {
 
     setInput(input.slice(0, -1));
     if (!minusLetter) return;
-    if (minusLetter.classList.contains("incorrect")) {
-      setIncorrect((n) => n - 1);
-    }
-    minusLetter.classList.remove("incorrect", "correct");
-    setCorrect((n) => n - 1);
-  };
 
-  useEffect(() => {
-    // console.log(letter);
-  }, [input]);
+    if (minusLetter.classList.contains("incorrect")) {
+      setIncorrect((i) => i - 1);
+    } else {
+      setCorrect((i) => i - 1);
+    }
+
+    minusLetter.classList.remove("incorrect", "correct");
+  };
 
   const spaceHandler = () => {
     if (current + 1 >= words.length || input === "") return;
@@ -118,6 +110,7 @@ const TypingGame: React.FC<Props> = () => {
     if (eventKey === " " || eventKey === "Backspace" || !letter) return;
     if (letter.innerHTML === key) {
       letter.classList.add("correct");
+      setChars();
       if (
         words.length === current + 1 &&
         words[current].length === input.length + 1
@@ -133,28 +126,29 @@ const TypingGame: React.FC<Props> = () => {
     if (!word) return;
     setInput("");
 
+    let ir = 0;
     word.childNodes.forEach((ll, i) => {
       const l = ll as Element;
       const lc = (ll as Element).classList;
 
       if (lc.contains("correct")) {
         lc.remove("correct");
+        console.log("elo");
         setCorrect((i) => i - 1);
       } else if (lc.contains("incorrect")) {
         lc.remove("incorrect");
         setIncorrect((i) => i - 1);
       } else if (lc.contains("extra")) {
-        setToRemove(i);
+        ir += 1;
+        // lc.add("hidden");
         setExtra((i) => i - 1);
       }
     });
-  };
 
-  useEffect(() => {
-    console.log(toRemove);
-    if (toRemove === 0 || !word) return;
-    console.log(word.children[toRemove].remove());
-  }, [toRemove]);
+    for (let i = 0; i < ir; i++) {
+      word.lastElementChild?.remove();
+    }
+  };
 
   // overflow removal handler
   useEffect(() => {
@@ -205,7 +199,7 @@ const TypingGame: React.FC<Props> = () => {
         currentKey === " "
       ) {
         setErrs("missed");
-        setChars();
+        setChars("only");
         return;
       }
     });
@@ -338,6 +332,9 @@ const Word = styled.div`
   span {
     &.extra {
       color: ${({ theme }) => theme.errorExtra} !important;
+    }
+    &.hidden {
+      display: none;
     }
   }
 `;

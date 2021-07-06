@@ -22,7 +22,7 @@ interface Context {
   setIncorrect: React.Dispatch<React.SetStateAction<number>>;
   setExtra: React.Dispatch<React.SetStateAction<number>>;
   setMissed: React.Dispatch<React.SetStateAction<number>>;
-  setChars: () => void;
+  setChars: (t?: "only") => void;
   setErrs: (s?: "missed" | "extra") => void;
   reset: () => void;
 }
@@ -65,10 +65,6 @@ const StatsProvider: React.FC = ({ children }) => {
     setTotal(incorrect + extra + missed);
   }, [incorrect, extra, missed]);
 
-  // useEffect(() => {
-  //   console.log(total);
-  // }, [total]);
-
   // useEffect(() => console.log(wpm), [wpm]);
 
   const [submit] = useSubmitResultMutation();
@@ -93,8 +89,8 @@ const StatsProvider: React.FC = ({ children }) => {
     setResults(false);
   };
 
-  const setChars = () => {
-    setCorrect((i) => i + 1);
+  const setChars = (t?: "only") => {
+    !t && setCorrect((i) => i + 1);
     setCharacters((i) => i + 1);
   };
 
@@ -111,15 +107,27 @@ const StatsProvider: React.FC = ({ children }) => {
   };
 
   useEffect(() => {
+    // console.log("correct:", correct);
+    // console.log("characters:", characters, "total:", total);
+    // console.log("total:", total);
+  }, [characters]);
+
+  useEffect(() => {
+    // console.log("total:", total);
+  }, [total]);
+
+  useEffect(() => {
     if (time === 0 || disabled) return;
 
-    const diff = correct - total;
+    const diff = characters + missed - (incorrect - extra);
     const realDiff = characters - errors;
+    console.log(total);
     const minute = 60 / time;
+    // console.log("diff:", characters + missed - (incorrect - extra));
 
     setAcc(((realDiff / characters) * 100).toFixed(2));
-    setCpm((diff * minute).toFixed(2));
-    setWpm((diff * (minute / 5)).toFixed(2));
+    setCpm((errors * minute).toFixed(2));
+    setWpm((total * (minute / 5)).toFixed(2));
     setRaw((characters * (minute / 5)).toFixed(2));
   }, [time, disabled]);
 
