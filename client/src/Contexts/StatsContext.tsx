@@ -35,14 +35,8 @@ export const useStats = () => {
 
 // Component ---------------------------------------------------------------------
 const StatsProvider: React.FC = ({ children }) => {
-  const {
-    disabled,
-    setDisabled,
-    isPlaying,
-    setPlaying,
-    setShowing,
-    repeatTest,
-  } = useTyping();
+  const { disabled, isPlaying, setPlaying, setShowing, repeatTest } =
+    useTyping();
   const { user } = useAuth();
 
   const [wpm, setWpm] = useState("0");
@@ -59,13 +53,18 @@ const StatsProvider: React.FC = ({ children }) => {
   //
   const [total, setTotal] = useState(0);
   const [errors, setErrors] = useState(0);
+  // const [chars, setChar] = useState(0);
   const [characters, setCharacters] = useState(0);
   //
   useEffect(() => {
     setTotal(incorrect + extra + missed);
   }, [incorrect, extra, missed]);
 
-  // useEffect(() => console.log(wpm), [wpm]);
+  // useEffect(() => {
+  //   console.log("total:", correct + total);
+  // }, [total, chars]);
+
+  // useEffect(() => console.log("chars:", chars), [chars]);
 
   const [submit] = useSubmitResultMutation();
 
@@ -107,28 +106,15 @@ const StatsProvider: React.FC = ({ children }) => {
   };
 
   useEffect(() => {
-    // console.log("correct:", correct);
-    // console.log("characters:", characters, "total:", total);
-    // console.log("total:", total);
-  }, [characters]);
-
-  useEffect(() => {
-    // console.log("total:", total);
-  }, [total]);
-
-  useEffect(() => {
     if (time === 0 || disabled) return;
 
-    const diff = characters + missed - (incorrect - extra);
-    const realDiff = characters - errors;
-    console.log(total);
+    const diff = characters - errors;
     const minute = 60 / time;
-    // console.log("diff:", characters + missed - (incorrect - extra));
 
-    setAcc(((realDiff / characters) * 100).toFixed(2));
-    setCpm((errors * minute).toFixed(2));
-    setWpm((total * (minute / 5)).toFixed(2));
-    setRaw((characters * (minute / 5)).toFixed(2));
+    setAcc(((diff / characters) * 100).toFixed(2));
+    setCpm((correct * minute).toFixed(2));
+    setWpm((correct * (minute / 5)).toFixed(2));
+    setRaw(((correct + total) * (minute / 5)).toFixed(2));
   }, [time, disabled]);
 
   useEffect(() => {
@@ -144,7 +130,7 @@ const StatsProvider: React.FC = ({ children }) => {
 
   const submitTest = async () => {
     user &&
-      (await submit({
+      submit({
         variables: {
           options: {
             wpm,
@@ -160,10 +146,12 @@ const StatsProvider: React.FC = ({ children }) => {
             missed,
           },
         },
-      }));
-    setPlaying(false);
-    setShowing(false);
-    setResults(true);
+      });
+    setTimeout(() => {
+      setPlaying(false);
+      setShowing(false);
+      setResults(true);
+    }, 100);
   };
 
   // submitTest
@@ -190,6 +178,7 @@ const StatsProvider: React.FC = ({ children }) => {
     setExtra,
     setChars,
     setErrs,
+    // setChar,
     reset,
   };
 

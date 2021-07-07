@@ -37,5 +37,5 @@ const Wrapper = styled.div`
   min-height: 100vh;
   overflow: hidden;
   background: ${({ theme }) => theme.background};
-  transition: 250ms ease;
+  transition: background 250ms ease;
 `;
