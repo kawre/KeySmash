@@ -16,6 +16,14 @@ font-family: 'Roboto Mono', monospace;
 font-family: 'Source Sans Pro', sans-serif;
 font-family: 'Titillium Web', sans-serif; */
 
+body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: ${({ theme }: any) => theme.background};
+  transition: background 250ms ease;
+}
+
 * {
    margin: 0;
    padding: 0;
@@ -25,7 +33,21 @@ font-family: 'Titillium Web', sans-serif; */
 }
 
 ::-webkit-scrollbar {
-   display: none;
+   width: 7px;
+}
+
+::-webkit-scrollbar-corner {
+   background: ${({ theme }) => (theme as any).sub};
+}
+
+::-webkit-scrollbar-track {
+  background: 0 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  transition: 250ms;
+  background: ${({ theme }) => (theme as any).sub};
 }
 
 a {
