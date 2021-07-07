@@ -1,5 +1,6 @@
 mutation SubmitResult($options: ScoreInput!) {
   submitResult(options: $options) {
+    quote
     wpm
     accuracy
     cpm

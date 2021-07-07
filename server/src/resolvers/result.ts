@@ -20,6 +20,9 @@ class ScoreInput {
   wpm: string;
 
   @Field()
+  quote: string;
+
+  @Field()
   accuracy: string;
 
   @Field()

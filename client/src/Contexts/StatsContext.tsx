@@ -133,6 +133,7 @@ const StatsProvider: React.FC = ({ children }) => {
       submit({
         variables: {
           options: {
+            quote: "",
             wpm,
             accuracy: acc,
             cpm,
@@ -151,7 +152,7 @@ const StatsProvider: React.FC = ({ children }) => {
       setPlaying(false);
       setShowing(false);
       setResults(true);
-    }, 100);
+    }, 50);
   };
 
   // submitTest

@@ -25,9 +25,13 @@ exports.ThemeResolver = void 0;
 const Theme_1 = require("../entities/Theme");
 const type_graphql_1 = require("type-graphql");
 const User_1 = require("../entities/User");
+const typeorm_1 = require("typeorm");
 let ThemeResolver = class ThemeResolver {
     themes() {
-        return Theme_1.Theme.find();
+        return typeorm_1.getConnection().query(`
+    select * from theme
+    order by background desc
+    `);
     }
     changeTheme(theme, { req }) {
         return __awaiter(this, void 0, void 0, function* () {

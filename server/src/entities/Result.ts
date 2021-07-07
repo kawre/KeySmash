@@ -21,6 +21,10 @@ export class Result extends BaseEntity {
 
   @Field()
   @Column()
+  quote: string;
+
+  @Field()
+  @Column()
   wpm: string;
 
   @Field()

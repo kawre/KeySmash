@@ -26,6 +26,11 @@ __decorate([
 ], Result.prototype, "userId", void 0);
 __decorate([
     type_graphql_1.Field(),
+    typeorm_1.Column("text", { default: "elo" }),
+    __metadata("design:type", String)
+], Result.prototype, "quote", void 0);
+__decorate([
+    type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], Result.prototype, "wpm", void 0);

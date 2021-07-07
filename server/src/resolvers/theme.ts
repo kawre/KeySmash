@@ -2,12 +2,16 @@ import { Theme } from "../entities/Theme";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { MyContext } from "src/types";
 import { User } from "../entities/User";
+import { getConnection } from "typeorm";
 
 @Resolver(Theme)
 export class ThemeResolver {
   @Query(() => [Theme])
   themes() {
-    return Theme.find();
+    return getConnection().query(`
+    select * from theme
+    order by background desc
+    `);
   }
 
   @Mutation(() => Theme, { nullable: true })

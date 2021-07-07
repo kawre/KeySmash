@@ -6,6 +6,11 @@ import session from "express-session";
 import Redis from "ioredis";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
+import { Quote } from "./entities/Quote";
+import { Result } from "./entities/Result";
+import { Stats } from "./entities/Stats";
+import { Theme } from "./entities/Theme";
+import { User } from "./entities/User";
 import { QuoteResolver } from "./resolvers/quote";
 import { ResultResolver } from "./resolvers/result";
 import { StatsResolver } from "./resolvers/stats";
@@ -18,19 +23,23 @@ const main = async () => {
 
   const app = express();
 
+  // await Quote.delete({});
+  // await Quote.insert({
+  //   quote: `Wilkinson County was a recipient of one of the new "separate but equal" schools built throughout the South as a result of the 1954 Supreme Court decision. It had been under construction on a fifty-two-acre plot in Woodville for almost a year, when I graduated in 1959.`,
+  // });
   // await Stats.delete({});
   // await Result.delete({});
   // await User.delete({});
 
   // await Theme.create({
-  //   name: "strawberry",
-  //   background: "#f37f83",
-  //   caret: "#fcfcf8",
-  //   main: "#fcfcf8",
-  //   sub: "#e53c58",
-  //   text: "#fcfcf8",
-  //   error: "#fcd23f",
-  //   errorExtra: "#d7ae1e",
+  //   name: "modern dolch",
+  //   background: "#2d2e30",
+  //   caret: "#7eddd3",
+  //   main: "#7eddd3",
+  //   sub: "#54585c",
+  //   text: "#e3e6eb",
+  //   error: "#d36a7b",
+  //   errorExtra: "#994154",
   // }).save();
 
   const RedisStore = connectRedis(session);

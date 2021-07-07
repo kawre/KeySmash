@@ -35,6 +35,10 @@ __decorate([
 __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
+], ScoreInput.prototype, "quote", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
 ], ScoreInput.prototype, "accuracy", void 0);
 __decorate([
     type_graphql_1.Field(),
