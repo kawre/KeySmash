@@ -26,23 +26,7 @@ const History: React.FC<Props> = () => {
   else if (!history || error) throw new Error(error?.message);
 
   return (
-    <Wrapper>
-      <ResultTable data={history} title="test history" />
-      {history.length % 10 === 0 && (
-        <div style={{ marginTop: "10px" }}>
-          <Button
-            type="submit"
-            onClick={() => {
-              fetchMore({
-                variables: { cursor: history[history.length - 1].createdAt },
-              });
-            }}
-          >
-            Load More
-          </Button>
-        </div>
-      )}
-    </Wrapper>
+    <ResultTable data={history} title="test history" fetchMore={fetchMore} />
   );
 };
 
@@ -50,33 +34,4 @@ export default History;
 
 // Styled ------------------------------------------------------------------------
 
-// const Wrapper = styled.div`
-//   padding: 50px 0;
-// `;
-
 const Wrapper = styled.div``;
-
-const Heading = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 12px 50px;
-
-  p {
-    font-size: 14px;
-    opacity: 0.8;
-    color: ${({ theme }) => theme.sub};
-  }
-`;
-
-const Stats = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Text = styled.p`
-  color: ${({ theme }) => theme.text};
-  font-size: 16px;
-  width: 106px;
-`;

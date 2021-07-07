@@ -62,14 +62,11 @@ export class ResultResolver {
 
   // query top results
   @Query(() => [Result])
-  async topResults() {
-    const results = await getConnection().query(`
+  topResults() {
+    return getConnection().query(`
       select * from result 
       order by wpm DESC
     `);
-    console.log(results);
-
-    return results;
   }
 
   // submit result
@@ -78,10 +75,7 @@ export class ResultResolver {
     @Arg("options") options: ScoreInput,
     @Ctx() { req }: MyContext
   ) {
-    const { userId } = req.session;
-    console.log(options);
-
-    return Result.create({ ...options, userId }).save();
+    return Result.create({ ...options, userId: req.session.userId }).save();
   }
 
   @Query(() => [Result])

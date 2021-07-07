@@ -1,18 +1,19 @@
 import React from "react";
-import { useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import styled from "styled-components";
 import { Result } from "../generated/graphql";
+import Button from "../Shared/Components/Button";
 import { date } from "../Shared/utils/date";
 // Types -------------------------------------------------------------------------
 
 interface Props {
   data: any[];
   title: string;
+  fetchMore?: ({}: any) => any;
 }
 
 // Component ---------------------------------------------------------------------
-const ResultTable: React.FC<Props> = ({ data, title }) => (
+const ResultTable: React.FC<Props> = ({ data, title, fetchMore }) => (
   <Wrapper>
     <Text style={{ width: "auto" }}>{title}</Text>
     <Table>
@@ -57,6 +58,22 @@ const ResultTable: React.FC<Props> = ({ data, title }) => (
         ))}
       </TableBody>
     </Table>
+    {fetchMore && data.length % 10 === 0 && (
+      <div style={{ marginTop: "10px" }}>
+        <Button
+          type="submit"
+          onClick={() => {
+            fetchMore({
+              variables: {
+                cursor: data[data.length - 1].createdAt,
+              },
+            });
+          }}
+        >
+          Load More
+        </Button>
+      </div>
+    )}
   </Wrapper>
 );
 
