@@ -19,11 +19,6 @@ export const AuthProvider: React.FC = ({ children }) => {
   const loadingRef = useRef<HTMLDivElement>(null);
   const [display, setDisplay] = useState(true);
 
-  // useEffect(() => {
-  //   setTimeout(() => setL(!loading), 1000);
-  // }, []);
-
-  // me
   const { data, loading } = useMeQuery();
 
   useEffect(() => {
@@ -61,12 +56,12 @@ const Loading = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: #323437;
   z-index: 100;
   opacity: 1;
-  transition: 100ms ease-in;
+  transition: opacity 100ms ease-in;
   pointer-events: none;
 
   &.fadeOut {

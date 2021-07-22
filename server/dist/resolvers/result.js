@@ -84,20 +84,16 @@ let ResultResolver = class ResultResolver {
         return User_1.User.findOne(result.userId);
     }
     topResults() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const results = yield typeorm_1.getConnection().query(`
+        return typeorm_1.getConnection().query(`
       select * from result 
       order by wpm DESC
     `);
-            console.log(results);
-            return results;
-        });
     }
     submitResult(options, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { userId } = req.session;
             console.log(options);
-            return Result_1.Result.create(Object.assign(Object.assign({}, options), { userId })).save();
+            console.log("------------------------------------");
+            return Result_1.Result.create(Object.assign(Object.assign({}, options), { userId: req.session.userId })).save();
         });
     }
     testHistory(cursor, { req }) {
@@ -124,7 +120,7 @@ __decorate([
     type_graphql_1.Query(() => [Result_1.Result]),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], ResultResolver.prototype, "topResults", null);
 __decorate([
     type_graphql_1.Mutation(() => Result_1.Result),

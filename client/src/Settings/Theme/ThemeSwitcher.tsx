@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import React from "react";
 import styled from "styled-components";
 import { useAuth } from "../../Contexts/AuthContext";
@@ -37,8 +38,19 @@ const ThemeSwitcher: React.FC<Props> = () => {
                 if (user) {
                   changeTheme({
                     variables: { name },
-                    update: (_, { data }) =>
-                      setTheme(data?.changeTheme as Theme),
+                    update: (cache, { data }) => {
+                      setTheme(data?.changeTheme as Theme);
+
+                      cache.writeFragment({
+                        id: `User:${user.id}`,
+                        fragment: gql`
+                          fragment _ on User {
+                            theme
+                          }
+                        `,
+                        data: { theme: name },
+                      });
+                    },
                   });
                 } else setTheme(t);
               }}

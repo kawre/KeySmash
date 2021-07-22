@@ -23,9 +23,10 @@ const main = async () => {
 
   const app = express();
 
+  // await Result.delete({});
   // await Quote.delete({});
   // await Quote.insert({
-  //   quote: `Wilkinson County was a recipient of one of the new "separate but equal" schools built throughout the South as a result of the 1954 Supreme Court decision. It had been under construction on a fifty-two-acre plot in Woodville for almost a year, when I graduated in 1959.`,
+  //   quote: `delord to nigger`,
   // });
   // await Stats.delete({});
   // await Result.delete({});

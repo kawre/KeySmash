@@ -20,7 +20,6 @@ const express_session_1 = __importDefault(require("express-session"));
 const ioredis_1 = __importDefault(require("ioredis"));
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const Quote_1 = require("./entities/Quote");
 const quote_1 = require("./resolvers/quote");
 const result_1 = require("./resolvers/result");
 const stats_1 = require("./resolvers/stats");
@@ -30,9 +29,6 @@ const constants_1 = require("./utils/constants");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (yield typeorm_1.createConnection()).runMigrations();
     const app = express_1.default();
-    yield Quote_1.Quote.insert({
-        quote: `Wilkinson County was a recipient of one of the new "separate but equal" schools built throughout the South as a result of the 1954 Supreme Court decision. It had been under construction on a fifty-two-acre plot in Woodville for almost a year, when I graduated in 1959.`,
-    });
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default();
     app.use(cors_1.default({ origin: "http://localhost:3000", credentials: true }));

@@ -171,17 +171,15 @@ export class StatsResolver {
   }
 
   @FieldResolver()
-  async personalBests(@Root() stats: Stats) {
-    const res = await getConnection().query(
+  personalBests(@Root() stats: Stats) {
+    return getConnection().query(
       `
     select * from result
     where "userId" = $1
-    order by wpm DESC
+    order by wpm::real desc
     limit 5
     `,
       [stats.userId]
     );
-    console.log(res);
-    return res;
   }
 }

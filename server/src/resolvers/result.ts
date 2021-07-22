@@ -75,6 +75,8 @@ export class ResultResolver {
     @Arg("options") options: ScoreInput,
     @Ctx() { req }: MyContext
   ) {
+    console.log(options);
+    console.log("------------------------------------");
     return Result.create({ ...options, userId: req.session.userId }).save();
   }
 

@@ -16,12 +16,16 @@ font-family: 'Roboto Mono', monospace;
 font-family: 'Source Sans Pro', sans-serif;
 font-family: 'Titillium Web', sans-serif; */
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
+  /* transition: background 250ms ease; */
   background: ${({ theme }: any) => theme.background};
-  transition: background 250ms ease;
 }
 
 * {
@@ -37,7 +41,7 @@ body {
 }
 
 ::-webkit-scrollbar-corner {
-   background: ${({ theme }) => (theme as any).sub};
+   background: ${({ theme }) => theme.sub};
 }
 
 ::-webkit-scrollbar-track {
@@ -47,7 +51,7 @@ body {
 ::-webkit-scrollbar-thumb {
   border-radius: 8px;
   transition: 250ms;
-  background: ${({ theme }) => (theme as any).sub};
+  background: ${({ theme }) => theme.sub};
 }
 
 a {

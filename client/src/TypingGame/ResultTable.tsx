@@ -33,7 +33,7 @@ const ResultTable: React.FC<Props> = ({ data, title, fetchMore }) => (
             chars
           </Td>
           <Td>time</Td>
-          <Td>info</Td>
+          <Td>details</Td>
           <Td>date</Td>
         </Tr>
       </TableHead>
