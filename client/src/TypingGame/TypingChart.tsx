@@ -103,7 +103,7 @@ const TypingChart: React.FC<Props> = () => {
   if (!results) return null;
   return (
     <Chart>
-      <Line type="line" id="chart" data={data} options={options} />
+      <Line id="chart" data={data} options={options} />
     </Chart>
   );
 };

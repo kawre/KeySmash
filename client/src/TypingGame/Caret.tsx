@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTyping } from "../Contexts/TypingGameContext";
@@ -16,6 +17,7 @@ const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
   const caretRef = useRef<HTMLDivElement>(null);
   const [caretFlash, setCaretFlash] = useState<boolean>(true);
   const [caretHeight, setCaretHeight] = useState<number>(0);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
 
   // caret position
   useEffect(() => {
@@ -26,14 +28,16 @@ const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
 
   const caretCurrentLetter = () => {
     if (!letter) return;
-    const rect = letter.getBoundingClientRect();
-    caretAnimation(rect.left, rect.top);
+    const { top, left } = letter.getBoundingClientRect();
+    setPosition({ left, top });
+    // caretAnimation(rect.left, rect.top);
   };
 
   const caretOverflow = () => {
     if (!minusLetter) return;
-    const rect = minusLetter.getBoundingClientRect();
-    caretAnimation(rect.right, rect.top);
+    const { top, right } = minusLetter.getBoundingClientRect();
+    setPosition({ top, left: right });
+    // caretAnimation(rect.right, rect.top);
   };
 
   // on load caret position
@@ -65,7 +69,16 @@ const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
 
   return (
     <Wrapper
+      // style={{ ...position, height: caretHeight }}
       style={{ height: caretHeight }}
+      animate={{
+        ...position,
+        transition: {
+          duration: 0.11,
+          ease: "linear",
+        },
+      }}
+      initial={false}
       className={`${caretFlashClass} ${caretHidden}`}
       ref={caretRef}
     />
@@ -76,7 +89,7 @@ export default Caret;
 
 // Styled ------------------------------------------------------------------------
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   position: fixed;
   background: ${(props) => props.theme.caret};
   border-radius: 99px;
