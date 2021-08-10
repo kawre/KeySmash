@@ -21,7 +21,6 @@ const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
 
   // caret position
   useEffect(() => {
-    // console.log(minusLetter);
     if (input.length < words[current].length) caretCurrentLetter();
     else caretOverflow();
   }, [letter, minusLetter]);
@@ -30,14 +29,12 @@ const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
     if (!letter) return;
     const { top, left } = letter.getBoundingClientRect();
     setPosition({ left, top });
-    // caretAnimation(rect.left, rect.top);
   };
 
   const caretOverflow = () => {
     if (!minusLetter) return;
     const { top, right } = minusLetter.getBoundingClientRect();
     setPosition({ top, left: right });
-    // caretAnimation(rect.right, rect.top);
   };
 
   // on load caret position
@@ -69,7 +66,6 @@ const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
 
   return (
     <Wrapper
-      // style={{ ...position, height: caretHeight }}
       style={{ height: caretHeight }}
       animate={{
         ...position,
