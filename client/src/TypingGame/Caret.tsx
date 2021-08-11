@@ -44,15 +44,6 @@ const Caret: React.FC<Props> = ({ letter, input, minusLetter, current }) => {
     setCaretHeight(rect.height);
   }, [caretRef, letter]);
 
-  // smooth caret animation
-  const caretAnimation = (left: number, top: number) => {
-    if (!caretRef.current) return;
-    caretRef.current.animate(
-      { left: `${left}px`, top: `${top}px` },
-      { duration: 100, fill: "forwards" }
-    );
-  };
-
   // caret flash animation on stop
   useEffect(() => {
     if (!isPlaying) return;
